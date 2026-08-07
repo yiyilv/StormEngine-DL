@@ -69,6 +69,24 @@ PYTHONPATH=src ../StormEngine/stormengine-env/bin/python \
 `configs/base.yaml` records the intended final year split and requires the
 remaining ERA5 months to be downloaded before it can be used.
 
+V6-style preprocessing is now reproducible outside the notebook. Statistics
+are fitted on the training years only, avoiding the full-dataset leakage in the
+exploratory V6 normalizer. The decoder receives a Natural Earth 10m land-sea
+mask and a metric-aware normalized distance-to-nearest-input field. Generate
+the pilot artifacts with:
+
+```bash
+PYTHONPATH=src ../StormEngine/stormengine-env/bin/python \
+  scripts/fit_normalization.py --config configs/pilot.yaml
+
+PYTHONPATH=src ../StormEngine/stormengine-env/bin/python \
+  scripts/build_static_fields.py --config configs/pilot.yaml
+```
+
+Cartopy is needed only to rebuild the Natural Earth mask; install the optional
+dependency with `pip install -e '.[static]'`. Runtime loading uses the compact
+versioned NPZ file and does not require Cartopy.
+
 ## Station profiles
 
 `data/stations_registry.csv` keeps physical land stations, virtual Adriatic sea

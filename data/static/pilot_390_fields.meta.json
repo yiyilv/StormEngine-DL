@@ -1,0 +1,14 @@
+{
+  "grid_shape": [
+    31,
+    33
+  ],
+  "station_profile": "dpc_plus_sea",
+  "station_count": 390,
+  "land_source": "Natural Earth 10m physical land via Cartopy",
+  "land_fraction": 0.5698924660682678,
+  "distance_method": "nearest station; local equirectangular kilometres; normalized by grid maximum",
+  "distance_min": 0.0,
+  "distance_max": 1.0,
+  "distance_mean": 0.23704874515533447
+}

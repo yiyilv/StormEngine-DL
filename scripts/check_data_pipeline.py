@@ -9,7 +9,8 @@ from pathlib import Path
 import torch
 import yaml
 
-from stormengine_dl.data import Era5SequenceDataset
+from stormengine_dl import StormEngineForecastModel
+from stormengine_dl.data import Era5SequenceDataset, StaticFields
 
 
 def _resolve(repo_root: Path, value: str) -> Path:
@@ -36,6 +37,7 @@ def main() -> int:
         target_variables=data["target_variables"],
         history_hours=int(data["history_hours"]),
         forecast_hours=int(data["forecast_hours"]),
+        normalization_path=_resolve(repo_root, data["normalization_stats"]),
     )
 
     datasets: dict[str, Era5SequenceDataset] = {}
@@ -71,7 +73,42 @@ def main() -> int:
         if not torch.isfinite(sample[name]).all():
             raise RuntimeError(f"non-finite values found in {name}")
 
-    print("\nPASS: configured splits and the first 390-coordinate sample are valid.")
+    static = StaticFields.load(_resolve(repo_root, data["static_fields"]))
+    static_tensor = static.as_tensor().unsqueeze(0)
+    model_config = config["model"]
+    model = StormEngineForecastModel(
+        input_channels=len(data["input_variables"]),
+        output_channels=len(data["target_variables"]),
+        point_hidden=int(model_config["point_hidden"]),
+        latent_channels=int(model_config["latent_channels"]),
+        height=int(config["domain"]["height"]),
+        width=int(config["domain"]["width"]),
+        sigma=float(model_config["gaussian_sigma"]),
+        processor_layers=int(model_config["processor_layers"]),
+        kernel_size=int(model_config["kernel_size"]),
+        static_channels=int(model_config["static_channels"]),
+        point_static_channels=int(model_config["point_static_channels"]),
+    )
+    with torch.no_grad():
+        prediction = model(
+            sample["point_values"].unsqueeze(0),
+            sample["point_coords"].unsqueeze(0),
+            forecast_steps=int(data["forecast_hours"]),
+            point_mask=sample["point_mask"].unsqueeze(0),
+            static_fields=static_tensor,
+            point_static=sample["point_static"].unsqueeze(0),
+        )
+    print("\nStatic fields and model forward")
+    print(f"  static fields: {tuple(static_tensor.shape)}")
+    print(f"  land fraction: {float(static.land_sea_mask.mean()):.3f}")
+    print(f"  distance mean: {float(static.station_distance.mean()):.3f}")
+    print(f"  prediction:    {tuple(prediction.shape)}")
+    if prediction.shape != sample["target"].unsqueeze(0).shape:
+        raise RuntimeError("prediction and target shapes do not match")
+    if not torch.isfinite(prediction).all():
+        raise RuntimeError("non-finite model prediction")
+
+    print("\nPASS: normalized data, static fields, and full model forward are valid.")
     return 0
 
 

@@ -102,6 +102,7 @@ class Era5SequenceDataset(Dataset[dict[str, torch.Tensor]]):
         station_dropout: float = 0.0,
         cache_months: int = 2,
         station_features: Sequence[Sequence[float]] | np.ndarray | None = None,
+        normalization_path: str | Path | None = None,
     ) -> None:
         if history_hours < 1 or forecast_hours < 1:
             raise ValueError("history_hours and forecast_hours must be positive")
@@ -164,6 +165,14 @@ class Era5SequenceDataset(Dataset[dict[str, torch.Tensor]]):
             raise ValueError("station coordinates fall outside the ERA5 domain")
         self.station_coordinates = stations
         self.station_features = None
+        self.normalization = None
+        if normalization_path is not None:
+            from .normalization import NormalizationStats
+
+            self.normalization = NormalizationStats.load(normalization_path)
+            missing = set(self._requested_variables) - set(self.normalization.variables)
+            if missing:
+                raise ValueError(f"normalization statistics missing variables: {sorted(missing)}")
         if station_features is not None:
             features = np.asarray(station_features, dtype=np.float32)
             if features.ndim != 2 or features.shape[0] != stations.shape[0]:
@@ -273,6 +282,14 @@ class Era5SequenceDataset(Dataset[dict[str, torch.Tensor]]):
         history_grids = self._gather(history_indices, self.input_variables)
         point_values = self._sample_stations(history_grids)
         target = self._gather(target_indices, self.target_variables)
+
+        if self.normalization is not None:
+            for channel, variable in enumerate(self.input_variables):
+                point_values[:, :, channel] = self.normalization.normalize(
+                    variable, point_values[:, :, channel]
+                )
+            for channel, variable in enumerate(self.target_variables):
+                target[:, channel] = self.normalization.normalize(variable, target[:, channel])
 
         mask = torch.ones((self.history_hours, self.station_coordinates.shape[0]))
         if self.station_dropout:

@@ -16,5 +16,8 @@ dependencies = [
   "shapely>=2.0",
 ]
 
+[project.optional-dependencies]
+static = ["cartopy>=0.24"]
+
 [tool.setuptools.packages.find]
 where = ["src"]

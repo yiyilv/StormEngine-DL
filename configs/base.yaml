@@ -13,6 +13,8 @@ data:
   era5_manifest: data/manifests/era5_manifest.csv
   station_registry: data/stations_registry.csv
   station_profile: dpc_plus_sea
+  normalization_stats: data/normalization/base_2010_2021.json
+  static_fields: data/static/base_390_fields.npz
   input_variables: [msl, u10, v10, i10fg, t2m]
   target_variables: [msl, u10, v10, t2m, tp]
   history_hours: 12
