@@ -59,8 +59,10 @@ are loaded lazily with a bounded cache.
 ## Station profiles
 
 `data/stations_registry.csv` keeps physical land stations, virtual Adriatic sea
-coordinates, and disabled legacy coastal anchors in one traceable catalog. Three
-profiles support controlled experiments:
+coordinates, and disabled legacy coastal anchors in one traceable catalog. The
+land profile is now built from the versioned official-source snapshot
+`data/source_snapshots/official_station_catalog_2026-08-07.csv`, rather than the
+earlier 485-coordinate team aggregate. Three profiles support controlled experiments:
 
 - `land_only`: all available DPC/regional physical stations in the domain
 - `sea_only`: virtual Adriatic coordinates, intended for Open-Meteo variables
@@ -70,15 +72,39 @@ Legacy `ARTA_VIRTUAL`, `ARPAM_VIRTUAL`, and `ARPA_PUGLIA_VIRTUAL` rows remain in
 the catalog for provenance but are disabled. They are never presented as DPC
 physical observations.
 
-The registry also recovers physical `dpcn-puglia` stations directly from the
-raw MeteoHub JSON because the earlier aggregated CSV omitted that network.
+The current snapshot contains 1,377 distinct physical coordinates inside the
+configured rectangle: 1,330 stations observed in three official MeteoHub query
+windows and 47 official Polaris-linked Abruzzo stations. Together with 115 sea
+coordinates, the default `dpc_plus_sea` profile contains 1,492 points.
+
+This count is deliberately described as an official-source snapshot, not a
+claim that every installed station was online. MeteoHub's observations endpoint
+only reveals stations that returned data in a selected time window. Abruzzo is
+also a documented gap: the regional authority states that its complete
+telemetered network contains 119 stations, while the accessible official API
+exposes 47 Polaris-linked coordinates and the public network-map link currently
+redirects to login. The exact queries, hashes, counts, and limitations are in
+`data/source_snapshots/official_station_catalog_2026-08-07.meta.json`.
+
+Rebuild the compact catalog from downloaded official API responses with:
+
+```bash
+PYTHONPATH=src ../StormEngine/stormengine-env/bin/python \
+  scripts/build_official_station_catalog.py \
+  --meteohub-json snapshot-00.json snapshot-06.json snapshot-11.json \
+  --abruzzo-json abruzzo-stations.json \
+  --output data/source_snapshots/official_station_catalog_2026-08-07.csv
+```
 
 ## Current status
 
-The repository now provides the complete tensor-level Encoder-Processor-Decoder
-skeleton, a validated ERA5 manifest, and cross-month sequence loading. The next
-milestones are the verified station registry, train-only normalization,
-training/baseline evaluation, and inference.
+The repository now provides the tensor-level Encoder-Processor-Decoder skeleton,
+a validated ERA5 manifest, cross-month sequence loading, and a traceable
+official-source station snapshot. The remaining station-data task is to obtain
+the non-public portion of the current Abruzzo station registry; model work can
+continue using the explicitly labelled public subset. The next pipeline
+milestones are train-only normalization, training/baseline evaluation, and
+inference.
 
 ## Quick smoke test
 

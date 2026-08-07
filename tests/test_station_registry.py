@@ -91,6 +91,27 @@ class StationRegistryTest(unittest.TestCase):
             self.assertEqual(len(physical), 2)
             self.assertEqual({record.station_name for record in physical}, {"North", "Bari"})
 
+    def test_official_catalog_can_replace_earlier_federated_catalog(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            official, virtual, output = root / "official.csv", root / "virtual.csv", root / "out.csv"
+            self._write(official, [{
+                "station_id": "MH::dpcn-marche::a", "station_name": "Official", "lat": 43,
+                "lon": 13, "network": "dpcn-marche", "coordinate_source": "MeteoHub",
+                "catalog_status": "observed_in_snapshot", "observed_snapshots": 3,
+                "variables": "B12101", "license": "CC BY 4.0", "notes": "Official snapshot.",
+            }])
+            self._write(virtual, [{
+                "station_id": "S1", "sensor_name": "Sea", "lat": 43, "lon": 15,
+                "gestore": "VIRTUAL_ADRIATIC_SEA",
+            }])
+            records = build_station_registry(
+                None, virtual, output, official_catalog_path=official
+            )
+            physical = [record for record in records if record.station_type == "physical_land"]
+            self.assertEqual(len(physical), 1)
+            self.assertEqual(physical[0].network, "dpcn-marche")
+
 
 if __name__ == "__main__":
     unittest.main()

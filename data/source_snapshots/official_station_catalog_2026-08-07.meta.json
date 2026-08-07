@@ -1,0 +1,40 @@
+{
+  "snapshot_date": "2026-08-07",
+  "domain": {
+    "lat_min": 39.0,
+    "lat_max": 46.5,
+    "lon_min": 12.0,
+    "lon_max": 20.0
+  },
+  "coordinate_deduplication": "first record per rounded (latitude, longitude), 6 decimals",
+  "station_count": 1377,
+  "sources": [
+    {
+      "name": "Agenzia ItaliaMeteo MeteoHub observations API",
+      "url": "https://meteohub.agenziaitaliameteo.it/api/observations",
+      "query_windows": [
+        "2026-08-07 00:00 to 00:59",
+        "2026-08-07 06:00 to 06:59",
+        "2026-08-07 11:00 to 11:59"
+      ],
+      "query_suffix": "license:CCBY_COMPLIANT",
+      "included_network_rule": "dpcn-* plus documented FVG/Emilia-Romagna regional civil-protection networks",
+      "station_count": 1330,
+      "raw_sha256": [
+        "c8652a977c005df43ae0eba013ecb87b04c4e63fc82bce4e0ee8c65a8eb77663",
+        "69c32258c900bcdefa3b97c875a2281fd03185e1184457df1a5dce3441fa6398",
+        "54cc1040814ede880f88c32fd82c3d0b602010fb7d1bea80f674bca3e97c6300"
+      ],
+      "completeness": "All qualifying stations that returned at least one observation in the three windows. Offline stations can be absent."
+    },
+    {
+      "name": "Regione Abruzzo Agroambiente public station API",
+      "url": "https://agroambiente.regione.abruzzo.it/api/aedita_meteo/get_stations",
+      "selection": "source=Regione Abruzzo and non-null polaris_id",
+      "station_count": 47,
+      "raw_sha256": "393449b2b1afe3ece602187f506c1b737fe4d8b459015c43f77287e412370c6f",
+      "completeness": "Official public Polaris-linked subset only. The regional authority states that the full Abruzzo telemetered network contains 119 stations."
+    }
+  ],
+  "known_gap": "A complete current coordinate catalog for all 119 Abruzzo stations was not exposed by the public endpoints checked. The official guest network map currently redirects to login."
+}

@@ -58,44 +58,79 @@ def _unique_station_rows(path: Path) -> Iterable[dict[str, str]]:
 
 
 def build_station_registry(
-    dpc_catalog_path: str | Path,
+    dpc_catalog_path: str | Path | None,
     virtual_catalog_path: str | Path,
     output_path: str | Path,
     *,
     legacy_coastal_paths: Iterable[str | Path] = (),
     meteohub_json_paths: Iterable[str | Path] = (),
     meteohub_networks: Iterable[str] = (),
+    official_catalog_path: str | Path | None = None,
     domain: tuple[float, float, float, float] = (39.0, 46.5, 12.0, 20.0),
 ) -> list[StationRecord]:
     """Create a catalog with explicit physical, sea, and disabled legacy classes."""
     records: list[StationRecord] = []
     physical_coordinates: set[tuple[float, float]] = set()
-    dpc_path = Path(dpc_catalog_path)
-    with dpc_path.open(newline="", encoding="utf-8-sig") as handle:
-        for row in csv.DictReader(handle):
-            lat, lon = float(row["lat"]), float(row["lon"])
-            if not _inside_domain(lat, lon, domain):
-                continue
-            records.append(
-                StationRecord(
-                    station_id=f"LAND::{row['station_id']}",
-                    station_name=row["station_name"],
-                    latitude=lat,
-                    longitude=lon,
-                    station_type="physical_land",
-                    network=row.get("gestore", "DPC") or "DPC",
-                    coordinate_source=dpc_path.name,
-                    pretraining_value_source="ERA5_sampled_at_coordinate",
-                    operational_value_source="DPC_regional_observation",
-                    enabled=True,
-                    profile_land_only=True,
-                    profile_sea_only=False,
-                    profile_dpc_plus_sea=True,
-                    dist_to_coast_km=row.get("dist_to_coast_km", ""),
-                    notes="Physical station in the current federated DPC/regional catalog.",
+    if official_catalog_path is not None:
+        official_path = Path(official_catalog_path)
+        with official_path.open(newline="", encoding="utf-8-sig") as handle:
+            for row in csv.DictReader(handle):
+                lat, lon = float(row["lat"]), float(row["lon"])
+                coordinate_key = (round(lat, 6), round(lon, 6))
+                if not _inside_domain(lat, lon, domain) or coordinate_key in physical_coordinates:
+                    continue
+                records.append(
+                    StationRecord(
+                        station_id=f"LAND::{row['station_id']}",
+                        station_name=row["station_name"],
+                        latitude=lat,
+                        longitude=lon,
+                        station_type="physical_land",
+                        network=row["network"],
+                        coordinate_source=row["coordinate_source"],
+                        pretraining_value_source="ERA5_sampled_at_coordinate",
+                        operational_value_source="DPC_regional_observation",
+                        enabled=True,
+                        profile_land_only=True,
+                        profile_sea_only=False,
+                        profile_dpc_plus_sea=True,
+                        dist_to_coast_km="",
+                        notes=(
+                            f"{row['catalog_status']}; observed_snapshots="
+                            f"{row['observed_snapshots']}. {row['notes']}"
+                        ),
+                    )
                 )
-            )
-            physical_coordinates.add((round(lat, 6), round(lon, 6)))
+                physical_coordinates.add(coordinate_key)
+
+    if dpc_catalog_path is not None:
+        dpc_path = Path(dpc_catalog_path)
+        with dpc_path.open(newline="", encoding="utf-8-sig") as handle:
+            for row in csv.DictReader(handle):
+                lat, lon = float(row["lat"]), float(row["lon"])
+                coordinate_key = (round(lat, 6), round(lon, 6))
+                if not _inside_domain(lat, lon, domain) or coordinate_key in physical_coordinates:
+                    continue
+                records.append(
+                    StationRecord(
+                        station_id=f"LAND::{row['station_id']}",
+                        station_name=row["station_name"],
+                        latitude=lat,
+                        longitude=lon,
+                        station_type="physical_land",
+                        network=row.get("gestore", "DPC") or "DPC",
+                        coordinate_source=dpc_path.name,
+                        pretraining_value_source="ERA5_sampled_at_coordinate",
+                        operational_value_source="DPC_regional_observation",
+                        enabled=True,
+                        profile_land_only=True,
+                        profile_sea_only=False,
+                        profile_dpc_plus_sea=True,
+                        dist_to_coast_km=row.get("dist_to_coast_km", ""),
+                        notes="Physical station in the earlier federated DPC/regional catalog.",
+                    )
+                )
+                physical_coordinates.add(coordinate_key)
 
     selected_networks = set(meteohub_networks)
     meteohub_stations: dict[tuple[str, str, float, float], str] = {}
