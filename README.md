@@ -72,10 +72,14 @@ Legacy `ARTA_VIRTUAL`, `ARPAM_VIRTUAL`, and `ARPA_PUGLIA_VIRTUAL` rows remain in
 the catalog for provenance but are disabled. They are never presented as DPC
 physical observations.
 
-The current snapshot contains 1,377 distinct physical coordinates inside the
-configured rectangle: 1,330 stations observed in three official MeteoHub query
-windows and 47 official Polaris-linked Abruzzo stations. Together with 115 sea
-coordinates, the default `dpc_plus_sea` profile contains 1,492 points.
+The official source snapshot contains 1,377 candidate physical coordinates
+inside the ERA5 rectangle: 1,330 stations observed in three official MeteoHub
+query windows and 47 official Polaris-linked Abruzzo stations. The training
+registry then applies a shared Shapely polygon representing a 20 km corridor
+around the Italian Adriatic shoreline. It retains 239 coastal physical stations.
+Together with 115 sea coordinates, the default `dpc_plus_sea` profile contains
+354 points. The full rectangle remains an ERA5 download/grid extent; it is not
+used as the station-selection geometry.
 
 This count is deliberately described as an official-source snapshot, not a
 claim that every installed station was online. MeteoHub's observations endpoint
@@ -85,6 +89,26 @@ telemetered network contains 119 stations, while the accessible official API
 exposes 47 Polaris-linked coordinates and the public network-map link currently
 redirects to login. The exact queries, hashes, counts, and limitations are in
 `data/source_snapshots/official_station_catalog_2026-08-07.meta.json`.
+
+The coastal rule follows the original DPC workflow at two independent stages:
+
+1. `scripts/build_station_registry.py` filters station metadata before a station
+   is admitted to a training profile.
+2. `scripts/filter_coastal_observations.py` reapplies the same point-in-polygon
+   test to every real-time measurement coordinate before values enter the model.
+
+The shoreline vertices, polygon construction, and version identifier live in
+`src/stormengine_dl/data/coastal_filter.py`. Counts and the selected buffer are
+recorded in `data/stations_registry.meta.json`.
+
+Apply the measurement-level check with:
+
+```bash
+PYTHONPATH=src ../StormEngine/stormengine-env/bin/python \
+  scripts/filter_coastal_observations.py \
+  --input observations.csv \
+  --output observations_coastal.csv
+```
 
 Rebuild the compact catalog from downloaded official API responses with:
 

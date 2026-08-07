@@ -112,6 +112,31 @@ class StationRegistryTest(unittest.TestCase):
             self.assertEqual(len(physical), 1)
             self.assertEqual(physical[0].network, "dpcn-marche")
 
+    def test_official_catalog_is_filtered_to_adriatic_coast_when_requested(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            official, virtual, output = root / "official.csv", root / "virtual.csv", root / "out.csv"
+            common = {
+                "network": "dpcn-test", "coordinate_source": "MeteoHub",
+                "catalog_status": "observed_in_snapshot", "observed_snapshots": 3,
+                "variables": "B12101", "license": "CC BY 4.0", "notes": "Official snapshot.",
+            }
+            self._write(official, [
+                {"station_id": "coast", "station_name": "Ancona", "lat": 43.62,
+                 "lon": 13.51, **common},
+                {"station_id": "west", "station_name": "Rome", "lat": 41.90,
+                 "lon": 12.50, **common},
+            ])
+            self._write(virtual, [{
+                "station_id": "S1", "sensor_name": "Sea", "lat": 43, "lon": 15,
+                "gestore": "VIRTUAL_ADRIATIC_SEA",
+            }])
+            records = build_station_registry(
+                None, virtual, output, official_catalog_path=official, coastal_buffer_km=20.0
+            )
+            physical = [record for record in records if record.station_type == "physical_land"]
+            self.assertEqual([record.station_name for record in physical], ["Ancona"])
+
 
 if __name__ == "__main__":
     unittest.main()

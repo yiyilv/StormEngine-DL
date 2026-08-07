@@ -1,0 +1,29 @@
+{
+  "registry_rule": "official DPC/regional source pool filtered to the Italian Adriatic coastal corridor, plus Adriatic virtual sea coordinates",
+  "coastal_filter_version": "italian-adriatic-coastline-v1",
+  "coastal_buffer_km": 20.0,
+  "candidate_physical_coordinates": 1377,
+  "selected_coastal_physical_coordinates": 239,
+  "selected_virtual_sea_coordinates": 115,
+  "enabled_dpc_plus_sea_coordinates": 354,
+  "disabled_legacy_virtual_coastal_coordinates": 52,
+  "physical_network_counts": {
+    "agrmet": 3,
+    "arpafvg": 22,
+    "boa": 6,
+    "dpcn-marche": 54,
+    "dpcn-molise": 4,
+    "dpcn-puglia": 61,
+    "dpcn-veneto": 22,
+    "marefe": 9,
+    "regione-abruzzo-polaris": 22,
+    "simnbo": 14,
+    "spdsra": 21,
+    "urbane": 1
+  },
+  "double_filter": {
+    "station_stage": "scripts/build_station_registry.py applies the polygon to official station metadata",
+    "measurement_stage": "scripts/filter_coastal_observations.py reapplies the same polygon to every observation row"
+  },
+  "era5_domain_note": "The 39.0-46.5 N, 12.0-20.0 E rectangle remains the ERA5 grid/download domain and is not the station-selection geometry."
+}

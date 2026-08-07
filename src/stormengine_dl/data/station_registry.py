@@ -11,6 +11,12 @@ from typing import Iterable
 
 import numpy as np
 
+from .coastal_filter import (
+    COASTAL_FILTER_VERSION,
+    distance_to_adriatic_coast_km,
+    is_in_adriatic_coastal_area,
+)
+
 
 PROFILE_FIELDS = {
     "land_only": "profile_land_only",
@@ -66,6 +72,7 @@ def build_station_registry(
     meteohub_json_paths: Iterable[str | Path] = (),
     meteohub_networks: Iterable[str] = (),
     official_catalog_path: str | Path | None = None,
+    coastal_buffer_km: float | None = None,
     domain: tuple[float, float, float, float] = (39.0, 46.5, 12.0, 20.0),
 ) -> list[StationRecord]:
     """Create a catalog with explicit physical, sea, and disabled legacy classes."""
@@ -78,6 +85,10 @@ def build_station_registry(
                 lat, lon = float(row["lat"]), float(row["lon"])
                 coordinate_key = (round(lat, 6), round(lon, 6))
                 if not _inside_domain(lat, lon, domain) or coordinate_key in physical_coordinates:
+                    continue
+                if coastal_buffer_km is not None and not is_in_adriatic_coastal_area(
+                    lat, lon, buffer_km=coastal_buffer_km
+                ):
                     continue
                 records.append(
                     StationRecord(
@@ -94,10 +105,12 @@ def build_station_registry(
                         profile_land_only=True,
                         profile_sea_only=False,
                         profile_dpc_plus_sea=True,
-                        dist_to_coast_km="",
+                        dist_to_coast_km=f"{distance_to_adriatic_coast_km(lat, lon):.3f}",
                         notes=(
                             f"{row['catalog_status']}; observed_snapshots="
-                            f"{row['observed_snapshots']}. {row['notes']}"
+                            f"{row['observed_snapshots']}; coastal_filter="
+                            f"{COASTAL_FILTER_VERSION}; coastal_buffer_km="
+                            f"{coastal_buffer_km}. {row['notes']}"
                         ),
                     )
                 )
@@ -110,6 +123,10 @@ def build_station_registry(
                 lat, lon = float(row["lat"]), float(row["lon"])
                 coordinate_key = (round(lat, 6), round(lon, 6))
                 if not _inside_domain(lat, lon, domain) or coordinate_key in physical_coordinates:
+                    continue
+                if coastal_buffer_km is not None and not is_in_adriatic_coastal_area(
+                    lat, lon, buffer_km=coastal_buffer_km
+                ):
                     continue
                 records.append(
                     StationRecord(
@@ -157,6 +174,10 @@ def build_station_registry(
     for (network, name, lat, lon), source_name in sorted(meteohub_stations.items()):
         coordinate_key = (round(lat, 6), round(lon, 6))
         if not _inside_domain(lat, lon, domain) or coordinate_key in physical_coordinates:
+            continue
+        if coastal_buffer_km is not None and not is_in_adriatic_coastal_area(
+            lat, lon, buffer_km=coastal_buffer_km
+        ):
             continue
         digest = hashlib.sha1(f"{network}|{name}|{lat:.6f}|{lon:.6f}".encode()).hexdigest()[:12]
         records.append(

@@ -13,8 +13,8 @@ dependencies = [
   "xarray>=2024.1",
   "netCDF4>=1.6",
   "PyYAML>=6.0",
+  "shapely>=2.0",
 ]
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
