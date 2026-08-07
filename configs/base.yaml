@@ -1,0 +1,38 @@
+seed: 42
+
+domain:
+  lat_min: 39.0
+  lat_max: 46.5
+  lon_min: 12.0
+  lon_max: 20.0
+  height: 31
+  width: 33
+
+data:
+  era5_root: ../DownloadDate
+  station_registry: data/stations_verified.csv
+  input_variables: [msl, u10, v10, i10fg, t2m]
+  target_variables: [msl, u10, v10, t2m, tp]
+  history_hours: 12
+  forecast_hours: 6
+  train_years: [2010, 2021]
+  validation_years: [2022, 2023]
+  test_years: [2024, 2024]
+
+model:
+  point_hidden: 64
+  latent_channels: 64
+  processor_layers: 2
+  kernel_size: 3
+  gaussian_sigma: 0.10
+  static_channels: 2
+
+training:
+  batch_size: 8
+  epochs: 50
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  station_dropout: 0.20
+  gradient_clip: 1.0
+  mixed_precision: true
+
