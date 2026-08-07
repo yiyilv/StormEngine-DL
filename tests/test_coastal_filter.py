@@ -8,6 +8,7 @@ from pathlib import Path
 from stormengine_dl.data.coastal_filter import (
     adriatic_coastal_polygon,
     distance_to_adriatic_coast_km,
+    is_adriatic_virtual_support,
     is_in_adriatic_coastal_area,
 )
 
@@ -28,6 +29,24 @@ class CoastalFilterTest(unittest.TestCase):
     def test_distance_is_recorded_in_kilometres(self) -> None:
         self.assertLess(distance_to_adriatic_coast_km(43.62, 13.51), 0.01)
         self.assertGreater(distance_to_adriatic_coast_km(41.90, 12.50), 100.0)
+
+    def test_virtual_support_keeps_both_adriatic_shores(self) -> None:
+        accepted = [
+            (43.0, 16.0, "VIRTUAL_ADRIATIC_SEA"),
+            (45.5, 13.6, "VIRTUAL_SLOVENIA"),
+            (43.5, 16.4, "VIRTUAL_CROATIA"),
+            (42.1, 19.1, "VIRTUAL_MONTENEGRO"),
+            (40.65, 19.5, "VIRTUAL_ALBANIA"),
+        ]
+        rejected = [
+            (40.3, 19.45, "VIRTUAL_ALBANIA"),
+            (39.6, 19.0, "VIRTUAL_IONIAN_SEA"),
+            (39.6, 19.9, "VIRTUAL_GREECE"),
+        ]
+        for lat, lon, group in accepted:
+            self.assertTrue(is_adriatic_virtual_support(lat, lon, group))
+        for lat, lon, group in rejected:
+            self.assertFalse(is_adriatic_virtual_support(lat, lon, group))
 
     def test_measurement_script_reapplies_same_filter(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

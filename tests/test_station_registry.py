@@ -35,6 +35,12 @@ class StationRegistryTest(unittest.TestCase):
                 [
                     {"station_id": "S1", "sensor_name": "Sea", "lat": 43, "lon": 15,
                      "gestore": "VIRTUAL_ADRIATIC_SEA"},
+                    {"station_id": "C1", "sensor_name": "Croatia", "lat": 43.5, "lon": 16.4,
+                     "gestore": "VIRTUAL_CROATIA"},
+                    {"station_id": "A1", "sensor_name": "North Albania", "lat": 40.65, "lon": 19.5,
+                     "gestore": "VIRTUAL_ALBANIA"},
+                    {"station_id": "A2", "sensor_name": "South Albania", "lat": 40.3, "lon": 19.45,
+                     "gestore": "VIRTUAL_ALBANIA"},
                     {"station_id": "I1", "sensor_name": "Ionian", "lat": 40, "lon": 18,
                      "gestore": "VIRTUAL_IONIAN_SEA"},
                 ],
@@ -45,13 +51,13 @@ class StationRegistryTest(unittest.TestCase):
                   "gestore": "ARTA_VIRTUAL"}],
             )
             records = build_station_registry(dpc, virtual, output, legacy_coastal_paths=[legacy])
-            self.assertEqual(len(records), 3)
+            self.assertEqual(len(records), 5)
             combined, combined_meta = load_station_coordinates(output, "dpc_plus_sea")
             land, _ = load_station_coordinates(output, "land_only")
             sea, _ = load_station_coordinates(output, "sea_only")
-            self.assertEqual(combined.shape, (2, 2))
+            self.assertEqual(combined.shape, (4, 2))
             self.assertEqual(land.shape, (1, 2))
-            self.assertEqual(sea.shape, (1, 2))
+            self.assertEqual(sea.shape, (3, 2))
             self.assertEqual({row["station_type"] for row in combined_meta}, {"physical_land", "virtual_sea"})
 
     def test_unknown_profile_is_rejected(self) -> None:

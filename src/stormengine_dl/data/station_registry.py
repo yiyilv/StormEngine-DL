@@ -13,7 +13,9 @@ import numpy as np
 
 from .coastal_filter import (
     COASTAL_FILTER_VERSION,
+    VIRTUAL_SUPPORT_FILTER_VERSION,
     distance_to_adriatic_coast_km,
+    is_adriatic_virtual_support,
     is_in_adriatic_coastal_area,
 )
 
@@ -204,8 +206,9 @@ def build_station_registry(
     virtual_path = Path(virtual_catalog_path)
     for row in _unique_station_rows(virtual_path):
         lat, lon = float(row["lat"]), float(row["lon"])
-        if row.get("gestore") != "VIRTUAL_ADRIATIC_SEA" or not _inside_domain(
-            lat, lon, domain
+        source_group = row.get("gestore", "")
+        if not _inside_domain(lat, lon, domain) or not is_adriatic_virtual_support(
+            lat, lon, source_group
         ):
             continue
         records.append(
@@ -215,7 +218,7 @@ def build_station_registry(
                 latitude=lat,
                 longitude=lon,
                 station_type="virtual_sea",
-                network="OPEN_METEO_ADRIATIC",
+                network=f"OPEN_METEO::{source_group}",
                 coordinate_source=virtual_path.name,
                 pretraining_value_source="ERA5_or_OpenMeteo_reanalysis",
                 operational_value_source="OpenMeteo_forecast_and_marine",
@@ -224,7 +227,10 @@ def build_station_registry(
                 profile_sea_only=True,
                 profile_dpc_plus_sea=True,
                 dist_to_coast_km="",
-                notes="Virtual Adriatic coordinate; not a physical observing station.",
+                notes=(
+                    "Virtual Adriatic support coordinate; not a physical observing "
+                    f"station. support_filter={VIRTUAL_SUPPORT_FILTER_VERSION}."
+                ),
             )
         )
 

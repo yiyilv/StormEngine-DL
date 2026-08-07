@@ -11,6 +11,22 @@ from shapely.prepared import prep
 
 DEFAULT_COASTAL_BUFFER_KM = 20.0
 COASTAL_FILTER_VERSION = "italian-adriatic-coastline-v1"
+VIRTUAL_SUPPORT_FILTER_VERSION = "adriatic-bilateral-support-v1"
+
+# Virtual coordinates are support nodes rather than observing stations.  The
+# model target covers the full Adriatic, so the support set includes the
+# eastern shore as well as points over the sea.  The southern Albanian coast,
+# Greece, and the explicitly Ionian group lie beyond the Adriatic boundary at
+# the Strait of Otranto and are excluded.
+_ADRIATIC_VIRTUAL_GROUPS = frozenset(
+    {
+        "VIRTUAL_ADRIATIC_SEA",
+        "VIRTUAL_SLOVENIA",
+        "VIRTUAL_CROATIA",
+        "VIRTUAL_MONTENEGRO",
+    }
+)
+_ALBANIA_ADRIATIC_MIN_LAT = 40.45
 
 # Approximate Italian Adriatic shoreline, north to south. Coordinates are
 # (longitude, latitude). The line is deliberately limited to the Italian side;
@@ -94,3 +110,17 @@ def distance_to_adriatic_coast_km(lat: float, lon: float) -> float:
     """Return approximate distance to the shared Italian Adriatic shoreline."""
     point = Point(float(lon) * _KM_PER_DEGREE_LON_AT_43N, float(lat) * _KM_PER_DEGREE_LAT)
     return float(_projected_coastline().distance(point))
+
+
+def is_adriatic_virtual_support(lat: float, lon: float, source_group: str) -> bool:
+    """Return whether a designed virtual node supports the Adriatic target.
+
+    The source groups encode whether coastal points belong to the Adriatic or
+    Ionian side.  Albania crosses that boundary, so its northern points are
+    retained using the approximate latitude of the Strait of Otranto.
+    """
+    del lon  # retained in the signature because this is a coordinate rule
+    group = str(source_group).strip().upper()
+    if group in _ADRIATIC_VIRTUAL_GROUPS:
+        return True
+    return group == "VIRTUAL_ALBANIA" and float(lat) >= _ALBANIA_ADRIATIC_MIN_LAT

@@ -1,11 +1,13 @@
 {
-  "registry_rule": "official DPC/regional source pool filtered to the Italian Adriatic coastal corridor, plus Adriatic virtual sea coordinates",
+  "registry_rule": "official DPC/regional source pool filtered to the Italian Adriatic coastal corridor, plus bilateral Adriatic virtual support coordinates",
   "coastal_filter_version": "italian-adriatic-coastline-v1",
   "coastal_buffer_km": 20.0,
   "candidate_physical_coordinates": 1377,
   "selected_coastal_physical_coordinates": 239,
-  "selected_virtual_sea_coordinates": 115,
-  "enabled_dpc_plus_sea_coordinates": 354,
+  "virtual_support_filter_version": "adriatic-bilateral-support-v1",
+  "selected_virtual_sea_coordinates": 151,
+  "enabled_dpc_plus_sea_coordinates": 390,
+  "virtual_support_rule": "Keep central Adriatic, Slovenia, Croatia, Montenegro, and Albania at or north of 40.45 N; exclude Greece, explicit Ionian points, and southern Albania.",
   "disabled_legacy_virtual_coastal_coordinates": 52,
   "physical_network_counts": {
     "agrmet": 3,

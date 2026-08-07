@@ -77,8 +77,11 @@ inside the ERA5 rectangle: 1,330 stations observed in three official MeteoHub
 query windows and 47 official Polaris-linked Abruzzo stations. The training
 registry then applies a shared Shapely polygon representing a 20 km corridor
 around the Italian Adriatic shoreline. It retains 239 coastal physical stations.
-Together with 115 sea coordinates, the default `dpc_plus_sea` profile contains
-354 points. The full rectangle remains an ERA5 download/grid extent; it is not
+Virtual support nodes are selected separately: the central Adriatic points and
+the Slovenian, Croatian, Montenegrin, and northern Albanian shore are retained,
+while Greece, the Ionian group, and Albania south of 40.45 N are excluded. This
+retains 151 virtual support coordinates, so the default `dpc_plus_sea` profile
+contains 390 points. The full rectangle remains an ERA5 download/grid extent; it is not
 used as the station-selection geometry.
 
 This count is deliberately described as an official-source snapshot, not a
