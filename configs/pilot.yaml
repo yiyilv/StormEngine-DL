@@ -34,9 +34,15 @@ model:
 
 training:
   batch_size: 8
-  epochs: 50
+  epochs: 80
   learning_rate: 0.0001
   weight_decay: 0.0001
   station_dropout: 0.20
   gradient_clip: 1.0
   mixed_precision: true
+  num_workers: 0
+  sea_weight: 2.0
+  early_stopping_patience: 12
+  lr_scheduler_patience: 5
+  lr_scheduler_factor: 0.5
+  output_dir: artifacts/v6_pilot

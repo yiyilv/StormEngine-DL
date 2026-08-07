@@ -156,13 +156,39 @@ PYTHONPATH=src ../StormEngine/stormengine-env/bin/python \
 
 ## Current status
 
-The repository now provides the tensor-level Encoder-Processor-Decoder skeleton,
-a validated ERA5 manifest, cross-month sequence loading, and a traceable
-official-source station snapshot. The remaining station-data task is to obtain
-the non-public portion of the current Abruzzo station registry; model work can
-continue using the explicitly labelled public subset. The next pipeline
-milestones are train-only normalization, training/baseline evaluation, and
-inference.
+The repository now provides the Encoder-Processor-Decoder model, validated
+cross-month ERA5 sequences, train-only normalization, reproducible static
+fields, a traceable official-source station snapshot, and a resumable V6
+training/evaluation entry point. The remaining station-data task is to obtain
+the non-public portion of the current Abruzzo station registry. The next model
+milestones are a full CUDA pilot run, baseline comparison, and operational
+inference with real-time observations.
+
+## V6 end-to-end training
+
+The new V6 keeps the original mean-normalized sea-weighted MSE definition
+(`sea_weight: 2.0`) and adds chronological train/validation/test years,
+mixed-precision CUDA training, gradient clipping, ReduceLROnPlateau, early
+stopping, resumable `last.pt`, best-model `best.pt`, and denormalized MAE/RMSE
+for the full grid, land, and sea. Run it from the repository root with:
+
+```bash
+python scripts/train.py --config configs/pilot.yaml --device cuda
+```
+
+Resume an interrupted Windows run with:
+
+```bash
+python scripts/train.py --config configs/pilot.yaml --device cuda \
+  --resume artifacts/v6_pilot/last.pt
+```
+
+On Windows, keep `num_workers: 0`; this avoids Jupyter multiprocessing spawn
+issues. If CUDA runs out of memory, reduce `batch_size` from 8 to 4 or 2 without
+changing the data split or model. `notebooks/StormEngine_V6_EndToEnd.ipynb`
+provides a path-editable Windows launcher and result viewer. It writes a local
+configuration that is ignored by Git, so machine-specific drive paths are not
+committed.
 
 ## Quick smoke test
 

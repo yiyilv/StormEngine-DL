@@ -8,6 +8,7 @@ __pycache__/
 .pytest_cache/
 .coverage
 outputs/
+artifacts/
 checkpoints/
 wandb/
 *.pt
@@ -18,4 +19,4 @@ wandb/
 *.zarr/
 data/raw/
 data/processed/
-
+configs/*.local.yaml
