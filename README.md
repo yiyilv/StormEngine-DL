@@ -70,6 +70,9 @@ Legacy `ARTA_VIRTUAL`, `ARPAM_VIRTUAL`, and `ARPA_PUGLIA_VIRTUAL` rows remain in
 the catalog for provenance but are disabled. They are never presented as DPC
 physical observations.
 
+The registry also recovers physical `dpcn-puglia` stations directly from the
+raw MeteoHub JSON because the earlier aggregated CSV omitted that network.
+
 ## Current status
 
 The repository now provides the complete tensor-level Encoder-Processor-Decoder

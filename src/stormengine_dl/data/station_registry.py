@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import csv
+import hashlib
+import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Iterable
@@ -61,10 +63,13 @@ def build_station_registry(
     output_path: str | Path,
     *,
     legacy_coastal_paths: Iterable[str | Path] = (),
+    meteohub_json_paths: Iterable[str | Path] = (),
+    meteohub_networks: Iterable[str] = (),
     domain: tuple[float, float, float, float] = (39.0, 46.5, 12.0, 20.0),
 ) -> list[StationRecord]:
     """Create a catalog with explicit physical, sea, and disabled legacy classes."""
     records: list[StationRecord] = []
+    physical_coordinates: set[tuple[float, float]] = set()
     dpc_path = Path(dpc_catalog_path)
     with dpc_path.open(newline="", encoding="utf-8-sig") as handle:
         for row in csv.DictReader(handle):
@@ -90,6 +95,55 @@ def build_station_registry(
                     notes="Physical station in the current federated DPC/regional catalog.",
                 )
             )
+            physical_coordinates.add((round(lat, 6), round(lon, 6)))
+
+    selected_networks = set(meteohub_networks)
+    meteohub_stations: dict[tuple[str, str, float, float], str] = {}
+    for json_value in meteohub_json_paths:
+        json_path = Path(json_value)
+        with json_path.open(encoding="utf-8") as handle:
+            for line in handle:
+                try:
+                    observation = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                network = str(observation.get("network", ""))
+                if selected_networks and network not in selected_networks:
+                    continue
+                for block in observation.get("data", []):
+                    variables = block.get("vars", {})
+                    name = variables.get("B01019", {}).get("v")
+                    lat = variables.get("B05001", {}).get("v")
+                    lon = variables.get("B06001", {}).get("v")
+                    if name and lat is not None and lon is not None:
+                        key = (network, str(name), float(lat), float(lon))
+                        meteohub_stations.setdefault(key, json_path.name)
+
+    for (network, name, lat, lon), source_name in sorted(meteohub_stations.items()):
+        coordinate_key = (round(lat, 6), round(lon, 6))
+        if not _inside_domain(lat, lon, domain) or coordinate_key in physical_coordinates:
+            continue
+        digest = hashlib.sha1(f"{network}|{name}|{lat:.6f}|{lon:.6f}".encode()).hexdigest()[:12]
+        records.append(
+            StationRecord(
+                station_id=f"LAND::MH::{network}::{digest}",
+                station_name=name,
+                latitude=lat,
+                longitude=lon,
+                station_type="physical_land",
+                network=f"MeteoHub_{network}",
+                coordinate_source=source_name,
+                pretraining_value_source="ERA5_sampled_at_coordinate",
+                operational_value_source="DPC_regional_observation",
+                enabled=True,
+                profile_land_only=True,
+                profile_sea_only=False,
+                profile_dpc_plus_sea=True,
+                dist_to_coast_km="",
+                notes="Physical station recovered from raw MeteoHub/DPC JSON metadata.",
+            )
+        )
+        physical_coordinates.add(coordinate_key)
 
     virtual_path = Path(virtual_catalog_path)
     for row in _unique_station_rows(virtual_path):
@@ -151,7 +205,11 @@ def build_station_registry(
     output = Path(output_path)
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(StationRecord.__dataclass_fields__))
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=list(StationRecord.__dataclass_fields__),
+            lineterminator="\n",
+        )
         writer.writeheader()
         writer.writerows(asdict(record) for record in records)
     return records
@@ -178,4 +236,3 @@ def load_station_coordinates(
         dtype=np.float64,
     )
     return coordinates, selected
-

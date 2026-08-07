@@ -14,6 +14,8 @@ def main() -> int:
     parser.add_argument("--dpc", required=True)
     parser.add_argument("--virtual", required=True)
     parser.add_argument("--legacy-coastal", nargs="*", default=[])
+    parser.add_argument("--meteohub-json", nargs="*", default=[])
+    parser.add_argument("--meteohub-network", action="append", default=[])
     parser.add_argument("--output", default="data/stations_registry.csv")
     args = parser.parse_args()
     records = build_station_registry(
@@ -21,6 +23,8 @@ def main() -> int:
         args.virtual,
         args.output,
         legacy_coastal_paths=args.legacy_coastal,
+        meteohub_json_paths=args.meteohub_json,
+        meteohub_networks=args.meteohub_network,
     )
     counts = Counter(record.station_type for record in records)
     print(f"Station records: {len(records)}")
