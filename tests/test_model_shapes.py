@@ -20,12 +20,16 @@ class ModelShapeTest(unittest.TestCase):
             width=width,
             processor_layers=2,
             static_channels=2,
+            point_static_channels=2,
         )
         values = torch.randn(batch, history, stations, input_channels)
         coords = torch.rand(batch, stations, 2)
         mask = torch.ones(batch, history, stations)
         mask[:, :, -2:] = 0
         static = torch.rand(batch, 2, height, width)
+        point_static = torch.zeros(batch, stations, 2)
+        point_static[:, : stations // 2, 0] = 1
+        point_static[:, stations // 2 :, 1] = 1
 
         prediction = model(
             values,
@@ -33,6 +37,7 @@ class ModelShapeTest(unittest.TestCase):
             forecast_steps=forecast_steps,
             point_mask=mask,
             static_fields=static,
+            point_static=point_static,
         )
         self.assertEqual(
             tuple(prediction.shape),
@@ -44,4 +49,3 @@ class ModelShapeTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

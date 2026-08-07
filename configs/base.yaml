@@ -10,7 +10,8 @@ domain:
 
 data:
   era5_root: ../DownloadDate
-  station_registry: data/stations_verified.csv
+  station_registry: data/stations_registry.csv
+  station_profile: dpc_plus_sea
   input_variables: [msl, u10, v10, i10fg, t2m]
   target_variables: [msl, u10, v10, t2m, tp]
   history_hours: 12
@@ -26,6 +27,7 @@ model:
   kernel_size: 3
   gaussian_sigma: 0.10
   static_channels: 2
+  point_static_channels: 2
 
 training:
   batch_size: 8
@@ -35,4 +37,3 @@ training:
   station_dropout: 0.20
   gradient_clip: 1.0
   mixed_precision: true
-

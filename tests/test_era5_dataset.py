@@ -83,6 +83,19 @@ class Era5SequenceDatasetTest(unittest.TestCase):
         self.assertAlmostEqual(float(convert_era5_units("tp", values)[0]), 100000.0)
         self.assertAlmostEqual(float(convert_era5_units("ssrd", values)[0]), 100.0 / 3600.0)
 
+    def test_bilinear_sampling_at_subgrid_coordinate(self) -> None:
+        dataset = object.__new__(Era5SequenceDataset)
+        dataset._lat_low = np.array([0])
+        dataset._lat_high = np.array([1])
+        dataset._lat_weight = np.array([0.5], dtype=np.float32)
+        dataset._lon_low = np.array([0])
+        dataset._lon_high = np.array([1])
+        dataset._lon_weight = np.array([0.5], dtype=np.float32)
+        grids = np.array([[[[0.0, 2.0], [4.0, 6.0]]]], dtype=np.float32)
+        sampled = dataset._sample_stations(grids)
+        self.assertEqual(sampled.shape, (1, 1, 1))
+        self.assertAlmostEqual(float(sampled[0, 0, 0]), 3.0)
+
 
 if __name__ == "__main__":
     unittest.main()

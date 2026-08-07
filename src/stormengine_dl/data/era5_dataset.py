@@ -13,6 +13,8 @@ import torch
 import xarray as xr
 from torch.utils.data import Dataset
 
+from .station_registry import load_station_coordinates
+
 
 INSTANT_VARIABLES = frozenset(("msl", "u10", "v10", "i10fg", "t2m"))
 ACCUM_VARIABLES = frozenset(("ssrd", "tp"))
@@ -60,6 +62,32 @@ class Era5SequenceDataset(Dataset[dict[str, torch.Tensor]]):
     with row zero through row ``H - 1`` in the target tensors.
     """
 
+    @classmethod
+    def from_station_registry(
+        cls,
+        manifest_path: str | Path,
+        data_root: str | Path,
+        station_registry_path: str | Path,
+        *,
+        station_profile: str = "dpc_plus_sea",
+        **kwargs: object,
+    ) -> "Era5SequenceDataset":
+        coordinates, metadata = load_station_coordinates(station_registry_path, station_profile)
+        station_features = np.asarray(
+            [
+                [1.0, 0.0] if row["station_type"] == "physical_land" else [0.0, 1.0]
+                for row in metadata
+            ],
+            dtype=np.float32,
+        )
+        return cls(
+            manifest_path,
+            data_root,
+            coordinates,
+            station_features=station_features,
+            **kwargs,
+        )
+
     def __init__(
         self,
         manifest_path: str | Path,
@@ -73,6 +101,7 @@ class Era5SequenceDataset(Dataset[dict[str, torch.Tensor]]):
         years: Iterable[int] | None = None,
         station_dropout: float = 0.0,
         cache_months: int = 2,
+        station_features: Sequence[Sequence[float]] | np.ndarray | None = None,
     ) -> None:
         if history_hours < 1 or forecast_hours < 1:
             raise ValueError("history_hours and forecast_hours must be positive")
@@ -134,8 +163,19 @@ class Era5SequenceDataset(Dataset[dict[str, torch.Tensor]]):
         ):
             raise ValueError("station coordinates fall outside the ERA5 domain")
         self.station_coordinates = stations
-        self._station_rows = np.abs(self.latitudes[:, None] - stations[:, 0]).argmin(axis=0)
-        self._station_columns = np.abs(self.longitudes[:, None] - stations[:, 1]).argmin(axis=0)
+        self.station_features = None
+        if station_features is not None:
+            features = np.asarray(station_features, dtype=np.float32)
+            if features.ndim != 2 or features.shape[0] != stations.shape[0]:
+                raise ValueError("station_features must have shape [N, F]")
+            self.station_features = features
+
+        self._lat_low, self._lat_high, self._lat_weight = self._linear_indices(
+            self.latitudes, stations[:, 0]
+        )
+        self._lon_low, self._lon_high, self._lon_weight = self._linear_indices(
+            self.longitudes, stations[:, 1]
+        )
         lat_norm = (stations[:, 0] - self.latitudes[0]) / (self.latitudes[-1] - self.latitudes[0])
         lon_norm = (stations[:, 1] - self.longitudes[0]) / (
             self.longitudes[-1] - self.longitudes[0]
@@ -143,6 +183,33 @@ class Era5SequenceDataset(Dataset[dict[str, torch.Tensor]]):
         self.normalized_station_coordinates = np.stack((lat_norm, lon_norm), axis=-1).astype(
             np.float32
         )
+
+    @staticmethod
+    def _linear_indices(grid: np.ndarray, points: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        high = np.searchsorted(grid, points, side="right").clip(1, grid.size - 1)
+        low = high - 1
+        weight = (points - grid[low]) / (grid[high] - grid[low])
+        at_lower_edge = points <= grid[0]
+        at_upper_edge = points >= grid[-1]
+        low[at_lower_edge], high[at_lower_edge], weight[at_lower_edge] = 0, 0, 0.0
+        low[at_upper_edge], high[at_upper_edge], weight[at_upper_edge] = (
+            grid.size - 1,
+            grid.size - 1,
+            0.0,
+        )
+        return low, high, weight.astype(np.float32)
+
+    def _sample_stations(self, grids: np.ndarray) -> np.ndarray:
+        """Bilinearly sample ``[T, C, H, W]`` fields at every station."""
+        lat_weight = self._lat_weight[None, None, :]
+        lon_weight = self._lon_weight[None, None, :]
+        low_lat_low_lon = grids[:, :, self._lat_low, self._lon_low]
+        low_lat_high_lon = grids[:, :, self._lat_low, self._lon_high]
+        high_lat_low_lon = grids[:, :, self._lat_high, self._lon_low]
+        high_lat_high_lon = grids[:, :, self._lat_high, self._lon_high]
+        low_lat = low_lat_low_lon * (1.0 - lon_weight) + low_lat_high_lon * lon_weight
+        high_lat = high_lat_low_lon * (1.0 - lon_weight) + high_lat_high_lon * lon_weight
+        return (low_lat * (1.0 - lat_weight) + high_lat * lat_weight).transpose(0, 2, 1)
 
     def _read_months(self, manifest_path: Path, years: set[int] | None) -> list[_Month]:
         months: list[_Month] = []
@@ -204,9 +271,7 @@ class Era5SequenceDataset(Dataset[dict[str, torch.Tensor]]):
             start + self.history_hours + self.forecast_hours,
         )
         history_grids = self._gather(history_indices, self.input_variables)
-        point_values = history_grids[
-            :, :, self._station_rows, self._station_columns
-        ].transpose(0, 2, 1)
+        point_values = self._sample_stations(history_grids)
         target = self._gather(target_indices, self.target_variables)
 
         mask = torch.ones((self.history_hours, self.station_coordinates.shape[0]))
@@ -215,11 +280,13 @@ class Era5SequenceDataset(Dataset[dict[str, torch.Tensor]]):
             mask *= station_mask[None]
             point_values = point_values * mask.numpy()[:, :, None]
 
-        return {
+        sample = {
             "point_values": torch.from_numpy(np.ascontiguousarray(point_values)).float(),
             "point_coords": torch.from_numpy(self.normalized_station_coordinates.copy()),
             "point_mask": mask,
             "target": torch.from_numpy(np.ascontiguousarray(target)).float(),
             "start_index": torch.tensor(start, dtype=torch.long),
         }
-
+        if self.station_features is not None:
+            sample["point_static"] = torch.from_numpy(self.station_features.copy())
+        return sample

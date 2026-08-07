@@ -23,6 +23,7 @@ class StormEngineForecastModel(nn.Module):
         processor_layers: int = 2,
         kernel_size: int = 3,
         static_channels: int = 0,
+        point_static_channels: int = 0,
     ) -> None:
         super().__init__()
         self.encoder = SetConvEncoder(
@@ -32,6 +33,7 @@ class StormEngineForecastModel(nn.Module):
             height=height,
             width=width,
             sigma=sigma,
+            point_static_channels=point_static_channels,
         )
         self.processor = ConvGRUProcessor(
             channels=latent_channels,
@@ -51,8 +53,8 @@ class StormEngineForecastModel(nn.Module):
         forecast_steps: int,
         point_mask: torch.Tensor | None = None,
         static_fields: torch.Tensor | None = None,
+        point_static: torch.Tensor | None = None,
     ) -> torch.Tensor:
-        encoded = self.encoder(point_values, point_coords, point_mask)
+        encoded = self.encoder(point_values, point_coords, point_mask, point_static)
         future = self.processor(encoded, forecast_steps)
         return self.decoder(future, static_fields)
-

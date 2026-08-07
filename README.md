@@ -56,6 +56,20 @@ ERA5 grid as the target. It converts pressure to hPa, temperature to degrees C,
 precipitation to mm, and hourly solar-radiation energy to W/m2. Monthly arrays
 are loaded lazily with a bounded cache.
 
+## Station profiles
+
+`data/stations_registry.csv` keeps physical land stations, virtual Adriatic sea
+coordinates, and disabled legacy coastal anchors in one traceable catalog. Three
+profiles support controlled experiments:
+
+- `land_only`: all available DPC/regional physical stations in the domain
+- `sea_only`: virtual Adriatic coordinates, intended for Open-Meteo variables
+- `dpc_plus_sea`: the combined operational design and default configuration
+
+Legacy `ARTA_VIRTUAL`, `ARPAM_VIRTUAL`, and `ARPA_PUGLIA_VIRTUAL` rows remain in
+the catalog for provenance but are disabled. They are never presented as DPC
+physical observations.
+
 ## Current status
 
 The repository now provides the complete tensor-level Encoder-Processor-Decoder

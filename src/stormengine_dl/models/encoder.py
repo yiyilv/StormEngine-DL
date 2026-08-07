@@ -26,14 +26,16 @@ class SetConvEncoder(nn.Module):
         height: int,
         width: int,
         sigma: float = 0.10,
+        point_static_channels: int = 0,
     ) -> None:
         super().__init__()
         self.height = height
         self.width = width
         self.sigma = sigma
+        self.point_static_channels = point_static_channels
 
         self.point_mlp = nn.Sequential(
-            nn.Linear(value_channels + 2, point_hidden),
+            nn.Linear(value_channels + 2 + point_static_channels, point_hidden),
             nn.ReLU(),
             nn.Linear(point_hidden, latent_channels),
             nn.ReLU(),
@@ -49,13 +51,23 @@ class SetConvEncoder(nn.Module):
         point_values: torch.Tensor,
         point_coords: torch.Tensor,
         point_mask: torch.Tensor | None = None,
+        point_static: torch.Tensor | None = None,
     ) -> torch.Tensor:
         batch, steps, stations, _ = point_values.shape
         if point_coords.shape != (batch, stations, 2):
             raise ValueError("point_coords must have shape [B, N, 2]")
 
         coords = point_coords[:, None].expand(-1, steps, -1, -1)
-        features = self.point_mlp(torch.cat((coords, point_values), dim=-1))
+        feature_parts = [coords, point_values]
+        if self.point_static_channels and point_static is None:
+            raise ValueError("point_static is required when point_static_channels is positive")
+        if point_static is not None:
+            if point_static.shape != (batch, stations, self.point_static_channels):
+                raise ValueError(
+                    f"point_static must have shape [B, N, {self.point_static_channels}]"
+                )
+            feature_parts.append(point_static[:, None].expand(-1, steps, -1, -1))
+        features = self.point_mlp(torch.cat(feature_parts, dim=-1))
 
         delta = coords[:, :, :, None, None, :] - self.grid_coords[None, None, None]
         distance_sq = delta.square().sum(dim=-1)
@@ -67,4 +79,3 @@ class SetConvEncoder(nn.Module):
         numerator = torch.einsum("btnhw,btnc->btchw", weights, features)
         denominator = weights.sum(dim=2, keepdim=False).clamp_min(1e-8)
         return numerator / denominator[:, :, None]
-
