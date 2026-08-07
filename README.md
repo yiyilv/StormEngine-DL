@@ -56,6 +56,19 @@ ERA5 grid as the target. It converts pressure to hPa, temperature to degrees C,
 precipitation to mm, and hourly solar-radiation energy to W/m2. Monthly arrays
 are loaded lazily with a bounded cache.
 
+The currently downloaded pilot data cover 2010, 2011, and January-February
+2012. `configs/pilot.yaml` therefore uses 2010 for training, 2011 for
+validation, and the available 2012 months for testing. Check the complete
+390-coordinate input path before training with:
+
+```bash
+PYTHONPATH=src ../StormEngine/stormengine-env/bin/python \
+  scripts/check_data_pipeline.py --config configs/pilot.yaml
+```
+
+`configs/base.yaml` records the intended final year split and requires the
+remaining ERA5 months to be downloaded before it can be used.
+
 ## Station profiles
 
 `data/stations_registry.csv` keeps physical land stations, virtual Adriatic sea
