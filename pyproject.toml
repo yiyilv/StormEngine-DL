@@ -18,6 +18,7 @@ dependencies = [
 
 [project.optional-dependencies]
 static = ["cartopy>=0.24"]
+notebook = ["jupyterlab>=4.0", "matplotlib>=3.8"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
