@@ -49,11 +49,19 @@ The manifest retains incomplete months and records missing variables, unexpected
 hour counts, time discontinuities, mismatched grids, read errors, and NaN values.
 Training code must consume only rows where `valid` is true.
 
+`Era5SequenceDataset` then builds continuous history/forecast windows across
+month boundaries. For the first reproducible experiment it samples ERA5 fields
+at verified DPC station coordinates to form sparse inputs and uses the complete
+ERA5 grid as the target. It converts pressure to hPa, temperature to degrees C,
+precipitation to mm, and hourly solar-radiation energy to W/m2. Monthly arrays
+are loaded lazily with a bounded cache.
+
 ## Current status
 
-The first milestone provides a runnable tensor-level skeleton for the complete
-Encoder-Processor-Decoder path. Data loading, station-registry validation,
-training, baselines, evaluation, and inference will be added incrementally.
+The repository now provides the complete tensor-level Encoder-Processor-Decoder
+skeleton, a validated ERA5 manifest, and cross-month sequence loading. The next
+milestones are the verified station registry, train-only normalization,
+training/baseline evaluation, and inference.
 
 ## Quick smoke test
 
