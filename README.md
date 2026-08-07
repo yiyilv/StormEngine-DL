@@ -34,6 +34,21 @@ tests/                   smoke and shape tests
 Large ERA5 files are not committed. The default config points to the sibling
 `../DownloadDate` directory and can be overridden for another machine.
 
+## ERA5 data validation
+
+Build a manifest before constructing training sequences:
+
+```bash
+PYTHONPATH=src ../StormEngine/stormengine-env/bin/python scripts/build_era5_manifest.py \
+  --root ../DownloadDate \
+  --output data/manifests/era5_manifest.csv \
+  --deep
+```
+
+The manifest retains incomplete months and records missing variables, unexpected
+hour counts, time discontinuities, mismatched grids, read errors, and NaN values.
+Training code must consume only rows where `valid` is true.
+
 ## Current status
 
 The first milestone provides a runnable tensor-level skeleton for the complete
@@ -47,4 +62,3 @@ Using the existing StormEngine virtual environment:
 ```bash
 PYTHONPATH=src ../StormEngine/stormengine-env/bin/python -m unittest discover -s tests -v
 ```
-
