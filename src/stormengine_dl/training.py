@@ -82,3 +82,44 @@ class RegionMetricAccumulator:
                 for index, name in enumerate(self.variable_names)
             }
         return output
+
+
+@dataclass
+class ForecastMetricAccumulator:
+    """Aggregate and lead-hour denormalized metrics for forecast tensors."""
+
+    variable_names: tuple[str, ...]
+    forecast_hours: int
+
+    def __post_init__(self) -> None:
+        if self.forecast_hours < 1:
+            raise ValueError("forecast_hours must be positive")
+        self._aggregate = RegionMetricAccumulator(self.variable_names)
+        self._by_lead = [
+            RegionMetricAccumulator(self.variable_names) for _ in range(self.forecast_hours)
+        ]
+
+    def update(
+        self,
+        prediction: torch.Tensor,
+        target: torch.Tensor,
+        land_sea_mask: torch.Tensor,
+    ) -> None:
+        if prediction.shape[1] != self.forecast_hours:
+            raise ValueError("prediction lead dimension does not match forecast_hours")
+        self._aggregate.update(prediction, target, land_sea_mask)
+        for lead, accumulator in enumerate(self._by_lead):
+            accumulator.update(
+                prediction[:, lead : lead + 1],
+                target[:, lead : lead + 1],
+                land_sea_mask,
+            )
+
+    def compute(self) -> dict[str, object]:
+        return {
+            "aggregate": self._aggregate.compute(),
+            "by_lead_hour": {
+                str(lead + 1): accumulator.compute()
+                for lead, accumulator in enumerate(self._by_lead)
+            },
+        }

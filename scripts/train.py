@@ -255,6 +255,11 @@ def main() -> int:
     parser.add_argument("--max-eval-batches", type=int)
     parser.add_argument("--epochs", type=int, help="Override configured epoch count")
     parser.add_argument("--output-dir", help="Override the configured artifact directory")
+    parser.add_argument(
+        "--evaluate-test",
+        action="store_true",
+        help="Explicitly evaluate the held-out test set after training",
+    )
     args = parser.parse_args()
 
     repo_root = Path(__file__).resolve().parents[1]
@@ -410,6 +415,24 @@ def main() -> int:
             break
 
     best = torch.load(output_dir / "best.pt", map_location=device, weights_only=False)
+    summary = {
+        "best_epoch": int(best["epoch"]) + 1,
+        "best_validation_loss": float(best["best_val_loss"]),
+        "test_evaluated": bool(args.evaluate_test),
+    }
+    (output_dir / "training_summary.json").write_text(
+        json.dumps(summary, indent=2) + "\n", encoding="utf-8"
+    )
+    if not args.evaluate_test:
+        print(json.dumps(summary, indent=2))
+        print(
+            "Held-out test was not evaluated. Use scripts/evaluate.py only after the "
+            "experiment configuration is frozen.",
+            flush=True,
+        )
+        print(f"Artifacts: {output_dir}")
+        return 0
+
     model.load_state_dict(best["model_state_dict"])
     normalization = NormalizationStats.load(_resolve(repo_root, data["normalization_stats"]))
     metrics = _evaluate(
@@ -423,8 +446,7 @@ def main() -> int:
         progress_every=progress_every,
     )
     result = {
-        "best_epoch": int(best["epoch"]) + 1,
-        "best_validation_loss": float(best["best_val_loss"]),
+        **summary,
         "test_metrics": metrics,
     }
     (output_dir / "metrics.json").write_text(json.dumps(result, indent=2), encoding="utf-8")

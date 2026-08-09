@@ -2,7 +2,12 @@ import unittest
 
 import torch
 
-from stormengine_dl.training import RegionMetricAccumulator, sea_weight_map, weighted_mse
+from stormengine_dl.training import (
+    ForecastMetricAccumulator,
+    RegionMetricAccumulator,
+    sea_weight_map,
+    weighted_mse,
+)
 
 
 class TrainingHelpersTest(unittest.TestCase):
@@ -26,6 +31,23 @@ class TrainingHelpersTest(unittest.TestCase):
         result = metrics.compute()
         self.assertAlmostEqual(result["land"]["a"]["mae"], 1.0)
         self.assertAlmostEqual(result["sea"]["b"]["rmse"], 4.0)
+
+    def test_forecast_metrics_preserve_each_lead_hour(self) -> None:
+        prediction = torch.tensor(
+            [
+                [
+                    [[[1.0, 2.0]]],
+                    [[[3.0, 4.0]]],
+                ]
+            ]
+        )
+        target = torch.zeros_like(prediction)
+        metrics = ForecastMetricAccumulator(("x",), forecast_hours=2)
+        metrics.update(prediction, target, torch.tensor([[1.0, 0.0]]))
+        result = metrics.compute()
+        self.assertAlmostEqual(result["by_lead_hour"]["1"]["land"]["x"]["mae"], 1.0)
+        self.assertAlmostEqual(result["by_lead_hour"]["2"]["sea"]["x"]["rmse"], 4.0)
+        self.assertAlmostEqual(result["aggregate"]["full"]["x"]["mae"], 2.5)
 
 
 if __name__ == "__main__":

@@ -182,7 +182,9 @@ The new V6 keeps the original mean-normalized sea-weighted MSE definition
 (`sea_weight: 2.0`) and adds chronological train/validation/test years,
 mixed-precision CUDA training, gradient clipping, ReduceLROnPlateau, early
 stopping, resumable `last.pt`, best-model `best.pt`, and denormalized MAE/RMSE
-for the full grid, land, and sea. Run it from the repository root with:
+for the full grid, land, and sea. Training selects checkpoints only with the
+validation years; it does not inspect the held-out test set by default. Run it
+from the repository root with:
 
 ```bash
 python scripts/train.py --config configs/era5_2010_2017.yaml --device cuda
@@ -195,6 +197,22 @@ python scripts/train.py --config configs/era5_2010_2017.yaml --device cuda \
   --resume artifacts/v6_2010_2017/last.pt
 ```
 
+Inspect every forecast lead on validation data while developing the model:
+
+```bash
+python scripts/evaluate.py \
+  --config configs/era5_2010_2017.yaml \
+  --checkpoint artifacts/v6_2010_2017/best.pt \
+  --split validation --device cuda
+```
+
+Only after the architecture and hyperparameters are frozen, replace
+`--split validation` with `--split test`. The evaluator writes aggregate and
+lead-hour MAE/RMSE for the full grid, land, and sea, plus representative
+denormalized forecast/target arrays. `notebooks/StormEngine_V6_Evaluation.ipynb`
+plots these metrics and example error maps. `train.py --evaluate-test` remains
+available only for isolated pipeline smoke checks.
+
 On Windows, keep `num_workers: 0`; this avoids Jupyter multiprocessing spawn
 issues. The RTX 4060 starting batch size is 16. If CUDA runs out of memory,
 reduce `batch_size` to 8 or 4 without changing the data split or model. Before
@@ -206,8 +224,8 @@ The training command prints batch progress, elapsed time, and ETA throughout
 each epoch.
 
 `notebooks/StormEngine_V6_EndToEnd.ipynb` performs the cache build, preflight,
-smoke run, medium pilot, full resumable training, and result inspection in that
-order. Its subprocess output is streamed live in Jupyter. It writes local
+smoke run, medium pilot, full resumable training, and validation inspection in
+that order. Its subprocess output is streamed live in Jupyter. It writes local
 configuration files ignored by Git, so machine-specific drive paths are not
 committed.
 
