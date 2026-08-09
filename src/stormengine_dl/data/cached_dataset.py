@@ -103,6 +103,25 @@ class CachedEra5SequenceDataset(Dataset[dict[str, torch.Tensor]]):
     def __len__(self) -> int:
         return int(self.window_starts.size)
 
+    def close(self) -> None:
+        """Release memory-map handles explicitly, which is required on Windows."""
+        for name in (
+            "point_values",
+            "target_grids",
+            "normalized_station_coordinates",
+            "station_features",
+        ):
+            values = getattr(self, name, None)
+            memory_map = getattr(values, "_mmap", None)
+            if memory_map is not None:
+                memory_map.close()
+
+    def __enter__(self) -> "CachedEra5SequenceDataset":
+        return self
+
+    def __exit__(self, *_: object) -> None:
+        self.close()
+
     def __getitem__(self, item: int) -> dict[str, torch.Tensor]:
         start = int(self.window_starts[item])
         global_start = int(self.global_indices[start])

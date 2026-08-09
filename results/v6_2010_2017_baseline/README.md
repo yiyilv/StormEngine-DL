@@ -47,10 +47,15 @@ The example is the middle saved 2017 test sample, showing 2 m temperature at +6 
 
 ![Representative t2m forecast](figures/representative_t2m_lead6.png)
 
+## Executed evaluation record
+
+`StormEngine_V6_Evaluation_executed.ipynb` preserves the cells and visual outputs from
+the frozen Windows evaluation. The reusable notebook under `notebooks/` is kept clean
+and leaves the held-out test locked by default.
+
 ## Files intentionally excluded
 
 - `best.pt` and `last.pt`
 - `cache/` and training caches
 - ERA5 `*.nc` data
 - Bulk prediction `*.npz` examples
-- Executed Notebook outputs

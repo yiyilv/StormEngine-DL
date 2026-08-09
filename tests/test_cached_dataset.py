@@ -49,6 +49,7 @@ class CachedDatasetTest(unittest.TestCase):
             self.assertEqual(tuple(sample["target"].shape), (1, 1, 2, 2))
             self.assertEqual(tuple(sample["point_static"].shape), (2, 2))
             self.assertEqual(sample["start_index"].item(), 4)
+            dataset.close()
 
     def test_variable_order_mismatch_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

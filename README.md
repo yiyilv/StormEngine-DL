@@ -229,6 +229,27 @@ that order. Its subprocess output is streamed live in Jupyter. It writes local
 configuration files ignored by Git, so machine-specific drive paths are not
 committed.
 
+### Persistence baselines
+
+After freezing the V6 test result, evaluate two non-learned references on exactly
+the same windows and land/sea masks:
+
+```bash
+python scripts/evaluate_baselines.py \
+  --config configs/era5_2010_2017.yaml \
+  --split test \
+  --v6-metrics results/v6_2010_2017_baseline/metrics_by_lead.json \
+  --output-dir artifacts/v6_2010_2017/baselines_test
+```
+
+`dense_grid_persistence` repeats the last complete ERA5 grid and is deliberately
+a strong reference with more information than V6. `sparse_idw_persistence` uses
+only the last-hour values at the same enabled coordinates as V6, interpolates the
+four shared target variables with metric-aware inverse-distance weighting, and
+uses a zero-precipitation forecast because `tp` is not an input variable. Positive
+skill (`1 - V6_RMSE / baseline_RMSE`) means V6 improves on that reference. The
+same workflow is available in `notebooks/StormEngine_V6_Baselines.ipynb`.
+
 ## Quick smoke test
 
 Using the existing StormEngine virtual environment:
