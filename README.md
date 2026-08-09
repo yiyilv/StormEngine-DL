@@ -65,8 +65,18 @@ as the smaller 2010/2011/2012 development split. Check the complete
 
 ```bash
 PYTHONPATH=src ../StormEngine/stormengine-env/bin/python \
+  scripts/build_training_cache.py --config configs/era5_2010_2017.yaml
+
+PYTHONPATH=src ../StormEngine/stormengine-env/bin/python \
   scripts/check_data_pipeline.py --config configs/era5_2010_2017.yaml
 ```
+
+The first command is a one-time preprocessing step. It converts the 96 monthly
+NetCDF pairs into normalized hourly station inputs and dense target grids stored
+as NumPy memory-mapped arrays. The cache is about 2 GB, stays beside the ERA5
+archive under `DownloadDate/cache/stormengine_2010_2017`, and is not committed
+to Git. Training refuses to fall back to repeated per-window NetCDF work when
+this configured cache is missing, preventing an accidentally very slow run.
 
 `configs/base.yaml` records the intended final year split and requires the
 remaining ERA5 months to be downloaded before it can be used.
@@ -186,19 +196,20 @@ python scripts/train.py --config configs/era5_2010_2017.yaml --device cuda \
 ```
 
 On Windows, keep `num_workers: 0`; this avoids Jupyter multiprocessing spawn
-issues. If CUDA runs out of memory, reduce `batch_size` from 8 to 4 or 2 without
-changing the data split or model. Before a full run, use the notebook's isolated
-smoke command (two training batches and one evaluation batch); its results are
-not used as experiment metrics. `notebooks/StormEngine_V6_EndToEnd.ipynb`
-provides the smoke run, a path-editable Windows launcher, checkpoint resume,
-and a result viewer. It writes a local configuration that is ignored by Git,
-so machine-specific drive paths are not committed.
+issues. The RTX 4060 starting batch size is 16. If CUDA runs out of memory,
+reduce `batch_size` to 8 or 4 without changing the data split or model. Before
+a full run, use the notebook's isolated smoke command (two training batches and
+one evaluation batch), then its bounded 2010-2012 pilot (200 training batches
+per epoch for three epochs). These are pipeline and speed checks, not scientific
+results. Only after both complete should the full 2010-2017 cell be started.
+The training command prints batch progress, elapsed time, and ETA throughout
+each epoch.
 
-The 2010-2017 configuration keeps all 72 training months in the dataset's
-bounded array cache. This uses roughly 1.3 GB of host memory but prevents
-randomly shuffled batches from repeatedly reopening monthly NetCDF files.
-Keep `num_workers: 0` on Windows so that this cache is not duplicated across
-worker processes.
+`notebooks/StormEngine_V6_EndToEnd.ipynb` performs the cache build, preflight,
+smoke run, medium pilot, full resumable training, and result inspection in that
+order. Its subprocess output is streamed live in Jupyter. It writes local
+configuration files ignored by Git, so machine-specific drive paths are not
+committed.
 
 ## Quick smoke test
 

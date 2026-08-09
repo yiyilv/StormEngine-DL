@@ -16,7 +16,12 @@ import yaml
 from torch.utils.data import DataLoader
 
 from stormengine_dl import StormEngineForecastModel
-from stormengine_dl.data import Era5SequenceDataset, NormalizationStats, StaticFields
+from stormengine_dl.data import (
+    CachedEra5SequenceDataset,
+    Era5SequenceDataset,
+    NormalizationStats,
+    StaticFields,
+)
 from stormengine_dl.training import RegionMetricAccumulator, sea_weight_map, weighted_mse
 
 
@@ -33,7 +38,31 @@ def _set_seed(seed: int) -> None:
         torch.cuda.manual_seed_all(seed)
 
 
-def _make_dataset(repo_root: Path, data: dict[str, Any], years: list[int], dropout: float) -> Era5SequenceDataset:
+def _training_cache_dir(repo_root: Path, data: dict[str, Any]) -> Path | None:
+    if not data.get("training_cache"):
+        return None
+    value = Path(data["training_cache"]).expanduser()
+    return value.resolve() if value.is_absolute() else _resolve(repo_root, data["era5_root"]) / value
+
+
+def _make_dataset(
+    repo_root: Path,
+    data: dict[str, Any],
+    years: list[int],
+    dropout: float,
+) -> CachedEra5SequenceDataset | Era5SequenceDataset:
+    cache_dir = _training_cache_dir(repo_root, data)
+    if cache_dir is not None and (cache_dir / "metadata.json").is_file():
+        return CachedEra5SequenceDataset(
+            cache_dir,
+            years=years,
+            history_hours=int(data["history_hours"]),
+            forecast_hours=int(data["forecast_hours"]),
+            window_stride_hours=int(data.get("window_stride_hours", 1)),
+            station_dropout=dropout,
+            input_variables=data["input_variables"],
+            target_variables=data["target_variables"],
+        )
     return Era5SequenceDataset.from_station_registry(
         manifest_path=_resolve(repo_root, data["era5_manifest"]),
         data_root=_resolve(repo_root, data["era5_root"]),
@@ -102,10 +131,14 @@ def _run_loss_epoch(
     scaler: torch.amp.GradScaler | None = None,
     gradient_clip: float = 1.0,
     max_batches: int | None = None,
+    label: str = "epoch",
+    progress_every: int = 100,
 ) -> float:
     training = optimizer is not None
     model.train(training)
     total, batches = 0.0, 0
+    expected = min(len(loader), max_batches) if max_batches is not None else len(loader)
+    started = time.time()
     for index, raw_batch in enumerate(loader):
         if max_batches is not None and index >= max_batches:
             break
@@ -125,6 +158,15 @@ def _run_loss_epoch(
             scaler.update()
         total += float(loss.detach())
         batches += 1
+        if progress_every > 0 and (batches % progress_every == 0 or batches == expected):
+            elapsed = time.time() - started
+            eta = elapsed / batches * max(0, expected - batches)
+            print(
+                f"  {label}: {batches:,}/{expected:,} ({100 * batches / expected:5.1f}%) "
+                f"loss={total / batches:.6f} elapsed={elapsed / 60:.1f}m "
+                f"ETA={eta / 60:.1f}m",
+                flush=True,
+            )
     if batches == 0:
         raise RuntimeError("data loader produced no batches")
     return total / batches
@@ -146,10 +188,13 @@ def _evaluate(
     variables: list[str],
     normalization: NormalizationStats,
     max_batches: int | None = None,
+    progress_every: int = 100,
 ) -> dict[str, dict[str, dict[str, float]]]:
     model.eval()
     accumulator = RegionMetricAccumulator(tuple(variables))
     land_mask = static_fields[0, 0].detach().cpu()
+    expected = min(len(loader), max_batches) if max_batches is not None else len(loader)
+    started = time.time()
     with torch.no_grad():
         for index, raw_batch in enumerate(loader):
             if max_batches is not None and index >= max_batches:
@@ -161,6 +206,15 @@ def _evaluate(
                 _denormalize_channels(batch["target"], variables, normalization),
                 land_mask,
             )
+            completed = index + 1
+            if progress_every > 0 and (completed % progress_every == 0 or completed == expected):
+                elapsed = time.time() - started
+                eta = elapsed / completed * max(0, expected - completed)
+                print(
+                    f"  test: {completed:,}/{expected:,} ({100 * completed / expected:5.1f}%) "
+                    f"elapsed={elapsed / 60:.1f}m ETA={eta / 60:.1f}m",
+                    flush=True,
+                )
     return accumulator.compute()
 
 
@@ -219,6 +273,16 @@ def main() -> int:
     if device.type == "cuda":
         print(f"GPU: {torch.cuda.get_device_name(0)}")
 
+    cache_dir = _training_cache_dir(repo_root, data)
+    if cache_dir is not None and (cache_dir / "metadata.json").is_file():
+        print(f"Training cache: {cache_dir}", flush=True)
+    elif cache_dir is not None:
+        raise FileNotFoundError(
+            f"Training cache is missing at {cache_dir}. Run "
+            f"'{Path(__file__).name.replace('train.py', 'build_training_cache.py')} "
+            f"--config {config_path}' first. Refusing the much slower per-window NetCDF path."
+        )
+
     train_dataset = _make_dataset(
         repo_root, data, data["train_years"], float(training.get("station_dropout", 0.0))
     )
@@ -275,6 +339,7 @@ def main() -> int:
 
     epochs = int(args.epochs if args.epochs is not None else training["epochs"])
     patience = int(training.get("early_stopping_patience", 12))
+    progress_every = int(training.get("progress_every_batches", 100))
     print(
         f"Windows: train={len(train_dataset)} validation={len(validation_dataset)} "
         f"test={len(test_dataset)} | batch={batch_size} | AMP={amp_enabled}"
@@ -297,6 +362,8 @@ def main() -> int:
             scaler=scaler,
             gradient_clip=float(training.get("gradient_clip", 1.0)),
             max_batches=args.max_train_batches,
+            label=f"epoch {epoch + 1} train",
+            progress_every=progress_every,
         )
         validation_loss = _run_loss_epoch(
             model,
@@ -306,6 +373,8 @@ def main() -> int:
             device,
             scaler=scaler,
             max_batches=args.max_eval_batches,
+            label=f"epoch {epoch + 1} validation",
+            progress_every=progress_every,
         )
         scheduler.step(validation_loss)
         record = {
@@ -351,6 +420,7 @@ def main() -> int:
         list(data["target_variables"]),
         normalization,
         max_batches=args.max_eval_batches,
+        progress_every=progress_every,
     )
     result = {
         "best_epoch": int(best["epoch"]) + 1,

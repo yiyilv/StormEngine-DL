@@ -20,3 +20,4 @@ wandb/
 data/raw/
 data/processed/
 configs/*.local.yaml
+cache/

@@ -1,5 +1,6 @@
 """Data discovery, validation, and training datasets."""
 
+from .cached_dataset import CachedEra5SequenceDataset
 from .era5_dataset import Era5SequenceDataset, convert_era5_units
 from .manifest import Era5MonthFiles, build_manifest, scan_month_files, validate_month
 from .normalization import NormalizationStats, VariableStat, fit_era5_normalization
@@ -8,6 +9,7 @@ from .station_registry import StationRecord, build_station_registry, load_statio
 
 __all__ = [
     "Era5MonthFiles",
+    "CachedEra5SequenceDataset",
     "Era5SequenceDataset",
     "StationRecord",
     "StaticFields",

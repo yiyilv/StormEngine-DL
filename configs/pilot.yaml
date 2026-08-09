@@ -21,6 +21,7 @@ data:
   forecast_hours: 6
   window_stride_hours: 1
   cache_months: 12
+  training_cache: cache/stormengine_2010_2017
   train_years: [2010]
   validation_years: [2011]
   test_years: [2012]
@@ -35,7 +36,7 @@ model:
   point_static_channels: 2
 
 training:
-  batch_size: 8
+  batch_size: 16
   epochs: 80
   learning_rate: 0.0001
   weight_decay: 0.0001
@@ -48,3 +49,4 @@ training:
   lr_scheduler_patience: 5
   lr_scheduler_factor: 0.5
   output_dir: artifacts/v6_pilot
+  progress_every_batches: 50

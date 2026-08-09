@@ -10,12 +10,19 @@ import torch
 import yaml
 
 from stormengine_dl import StormEngineForecastModel
-from stormengine_dl.data import Era5SequenceDataset, StaticFields
+from stormengine_dl.data import CachedEra5SequenceDataset, Era5SequenceDataset, StaticFields
 
 
 def _resolve(repo_root: Path, value: str) -> Path:
     path = Path(value).expanduser()
     return path.resolve() if path.is_absolute() else (repo_root / path).resolve()
+
+
+def _cache_dir(repo_root: Path, data: dict[str, object]) -> Path | None:
+    if not data.get("training_cache"):
+        return None
+    value = Path(str(data["training_cache"])).expanduser()
+    return value.resolve() if value.is_absolute() else _resolve(repo_root, str(data["era5_root"])) / value
 
 
 def main() -> int:
@@ -42,16 +49,30 @@ def main() -> int:
         normalization_path=_resolve(repo_root, data["normalization_stats"]),
     )
 
-    datasets: dict[str, Era5SequenceDataset] = {}
+    cache_dir = _cache_dir(repo_root, data)
+    if cache_dir is not None and not (cache_dir / "metadata.json").is_file():
+        raise FileNotFoundError(
+            f"Training cache is missing at {cache_dir}. Run scripts/build_training_cache.py "
+            f"--config {config_path} first."
+        )
+    datasets: dict[str, CachedEra5SequenceDataset | Era5SequenceDataset] = {}
     for split, field in (
         ("train", "train_years"),
         ("validation", "validation_years"),
         ("test", "test_years"),
     ):
-        dataset = Era5SequenceDataset.from_station_registry(
-            **common,
-            years=data[field],
-        )
+        if cache_dir is not None and (cache_dir / "metadata.json").is_file():
+            dataset = CachedEra5SequenceDataset(
+                cache_dir,
+                years=data[field],
+                history_hours=int(data["history_hours"]),
+                forecast_hours=int(data["forecast_hours"]),
+                window_stride_hours=int(data.get("window_stride_hours", 1)),
+                input_variables=data["input_variables"],
+                target_variables=data["target_variables"],
+            )
+        else:
+            dataset = Era5SequenceDataset.from_station_registry(**common, years=data[field])
         datasets[split] = dataset
         print(
             f"{split:10s}: years={data[field]} months={len(dataset.months):2d} "
@@ -59,6 +80,7 @@ def main() -> int:
         )
 
     sample = datasets["train"][0]
+    print(f"  data source:   {'memory-mapped cache' if isinstance(datasets['train'], CachedEra5SequenceDataset) else 'monthly NetCDF'}")
     station_types = sample["point_static"].sum(dim=0).to(torch.int64).tolist()
     print("\nFirst training sample")
     print(f"  point_values: {tuple(sample['point_values'].shape)}")
