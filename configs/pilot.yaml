@@ -19,6 +19,8 @@ data:
   target_variables: [msl, u10, v10, t2m, tp]
   history_hours: 12
   forecast_hours: 6
+  window_stride_hours: 1
+  cache_months: 12
   train_years: [2010]
   validation_years: [2011]
   test_years: [2012]

@@ -76,6 +76,18 @@ class Era5SequenceDatasetTest(unittest.TestCase):
             self.assertAlmostEqual(float(sample["target"][0, 0, 0, 0]), 105.0)
             self.assertAlmostEqual(float(sample["target"][0, 1, 0, 0]), 105000.0)
 
+            strided = Era5SequenceDataset(
+                manifest,
+                root,
+                station_coordinates=[[0.0, 10.0]],
+                input_variables=("u10",),
+                target_variables=("u10",),
+                history_hours=2,
+                forecast_hours=2,
+                window_stride_hours=2,
+            )
+            self.assertEqual(strided.window_starts.tolist(), [0, 2])
+
     def test_unit_conversions(self) -> None:
         values = np.array([100.0], dtype=np.float32)
         self.assertAlmostEqual(float(convert_era5_units("msl", values)[0]), 1.0)

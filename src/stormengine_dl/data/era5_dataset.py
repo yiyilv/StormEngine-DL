@@ -98,6 +98,7 @@ class Era5SequenceDataset(Dataset[dict[str, torch.Tensor]]):
         target_variables: Sequence[str] = ("msl", "u10", "v10", "t2m", "tp"),
         history_hours: int = 12,
         forecast_hours: int = 6,
+        window_stride_hours: int = 1,
         years: Iterable[int] | None = None,
         station_dropout: float = 0.0,
         cache_months: int = 2,
@@ -106,6 +107,8 @@ class Era5SequenceDataset(Dataset[dict[str, torch.Tensor]]):
     ) -> None:
         if history_hours < 1 or forecast_hours < 1:
             raise ValueError("history_hours and forecast_hours must be positive")
+        if window_stride_hours < 1:
+            raise ValueError("window_stride_hours must be positive")
         if not 0.0 <= station_dropout < 1.0:
             raise ValueError("station_dropout must be in [0, 1)")
         if cache_months < 1:
@@ -116,6 +119,7 @@ class Era5SequenceDataset(Dataset[dict[str, torch.Tensor]]):
         self.target_variables = tuple(target_variables)
         self.history_hours = history_hours
         self.forecast_hours = forecast_hours
+        self.window_stride_hours = window_stride_hours
         self.station_dropout = station_dropout
         self.cache_months = cache_months
         self._cache: OrderedDict[int, dict[str, np.ndarray]] = OrderedDict()
@@ -140,7 +144,7 @@ class Era5SequenceDataset(Dataset[dict[str, torch.Tensor]]):
         self.window_starts = np.asarray(
             [
                 start
-                for start in range(max(0, self.times.size - window + 1))
+            for start in range(0, max(0, self.times.size - window + 1), window_stride_hours)
                 if self.times[start + window - 1] - self.times[start]
                 == np.timedelta64(window - 1, "h")
             ],

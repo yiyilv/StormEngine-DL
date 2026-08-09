@@ -43,6 +43,8 @@ def _make_dataset(repo_root: Path, data: dict[str, Any], years: list[int], dropo
         target_variables=data["target_variables"],
         history_hours=int(data["history_hours"]),
         forecast_hours=int(data["forecast_hours"]),
+        window_stride_hours=int(data.get("window_stride_hours", 1)),
+        cache_months=int(data.get("cache_months", 2)),
         years=years,
         station_dropout=dropout,
         normalization_path=_resolve(repo_root, data["normalization_stats"]),

@@ -56,14 +56,16 @@ ERA5 grid as the target. It converts pressure to hPa, temperature to degrees C,
 precipitation to mm, and hourly solar-radiation energy to W/m2. Monthly arrays
 are loaded lazily with a bounded cache.
 
-The currently downloaded pilot data cover 2010, 2011, and January-February
-2012. `configs/pilot.yaml` therefore uses 2010 for training, 2011 for
-validation, and the available 2012 months for testing. Check the complete
-390-coordinate input path before training with:
+The validated local archive now covers every hour from 2010 through 2017: 96
+complete monthly pairs, 70,128 hourly steps, one consistent 31 x 33 grid, and
+no NaN values. `configs/era5_2010_2017.yaml` uses 2010-2015 for training, 2016
+for validation, and 2017 as a held-out test year. `configs/pilot.yaml` remains
+as the smaller 2010/2011/2012 development split. Check the complete
+390-coordinate input path with:
 
 ```bash
 PYTHONPATH=src ../StormEngine/stormengine-env/bin/python \
-  scripts/check_data_pipeline.py --config configs/pilot.yaml
+  scripts/check_data_pipeline.py --config configs/era5_2010_2017.yaml
 ```
 
 `configs/base.yaml` records the intended final year split and requires the
@@ -173,22 +175,30 @@ stopping, resumable `last.pt`, best-model `best.pt`, and denormalized MAE/RMSE
 for the full grid, land, and sea. Run it from the repository root with:
 
 ```bash
-python scripts/train.py --config configs/pilot.yaml --device cuda
+python scripts/train.py --config configs/era5_2010_2017.yaml --device cuda
 ```
 
 Resume an interrupted Windows run with:
 
 ```bash
-python scripts/train.py --config configs/pilot.yaml --device cuda \
-  --resume artifacts/v6_pilot/last.pt
+python scripts/train.py --config configs/era5_2010_2017.yaml --device cuda \
+  --resume artifacts/v6_2010_2017/last.pt
 ```
 
 On Windows, keep `num_workers: 0`; this avoids Jupyter multiprocessing spawn
 issues. If CUDA runs out of memory, reduce `batch_size` from 8 to 4 or 2 without
-changing the data split or model. `notebooks/StormEngine_V6_EndToEnd.ipynb`
-provides a path-editable Windows launcher and result viewer. It writes a local
-configuration that is ignored by Git, so machine-specific drive paths are not
-committed.
+changing the data split or model. Before a full run, use the notebook's isolated
+smoke command (two training batches and one evaluation batch); its results are
+not used as experiment metrics. `notebooks/StormEngine_V6_EndToEnd.ipynb`
+provides the smoke run, a path-editable Windows launcher, checkpoint resume,
+and a result viewer. It writes a local configuration that is ignored by Git,
+so machine-specific drive paths are not committed.
+
+The 2010-2017 configuration keeps all 72 training months in the dataset's
+bounded array cache. This uses roughly 1.3 GB of host memory but prevents
+randomly shuffled batches from repeatedly reopening monthly NetCDF files.
+Keep `num_workers: 0` on Windows so that this cache is not duplicated across
+worker processes.
 
 ## Quick smoke test
 

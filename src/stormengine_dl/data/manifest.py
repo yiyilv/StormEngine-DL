@@ -226,7 +226,7 @@ def validate_month(
         errors.append(f"read error: {type(error).__name__}: {error}")
 
     default.valid = not errors
-    default.errors = "; ".join(errors)
+    default.errors = "; ".join(errors) or "none"
     return default
 
 
@@ -241,7 +241,7 @@ def build_manifest(
     output.parent.mkdir(parents=True, exist_ok=True)
     fieldnames = list(ManifestRow.__dataclass_fields__)
     with output.open("w", newline="", encoding="utf-8") as stream:
-        writer = csv.DictWriter(stream, fieldnames=fieldnames)
+        writer = csv.DictWriter(stream, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         for row in rows:
             writer.writerow(asdict(row))

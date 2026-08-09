@@ -37,6 +37,8 @@ def main() -> int:
         target_variables=data["target_variables"],
         history_hours=int(data["history_hours"]),
         forecast_hours=int(data["forecast_hours"]),
+        window_stride_hours=int(data.get("window_stride_hours", 1)),
+        cache_months=int(data.get("cache_months", 2)),
         normalization_path=_resolve(repo_root, data["normalization_stats"]),
     )
 
