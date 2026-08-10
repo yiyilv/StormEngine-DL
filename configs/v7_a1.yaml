@@ -1,0 +1,3 @@
+extends: v7_base.yaml
+model: {include_age: true}
+training: {output_dir: artifacts/v7_a1_dev}

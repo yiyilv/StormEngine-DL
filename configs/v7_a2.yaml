@@ -1,0 +1,7 @@
+extends: v7_base.yaml
+# Controlled ablation: remove the operationally sparse gust channel.
+data: {input_variables: [u10, v10, t2m]}
+model: {include_age: true}
+missingness:
+  variable_dropout: {u10: 0.20, v10: 0.20, t2m: 0.10}
+training: {output_dir: artifacts/v7_a2_no_gust_dev}

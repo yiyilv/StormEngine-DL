@@ -1,0 +1,4 @@
+extends: v7_base.yaml
+model: {include_age: false}
+missingness: {age_60_probability: 0.0}
+training: {output_dir: artifacts/v7_a0_dev}

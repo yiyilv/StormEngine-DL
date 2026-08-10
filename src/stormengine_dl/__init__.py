@@ -4,11 +4,16 @@ from __future__ import annotations
 
 from importlib import import_module
 
-__all__ = ["StormEngineForecastModel", "StormEngineReconstructionModel"]
+__all__ = [
+    "StormEngineForecastModel",
+    "StormEngineReconstructionModel",
+    "StormEngineV7ForecastModel",
+]
 
 _EXPORTS = {
     "StormEngineForecastModel": (".models.system", "StormEngineForecastModel"),
     "StormEngineReconstructionModel": (".models.reconstruction", "StormEngineReconstructionModel"),
+    "StormEngineV7ForecastModel": (".models.mask_aware", "StormEngineV7ForecastModel"),
 }
 
 

@@ -1,0 +1,55 @@
+seed: 42
+
+domain: {lat_min: 39.0, lat_max: 46.5, lon_min: 12.0, lon_max: 20.0, height: 31, width: 33}
+
+data:
+  era5_root: ../DownloadDate
+  training_cache: cache/stormengine_2010_2017
+  cache_identity: data/manifests/v7_cache_identity_2010_2017.json
+  station_registry: data/stations_registry.csv
+  static_fields: data/static/adriatic_physical_239_fields.npz
+  # Operationally compatible ERA5 proxy channels. Station pressure is excluded:
+  # raw B10004 pressure must not be relabelled as ERA5 mean-sea-level pressure.
+  input_variables: [u10, v10, i10fg, t2m]
+  target_variables: [msl, u10, v10, t2m, tp]
+  history_hours: 12
+  forecast_hours: 6
+  window_stride_hours: 1
+  train_years: [2010, 2011, 2012]
+  validation_years: [2016]
+
+model:
+  include_age: true
+  point_hidden: 64
+  latent_channels: 64
+  processor_layers: 2
+  kernel_size: 3
+  gaussian_sigma: 0.10
+  static_channels: 2
+  point_static_channels: 2
+
+missingness:
+  variable_dropout: {u10: 0.20, v10: 0.20, i10fg: 0.35, t2m: 0.10}
+  station_dropout: 0.10
+  network_dropout: 0.03
+  time_block_probability: 0.10
+  time_block_hours: 3
+  age_60_probability: 0.20
+
+training:
+  batch_size: 16
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  gradient_clip: 1.0
+  mixed_precision: true
+  num_workers: 0
+  sea_weight: 2.0
+  smoke_train_batches: 10
+  smoke_validation_batches: 5
+  benchmark_warmup_batches: 10
+  benchmark_batches: 200
+  pilot_epochs: 5
+  pilot_train_batches: 300
+  pilot_validation_batches: 75
+  early_stopping_patience: 3
+  output_dir: artifacts/v7_a1_dev

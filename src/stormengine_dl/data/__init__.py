@@ -14,6 +14,9 @@ __all__ = [
     "NormalizationStats",
     "OperationalTensorBatch",
     "VariableStat",
+    "V7CachedSequenceDataset",
+    "MissingnessStrategy",
+    "build_cache_identity",
     "build_manifest",
     "build_operational_tensors",
     "build_station_registry",
@@ -25,6 +28,7 @@ __all__ = [
     "load_fixed_registry",
     "meteorological_wind_to_uv",
     "validate_month",
+    "validate_cache_identity",
 ]
 
 _EXPORTS = {
@@ -37,6 +41,9 @@ _EXPORTS = {
     "StationRecord": (".station_registry", "StationRecord"),
     "StaticFields": (".static_fields", "StaticFields"),
     "VariableStat": (".normalization", "VariableStat"),
+    "V7CachedSequenceDataset": (".v7_dataset", "V7CachedSequenceDataset"),
+    "MissingnessStrategy": (".v7_dataset", "MissingnessStrategy"),
+    "build_cache_identity": (".v7_dataset", "build_cache_identity"),
     "build_manifest": (".manifest", "build_manifest"),
     "build_operational_tensors": (".operational_adapter", "build_operational_tensors"),
     "build_station_distance_field": (".static_fields", "build_station_distance_field"),
@@ -51,6 +58,7 @@ _EXPORTS = {
     ),
     "scan_month_files": (".manifest", "scan_month_files"),
     "validate_month": (".manifest", "validate_month"),
+    "validate_cache_identity": (".v7_dataset", "validate_cache_identity"),
 }
 
 
