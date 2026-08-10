@@ -34,6 +34,9 @@ __all__ = [
     "V7_INPUT_VARIABLES",
     "adapt_dpc_to_v7",
     "load_dpc_v7_input",
+    "OpenMeteoBatch",
+    "load_marine_points",
+    "load_download_chunks",
 ]
 
 _EXPORTS = {
@@ -69,6 +72,9 @@ _EXPORTS = {
     "V7_INPUT_VARIABLES": (".v7_input", "V7_INPUT_VARIABLES"),
     "adapt_dpc_to_v7": (".v7_input", "adapt_dpc_to_v7"),
     "load_dpc_v7_input": (".v7_input", "load_dpc_v7_input"),
+    "OpenMeteoBatch": (".open_meteo", "OpenMeteoBatch"),
+    "load_marine_points": (".open_meteo", "load_marine_points"),
+    "load_download_chunks": (".open_meteo", "load_download_chunks"),
 }
 
 
