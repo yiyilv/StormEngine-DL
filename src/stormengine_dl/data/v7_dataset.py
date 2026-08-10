@@ -115,6 +115,9 @@ class MissingnessStrategy:
     time_block_probability: float = 0.0
     time_block_hours: int = 3
     age_60_probability: float = 0.0
+    variable_dropout_range: tuple[float, float] | None = None
+    station_dropout_range: tuple[float, float] | None = None
+    outage_duration_hours: tuple[int, int] | None = None
 
     def validate(self, variables: Sequence[str]) -> None:
         probabilities = [
@@ -126,12 +129,19 @@ class MissingnessStrategy:
         ]
         if any(not 0.0 <= value < 1.0 for value in probabilities):
             raise ValueError("Missingness probabilities must be in [0, 1)")
+        for bounds in (self.variable_dropout_range, self.station_dropout_range):
+            if bounds is not None and not (0.0 <= bounds[0] <= bounds[1] < 1.0):
+                raise ValueError("Missingness probability ranges must lie in [0, 1)")
+        if self.outage_duration_hours is not None and not (
+            1 <= self.outage_duration_hours[0] <= self.outage_duration_hours[1]
+        ):
+            raise ValueError("Outage duration range must be positive and ordered")
         if self.time_block_hours < 1:
             raise ValueError("time_block_hours must be positive")
 
 
 class EmpiricalDPCMaskLibrary:
-    """Contiguous DPC mask/age windows replayed during ERA5 training."""
+    """Contiguous DPC mask/age windows retained for realistic diagnostics."""
 
     def __init__(
         self,
@@ -377,15 +387,25 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
 
         for channel, name in enumerate(self.input_variables):
             probability = float(self.strategy.variable_dropout.get(name, 0.0))
+            if self.strategy.variable_dropout_range is not None:
+                probability = float(rng.uniform(*self.strategy.variable_dropout_range))
             if probability:
                 mask[:, :, channel] &= rng.random(mask[:, :, channel].shape) >= probability
-        if self.strategy.station_dropout:
-            keep = rng.random(self.station_indices.size) >= self.strategy.station_dropout
+        station_dropout = self.strategy.station_dropout
+        if self.strategy.station_dropout_range is not None:
+            station_dropout = float(rng.uniform(*self.strategy.station_dropout_range))
+        if station_dropout:
+            keep = rng.random(self.station_indices.size) >= station_dropout
             mask &= keep[None, :, None]
         if self.strategy.network_dropout:
             for indices in self._network_groups.values():
                 if rng.random() < self.strategy.network_dropout:
-                    mask[:, indices, :] = False
+                    minimum, maximum = self.strategy.outage_duration_hours or (
+                        self.history_hours, self.history_hours
+                    )
+                    length = min(self.history_hours, int(rng.integers(minimum, maximum + 1)))
+                    start = int(rng.integers(self.history_hours - length + 1))
+                    mask[start:start + length, indices, :] = False
         if self.strategy.time_block_probability and rng.random() < self.strategy.time_block_probability:
             network = sorted(self._network_groups)[int(rng.integers(len(self._network_groups)))]
             indices = self._network_groups[network]

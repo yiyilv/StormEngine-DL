@@ -21,8 +21,8 @@
   },
   "notes": [
     "Historical TP input is bilinearly sampled at the 239 station coordinates from the existing normalized target-grid cache.",
-    "Training batches replay contiguous 12-hour empirical DPC mask and observation-age templates.",
-    "The validation dataset uses clean inputs without synthetic missingness.",
+    "Training batches use station-independent randomized missingness; empirical DPC windows are reserved for validation and stress testing.",
+    "Validation uses pinned empirical DPC windows as a fixed stress test.",
     "This is a development speed gate, not a model-quality result.",
     "No formal V7 training was started."
   ]

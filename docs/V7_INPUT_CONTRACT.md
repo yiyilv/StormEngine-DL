@@ -33,14 +33,18 @@ Values use ERA5 2010-2015 training-only normalization. Missing values and ages
 are zero after normalization, while `value_mask` remains false. Valid DPC ages
 are expressed as a fraction of the 60-minute latest-at-or-before limit.
 
-ERA5 training replays contiguous 12-hour mask and age windows from the pinned
-official DPC tensor. Its byte size, SHA-256, station count, hour count, and
-template count are recorded in
-`data/manifests/v7_dpc_mask_profile_20260801_20260808.json`. Non-zero ages are
-represented by linear interpolation between the preceding and current ERA5
-hour for instantaneous wind and temperature. A stale gust uses the preceding
-hour rather than interpolating a maximum. TP must be a complete accumulation
-ending at the current valid time and is rejected if stale.
+ERA5 training uses generic random variable loss, station outages, continuous
+network outages, and occasional stale observations. The ranges are configurable
+and do not depend on a specific station ID or on the exact pattern of one week.
+
+The pinned official DPC tensor is retained for interface validation and stress
+testing only. Its byte size, SHA-256, station count, hour count, and template
+count are recorded in
+`data/manifests/v7_dpc_mask_profile_20260801_20260808.json`. During a real-window
+diagnostic, non-zero ages are represented by linear interpolation between the
+preceding and current ERA5 hour for instantaneous wind and temperature. A stale
+gust uses the preceding hour rather than interpolating a maximum. TP must be a
+complete accumulation ending at the current valid time and is rejected if stale.
 
 ## Deliberately excluded from this contract
 

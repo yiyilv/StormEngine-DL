@@ -24,9 +24,9 @@ caches.
 - `v7_a2.yaml`: A1 with gust removed; controlled sparse-gust ablation.
 
 All candidates reuse the immutable 2010-2017 ERA5 memmap cache through a
-validated sidecar identity. Contiguous 12-hour missingness and observation-age
-templates are replayed from the pinned official DPC tensor, so no duplicate
-multi-gigabyte cache is required.
+validated sidecar identity. Training uses generic randomized missingness; the
+pinned contiguous DPC windows are reserved for validation and stress testing.
+No duplicate multi-gigabyte cache is required.
 
 ## Promotion rules
 

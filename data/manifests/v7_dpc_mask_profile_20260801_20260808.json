@@ -1,6 +1,6 @@
 {
   "format_version": 1,
-  "purpose": "Empirical 12-hour missingness and observation-age templates for V7-A ERA5 training",
+  "purpose": "Empirical 12-hour missingness and observation-age templates for V7 diagnostics and stress testing",
   "tensor_path": "data_external/meteohub/processed/20260801_20260808/official_hourly_physical.npz",
   "tensor_bytes": 281616,
   "tensor_sha256": "89f683b1c8e9aacc05ff19c4f4ec563afad23fd943caa87437adfb2b393b3b13",

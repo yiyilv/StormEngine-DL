@@ -29,16 +29,20 @@ model:
   point_static_channels: 2
 
 missingness:
-  mode: empirical_dpc
   empirical_tensor: data_external/meteohub/processed/20260801_20260808/official_hourly_physical.npz
   empirical_manifest: data/manifests/v7_dpc_mask_profile_20260801_20260808.json
-  # Synthetic probabilities are disabled; V7-A replays contiguous empirical DPC masks.
+  use_real_templates_for_training: false
+  use_real_templates_for_validation: true
+  # Generic random training corruption; it does not depend on specific station IDs.
   variable_dropout: {}
+  variable_dropout_range: [0.0, 0.4]
   station_dropout: 0.0
-  network_dropout: 0.0
+  station_dropout_range: [0.0, 0.2]
+  network_outage_probability: 0.1
+  outage_duration_hours: [1, 12]
   time_block_probability: 0.0
   time_block_hours: 3
-  age_60_probability: 0.0
+  age_60_probability: 0.01
 
 training:
   batch_size: 16

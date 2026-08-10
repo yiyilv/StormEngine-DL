@@ -57,13 +57,19 @@ def cache_dir(data: dict[str, Any]) -> Path:
 
 def strategy(config: dict[str, Any]) -> MissingnessStrategy:
     value = config["missingness"]
+    variable_range = value.get("variable_dropout_range")
+    station_range = value.get("station_dropout_range")
+    outage_range = value.get("outage_duration_hours")
     return MissingnessStrategy(
         variable_dropout=value.get("variable_dropout", {}),
         station_dropout=float(value.get("station_dropout", 0)),
-        network_dropout=float(value.get("network_dropout", 0)),
+        network_dropout=float(value.get("network_outage_probability", value.get("network_dropout", 0))),
         time_block_probability=float(value.get("time_block_probability", 0)),
         time_block_hours=int(value.get("time_block_hours", 3)),
         age_60_probability=float(value.get("age_60_probability", 0)),
+        variable_dropout_range=tuple(map(float, variable_range)) if variable_range else None,
+        station_dropout_range=tuple(map(float, station_range)) if station_range else None,
+        outage_duration_hours=tuple(map(int, outage_range)) if outage_range else None,
     )
 
 
@@ -72,12 +78,15 @@ def make_dataset(
 ) -> V7CachedSequenceDataset:
     data = config["data"]
     missingness = config["missingness"]
-    mode = missingness.get("mode", "synthetic")
-    if mode not in {"synthetic", "empirical_dpc"}:
-        raise ValueError(f"Unknown V7 missingness mode: {mode}")
+    use_empirical = bool(
+        missingness.get(
+            "use_real_templates_for_training" if augment else "use_real_templates_for_validation",
+            False,
+        )
+    )
     empirical_path = (
         resolve(missingness["empirical_tensor"])
-        if augment and mode == "empirical_dpc"
+        if use_empirical
         else None
     )
     empirical_manifest = (
@@ -89,7 +98,7 @@ def make_dataset(
         cache_dir(data), resolve(data["station_registry"]), resolve(data["cache_identity"]),
         years=years, input_variables=data["input_variables"],
         target_variables=data["target_variables"],
-        strategy=strategy(config) if augment else MissingnessStrategy({}),
+        strategy=strategy(config) if augment and not use_empirical else MissingnessStrategy({}),
         history_hours=int(data["history_hours"]), forecast_hours=int(data["forecast_hours"]),
         window_stride_hours=int(data.get("window_stride_hours", 1)), seed=int(config["seed"]),
         empirical_mask_path=empirical_path,
@@ -195,6 +204,11 @@ def main() -> int:
         print(json.dumps(result, indent=2)); train.close(); validation.close(); return 0
 
     training = config["training"]
+    validation_missingness = (
+        "empirical_dpc"
+        if config["missingness"].get("use_real_templates_for_validation", False)
+        else "clean"
+    )
     default_batches = training["benchmark_batches"] if args.mode == "benchmark" else training["smoke_train_batches"] if args.mode == "smoke" else training["pilot_train_batches"]
     max_train = int(args.batches or default_batches)
     max_validation = int(training["smoke_validation_batches"] if args.mode == "smoke" else training["pilot_validation_batches"])
@@ -251,7 +265,7 @@ def main() -> int:
             if epochs_without_improvement >= int(training.get("early_stopping_patience", 3)):
                 break
     mean_batch = float(np.mean(timings)) if timings else None
-    result = {"mode": args.mode, "device": str(device), "gpu": torch.cuda.get_device_name(0) if device.type == "cuda" else None, "contract": model_contract, "validation_missingness": "clean", "history": history, "timed_batches": len(timings), "mean_batch_seconds": mean_batch, "estimated_epoch_seconds": mean_batch * math.ceil(len(train) / options["batch_size"]) if mean_batch else None, "peak_cuda_bytes": int(torch.cuda.max_memory_allocated()) if device.type == "cuda" else None}
+    result = {"mode": args.mode, "device": str(device), "gpu": torch.cuda.get_device_name(0) if device.type == "cuda" else None, "contract": model_contract, "validation_missingness": validation_missingness, "history": history, "timed_batches": len(timings), "mean_batch_seconds": mean_batch, "estimated_epoch_seconds": mean_batch * math.ceil(len(train) / options["batch_size"]) if mean_batch else None, "peak_cuda_bytes": int(torch.cuda.max_memory_allocated()) if device.type == "cuda" else None}
     (output / f"{args.mode}_summary.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(result, indent=2)); train.close(); validation.close(); return 0
 
