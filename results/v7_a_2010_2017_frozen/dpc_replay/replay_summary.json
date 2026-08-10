@@ -1,0 +1,1385 @@
+{
+  "schema_version": 1,
+  "purpose": "runtime compatibility replay; no accuracy claim without 2026 targets",
+  "checkpoint": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v7_a_2010_2017\\best.pt",
+  "windows": 152,
+  "all_finite": true,
+  "variables": [
+    "msl",
+    "u10",
+    "v10",
+    "t2m",
+    "tp"
+  ],
+  "forecast_hours": 6,
+  "records": [
+    {
+      "window": 0,
+      "history_start": "2026-08-01T00:00",
+      "analysis_time": "2026-08-01T11:00",
+      "valid_fraction": 0.3115062713623047,
+      "stations_present_min": 149,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 1,
+      "history_start": "2026-08-01T01:00",
+      "analysis_time": "2026-08-01T12:00",
+      "valid_fraction": 0.31799161434173584,
+      "stations_present_min": 163,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 2,
+      "history_start": "2026-08-01T02:00",
+      "analysis_time": "2026-08-01T13:00",
+      "valid_fraction": 0.317573219537735,
+      "stations_present_min": 163,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 3,
+      "history_start": "2026-08-01T03:00",
+      "analysis_time": "2026-08-01T14:00",
+      "valid_fraction": 0.3175034821033478,
+      "stations_present_min": 163,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 4,
+      "history_start": "2026-08-01T04:00",
+      "analysis_time": "2026-08-01T15:00",
+      "valid_fraction": 0.3175034821033478,
+      "stations_present_min": 163,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 5,
+      "history_start": "2026-08-01T05:00",
+      "analysis_time": "2026-08-01T16:00",
+      "valid_fraction": 0.317712664604187,
+      "stations_present_min": 163,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 6,
+      "history_start": "2026-08-01T06:00",
+      "analysis_time": "2026-08-01T17:00",
+      "valid_fraction": 0.3178521394729614,
+      "stations_present_min": 163,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 7,
+      "history_start": "2026-08-01T07:00",
+      "analysis_time": "2026-08-01T18:00",
+      "valid_fraction": 0.31743374466896057,
+      "stations_present_min": 163,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 8,
+      "history_start": "2026-08-01T08:00",
+      "analysis_time": "2026-08-01T19:00",
+      "valid_fraction": 0.31743374466896057,
+      "stations_present_min": 163,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 9,
+      "history_start": "2026-08-01T09:00",
+      "analysis_time": "2026-08-01T20:00",
+      "valid_fraction": 0.31743374466896057,
+      "stations_present_min": 163,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 10,
+      "history_start": "2026-08-01T10:00",
+      "analysis_time": "2026-08-01T21:00",
+      "valid_fraction": 0.31729426980018616,
+      "stations_present_min": 163,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 11,
+      "history_start": "2026-08-01T11:00",
+      "analysis_time": "2026-08-01T22:00",
+      "valid_fraction": 0.317712664604187,
+      "stations_present_min": 163,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 12,
+      "history_start": "2026-08-01T12:00",
+      "analysis_time": "2026-08-01T23:00",
+      "valid_fraction": 0.31708505749702454,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 13,
+      "history_start": "2026-08-01T13:00",
+      "analysis_time": "2026-08-02T00:00",
+      "valid_fraction": 0.31792187690734863,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 14,
+      "history_start": "2026-08-01T14:00",
+      "analysis_time": "2026-08-02T01:00",
+      "valid_fraction": 0.31820082664489746,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 15,
+      "history_start": "2026-08-01T15:00",
+      "analysis_time": "2026-08-02T02:00",
+      "valid_fraction": 0.3184100389480591,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 16,
+      "history_start": "2026-08-01T16:00",
+      "analysis_time": "2026-08-02T03:00",
+      "valid_fraction": 0.3183403015136719,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 17,
+      "history_start": "2026-08-01T17:00",
+      "analysis_time": "2026-08-02T04:00",
+      "valid_fraction": 0.31792187690734863,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 18,
+      "history_start": "2026-08-01T18:00",
+      "analysis_time": "2026-08-02T05:00",
+      "valid_fraction": 0.31827056407928467,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 19,
+      "history_start": "2026-08-01T19:00",
+      "analysis_time": "2026-08-02T06:00",
+      "valid_fraction": 0.3184100389480591,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 20,
+      "history_start": "2026-08-01T20:00",
+      "analysis_time": "2026-08-02T07:00",
+      "valid_fraction": 0.3185495138168335,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 21,
+      "history_start": "2026-08-01T21:00",
+      "analysis_time": "2026-08-02T08:00",
+      "valid_fraction": 0.3186192214488983,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 22,
+      "history_start": "2026-08-01T22:00",
+      "analysis_time": "2026-08-02T09:00",
+      "valid_fraction": 0.3186192214488983,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 23,
+      "history_start": "2026-08-01T23:00",
+      "analysis_time": "2026-08-02T10:00",
+      "valid_fraction": 0.3185495138168335,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 24,
+      "history_start": "2026-08-02T00:00",
+      "analysis_time": "2026-08-02T11:00",
+      "valid_fraction": 0.31896790862083435,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 25,
+      "history_start": "2026-08-02T01:00",
+      "analysis_time": "2026-08-02T12:00",
+      "valid_fraction": 0.3175034821033478,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 26,
+      "history_start": "2026-08-02T02:00",
+      "analysis_time": "2026-08-02T13:00",
+      "valid_fraction": 0.31708505749702454,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 27,
+      "history_start": "2026-08-02T03:00",
+      "analysis_time": "2026-08-02T14:00",
+      "valid_fraction": 0.3168758451938629,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 28,
+      "history_start": "2026-08-02T04:00",
+      "analysis_time": "2026-08-02T15:00",
+      "valid_fraction": 0.3167364001274109,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 29,
+      "history_start": "2026-08-02T05:00",
+      "analysis_time": "2026-08-02T16:00",
+      "valid_fraction": 0.31645745038986206,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 30,
+      "history_start": "2026-08-02T06:00",
+      "analysis_time": "2026-08-02T17:00",
+      "valid_fraction": 0.31617850065231323,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 31,
+      "history_start": "2026-08-02T07:00",
+      "analysis_time": "2026-08-02T18:00",
+      "valid_fraction": 0.3160390257835388,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 32,
+      "history_start": "2026-08-02T08:00",
+      "analysis_time": "2026-08-02T19:00",
+      "valid_fraction": 0.3157601058483124,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 33,
+      "history_start": "2026-08-02T09:00",
+      "analysis_time": "2026-08-02T20:00",
+      "valid_fraction": 0.31555089354515076,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 34,
+      "history_start": "2026-08-02T10:00",
+      "analysis_time": "2026-08-02T21:00",
+      "valid_fraction": 0.31562063097953796,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 35,
+      "history_start": "2026-08-02T11:00",
+      "analysis_time": "2026-08-02T22:00",
+      "valid_fraction": 0.31541141867637634,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 36,
+      "history_start": "2026-08-02T12:00",
+      "analysis_time": "2026-08-02T23:00",
+      "valid_fraction": 0.3149930238723755,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 37,
+      "history_start": "2026-08-02T13:00",
+      "analysis_time": "2026-08-03T00:00",
+      "valid_fraction": 0.31652718782424927,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 38,
+      "history_start": "2026-08-02T14:00",
+      "analysis_time": "2026-08-03T01:00",
+      "valid_fraction": 0.31708505749702454,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 39,
+      "history_start": "2026-08-02T15:00",
+      "analysis_time": "2026-08-03T02:00",
+      "valid_fraction": 0.3168061375617981,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 40,
+      "history_start": "2026-08-02T16:00",
+      "analysis_time": "2026-08-03T03:00",
+      "valid_fraction": 0.3168758451938629,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 41,
+      "history_start": "2026-08-02T17:00",
+      "analysis_time": "2026-08-03T04:00",
+      "valid_fraction": 0.31715479493141174,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 42,
+      "history_start": "2026-08-02T18:00",
+      "analysis_time": "2026-08-03T05:00",
+      "valid_fraction": 0.31715479493141174,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 43,
+      "history_start": "2026-08-02T19:00",
+      "analysis_time": "2026-08-03T06:00",
+      "valid_fraction": 0.31743374466896057,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 44,
+      "history_start": "2026-08-02T20:00",
+      "analysis_time": "2026-08-03T07:00",
+      "valid_fraction": 0.31729426980018616,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 45,
+      "history_start": "2026-08-02T21:00",
+      "analysis_time": "2026-08-03T08:00",
+      "valid_fraction": 0.31715479493141174,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 46,
+      "history_start": "2026-08-02T22:00",
+      "analysis_time": "2026-08-03T09:00",
+      "valid_fraction": 0.31701532006263733,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 47,
+      "history_start": "2026-08-02T23:00",
+      "analysis_time": "2026-08-03T10:00",
+      "valid_fraction": 0.31701532006263733,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 48,
+      "history_start": "2026-08-03T00:00",
+      "analysis_time": "2026-08-03T11:00",
+      "valid_fraction": 0.31715479493141174,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 49,
+      "history_start": "2026-08-03T01:00",
+      "analysis_time": "2026-08-03T12:00",
+      "valid_fraction": 0.3157601058483124,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 50,
+      "history_start": "2026-08-03T02:00",
+      "analysis_time": "2026-08-03T13:00",
+      "valid_fraction": 0.3151324987411499,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 51,
+      "history_start": "2026-08-03T03:00",
+      "analysis_time": "2026-08-03T14:00",
+      "valid_fraction": 0.31555089354515076,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 52,
+      "history_start": "2026-08-03T04:00",
+      "analysis_time": "2026-08-03T15:00",
+      "valid_fraction": 0.31555089354515076,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 53,
+      "history_start": "2026-08-03T05:00",
+      "analysis_time": "2026-08-03T16:00",
+      "valid_fraction": 0.31548115611076355,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 54,
+      "history_start": "2026-08-03T06:00",
+      "analysis_time": "2026-08-03T17:00",
+      "valid_fraction": 0.3152022063732147,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 55,
+      "history_start": "2026-08-03T07:00",
+      "analysis_time": "2026-08-03T18:00",
+      "valid_fraction": 0.3152022063732147,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 56,
+      "history_start": "2026-08-03T08:00",
+      "analysis_time": "2026-08-03T19:00",
+      "valid_fraction": 0.3151324987411499,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 57,
+      "history_start": "2026-08-03T09:00",
+      "analysis_time": "2026-08-03T20:00",
+      "valid_fraction": 0.3149930238723755,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 58,
+      "history_start": "2026-08-03T10:00",
+      "analysis_time": "2026-08-03T21:00",
+      "valid_fraction": 0.3148535490036011,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 59,
+      "history_start": "2026-08-03T11:00",
+      "analysis_time": "2026-08-03T22:00",
+      "valid_fraction": 0.3149232864379883,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 60,
+      "history_start": "2026-08-03T12:00",
+      "analysis_time": "2026-08-03T23:00",
+      "valid_fraction": 0.3148535490036011,
+      "stations_present_min": 161,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 61,
+      "history_start": "2026-08-03T13:00",
+      "analysis_time": "2026-08-04T00:00",
+      "valid_fraction": 0.315969318151474,
+      "stations_present_min": 161,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 62,
+      "history_start": "2026-08-03T14:00",
+      "analysis_time": "2026-08-04T01:00",
+      "valid_fraction": 0.31624823808670044,
+      "stations_present_min": 161,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 63,
+      "history_start": "2026-08-03T15:00",
+      "analysis_time": "2026-08-04T02:00",
+      "valid_fraction": 0.31631797552108765,
+      "stations_present_min": 161,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 64,
+      "history_start": "2026-08-03T16:00",
+      "analysis_time": "2026-08-04T03:00",
+      "valid_fraction": 0.315969318151474,
+      "stations_present_min": 161,
+      "stations_present_max": 162,
+      "finite": true
+    },
+    {
+      "window": 65,
+      "history_start": "2026-08-03T17:00",
+      "analysis_time": "2026-08-04T04:00",
+      "valid_fraction": 0.3160390257835388,
+      "stations_present_min": 161,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 66,
+      "history_start": "2026-08-03T18:00",
+      "analysis_time": "2026-08-04T05:00",
+      "valid_fraction": 0.31624823808670044,
+      "stations_present_min": 161,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 67,
+      "history_start": "2026-08-03T19:00",
+      "analysis_time": "2026-08-04T06:00",
+      "valid_fraction": 0.31638771295547485,
+      "stations_present_min": 161,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 68,
+      "history_start": "2026-08-03T20:00",
+      "analysis_time": "2026-08-04T07:00",
+      "valid_fraction": 0.3165969252586365,
+      "stations_present_min": 161,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 69,
+      "history_start": "2026-08-03T21:00",
+      "analysis_time": "2026-08-04T08:00",
+      "valid_fraction": 0.3166666626930237,
+      "stations_present_min": 161,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 70,
+      "history_start": "2026-08-03T22:00",
+      "analysis_time": "2026-08-04T09:00",
+      "valid_fraction": 0.31380751729011536,
+      "stations_present_min": 149,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 71,
+      "history_start": "2026-08-03T23:00",
+      "analysis_time": "2026-08-04T10:00",
+      "valid_fraction": 0.3082287311553955,
+      "stations_present_min": 119,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 72,
+      "history_start": "2026-08-04T00:00",
+      "analysis_time": "2026-08-04T11:00",
+      "valid_fraction": 0.30578798055648804,
+      "stations_present_min": 119,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 73,
+      "history_start": "2026-08-04T01:00",
+      "analysis_time": "2026-08-04T12:00",
+      "valid_fraction": 0.30502089858055115,
+      "stations_present_min": 119,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 74,
+      "history_start": "2026-08-04T02:00",
+      "analysis_time": "2026-08-04T13:00",
+      "valid_fraction": 0.3046722412109375,
+      "stations_present_min": 119,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 75,
+      "history_start": "2026-08-04T03:00",
+      "analysis_time": "2026-08-04T14:00",
+      "valid_fraction": 0.30425381660461426,
+      "stations_present_min": 119,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 76,
+      "history_start": "2026-08-04T04:00",
+      "analysis_time": "2026-08-04T15:00",
+      "valid_fraction": 0.30425381660461426,
+      "stations_present_min": 119,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 77,
+      "history_start": "2026-08-04T05:00",
+      "analysis_time": "2026-08-04T16:00",
+      "valid_fraction": 0.3038354218006134,
+      "stations_present_min": 119,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 78,
+      "history_start": "2026-08-04T06:00",
+      "analysis_time": "2026-08-04T17:00",
+      "valid_fraction": 0.30348673462867737,
+      "stations_present_min": 119,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 79,
+      "history_start": "2026-08-04T07:00",
+      "analysis_time": "2026-08-04T18:00",
+      "valid_fraction": 0.3029288649559021,
+      "stations_present_min": 119,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 80,
+      "history_start": "2026-08-04T08:00",
+      "analysis_time": "2026-08-04T19:00",
+      "valid_fraction": 0.3029288649559021,
+      "stations_present_min": 119,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 81,
+      "history_start": "2026-08-04T09:00",
+      "analysis_time": "2026-08-04T20:00",
+      "valid_fraction": 0.3029288649559021,
+      "stations_present_min": 119,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 82,
+      "history_start": "2026-08-04T10:00",
+      "analysis_time": "2026-08-04T21:00",
+      "valid_fraction": 0.3057182729244232,
+      "stations_present_min": 119,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 83,
+      "history_start": "2026-08-04T11:00",
+      "analysis_time": "2026-08-04T22:00",
+      "valid_fraction": 0.3108786344528198,
+      "stations_present_min": 151,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 84,
+      "history_start": "2026-08-04T12:00",
+      "analysis_time": "2026-08-04T23:00",
+      "valid_fraction": 0.31304043531417847,
+      "stations_present_min": 161,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 85,
+      "history_start": "2026-08-04T13:00",
+      "analysis_time": "2026-08-05T00:00",
+      "valid_fraction": 0.3141562044620514,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 86,
+      "history_start": "2026-08-04T14:00",
+      "analysis_time": "2026-08-05T01:00",
+      "valid_fraction": 0.31471407413482666,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 87,
+      "history_start": "2026-08-04T15:00",
+      "analysis_time": "2026-08-05T02:00",
+      "valid_fraction": 0.3152022063732147,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 88,
+      "history_start": "2026-08-04T16:00",
+      "analysis_time": "2026-08-05T03:00",
+      "valid_fraction": 0.3157601058483124,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 89,
+      "history_start": "2026-08-04T17:00",
+      "analysis_time": "2026-08-05T04:00",
+      "valid_fraction": 0.31652718782424927,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 90,
+      "history_start": "2026-08-04T18:00",
+      "analysis_time": "2026-08-05T05:00",
+      "valid_fraction": 0.3169455826282501,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 91,
+      "history_start": "2026-08-04T19:00",
+      "analysis_time": "2026-08-05T06:00",
+      "valid_fraction": 0.31715479493141174,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 92,
+      "history_start": "2026-08-04T20:00",
+      "analysis_time": "2026-08-05T07:00",
+      "valid_fraction": 0.31715479493141174,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 93,
+      "history_start": "2026-08-04T21:00",
+      "analysis_time": "2026-08-05T08:00",
+      "valid_fraction": 0.3169455826282501,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 94,
+      "history_start": "2026-08-04T22:00",
+      "analysis_time": "2026-08-05T09:00",
+      "valid_fraction": 0.3169455826282501,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 95,
+      "history_start": "2026-08-04T23:00",
+      "analysis_time": "2026-08-05T10:00",
+      "valid_fraction": 0.31701532006263733,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 96,
+      "history_start": "2026-08-05T00:00",
+      "analysis_time": "2026-08-05T11:00",
+      "valid_fraction": 0.31708505749702454,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 97,
+      "history_start": "2026-08-05T01:00",
+      "analysis_time": "2026-08-05T12:00",
+      "valid_fraction": 0.31569036841392517,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 98,
+      "history_start": "2026-08-05T02:00",
+      "analysis_time": "2026-08-05T13:00",
+      "valid_fraction": 0.314016729593277,
+      "stations_present_min": 155,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 99,
+      "history_start": "2026-08-05T03:00",
+      "analysis_time": "2026-08-05T14:00",
+      "valid_fraction": 0.31366804242134094,
+      "stations_present_min": 155,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 100,
+      "history_start": "2026-08-05T04:00",
+      "analysis_time": "2026-08-05T15:00",
+      "valid_fraction": 0.3134588301181793,
+      "stations_present_min": 155,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 101,
+      "history_start": "2026-08-05T05:00",
+      "analysis_time": "2026-08-05T16:00",
+      "valid_fraction": 0.31283122301101685,
+      "stations_present_min": 155,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 102,
+      "history_start": "2026-08-05T06:00",
+      "analysis_time": "2026-08-05T17:00",
+      "valid_fraction": 0.3125523030757904,
+      "stations_present_min": 155,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 103,
+      "history_start": "2026-08-05T07:00",
+      "analysis_time": "2026-08-05T18:00",
+      "valid_fraction": 0.312412828207016,
+      "stations_present_min": 155,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 104,
+      "history_start": "2026-08-05T08:00",
+      "analysis_time": "2026-08-05T19:00",
+      "valid_fraction": 0.31206414103507996,
+      "stations_present_min": 155,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 105,
+      "history_start": "2026-08-05T09:00",
+      "analysis_time": "2026-08-05T20:00",
+      "valid_fraction": 0.3124825656414032,
+      "stations_present_min": 155,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 106,
+      "history_start": "2026-08-05T10:00",
+      "analysis_time": "2026-08-05T21:00",
+      "valid_fraction": 0.31269174814224243,
+      "stations_present_min": 155,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 107,
+      "history_start": "2026-08-05T11:00",
+      "analysis_time": "2026-08-05T22:00",
+      "valid_fraction": 0.31290096044540405,
+      "stations_present_min": 155,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 108,
+      "history_start": "2026-08-05T12:00",
+      "analysis_time": "2026-08-05T23:00",
+      "valid_fraction": 0.31276148557662964,
+      "stations_present_min": 155,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 109,
+      "history_start": "2026-08-05T13:00",
+      "analysis_time": "2026-08-06T00:00",
+      "valid_fraction": 0.3140864670276642,
+      "stations_present_min": 155,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 110,
+      "history_start": "2026-08-05T14:00",
+      "analysis_time": "2026-08-06T01:00",
+      "valid_fraction": 0.31527194380760193,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 111,
+      "history_start": "2026-08-05T15:00",
+      "analysis_time": "2026-08-06T02:00",
+      "valid_fraction": 0.31534168124198914,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 112,
+      "history_start": "2026-08-05T16:00",
+      "analysis_time": "2026-08-06T03:00",
+      "valid_fraction": 0.3150627613067627,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 113,
+      "history_start": "2026-08-05T17:00",
+      "analysis_time": "2026-08-06T04:00",
+      "valid_fraction": 0.31527194380760193,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 114,
+      "history_start": "2026-08-05T18:00",
+      "analysis_time": "2026-08-06T05:00",
+      "valid_fraction": 0.31534168124198914,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 115,
+      "history_start": "2026-08-05T19:00",
+      "analysis_time": "2026-08-06T06:00",
+      "valid_fraction": 0.3157601058483124,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 116,
+      "history_start": "2026-08-05T20:00",
+      "analysis_time": "2026-08-06T07:00",
+      "valid_fraction": 0.31638771295547485,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 117,
+      "history_start": "2026-08-05T21:00",
+      "analysis_time": "2026-08-06T08:00",
+      "valid_fraction": 0.31645745038986206,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 118,
+      "history_start": "2026-08-05T22:00",
+      "analysis_time": "2026-08-06T09:00",
+      "valid_fraction": 0.31638771295547485,
+      "stations_present_min": 163,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 119,
+      "history_start": "2026-08-05T23:00",
+      "analysis_time": "2026-08-06T10:00",
+      "valid_fraction": 0.31652718782424927,
+      "stations_present_min": 163,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 120,
+      "history_start": "2026-08-06T00:00",
+      "analysis_time": "2026-08-06T11:00",
+      "valid_fraction": 0.31715479493141174,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 121,
+      "history_start": "2026-08-06T01:00",
+      "analysis_time": "2026-08-06T12:00",
+      "valid_fraction": 0.3160390257835388,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 122,
+      "history_start": "2026-08-06T02:00",
+      "analysis_time": "2026-08-06T13:00",
+      "valid_fraction": 0.3166666626930237,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 123,
+      "history_start": "2026-08-06T03:00",
+      "analysis_time": "2026-08-06T14:00",
+      "valid_fraction": 0.31645745038986206,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 124,
+      "history_start": "2026-08-06T04:00",
+      "analysis_time": "2026-08-06T15:00",
+      "valid_fraction": 0.3166666626930237,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 125,
+      "history_start": "2026-08-06T05:00",
+      "analysis_time": "2026-08-06T16:00",
+      "valid_fraction": 0.3165969252586365,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 126,
+      "history_start": "2026-08-06T06:00",
+      "analysis_time": "2026-08-06T17:00",
+      "valid_fraction": 0.31652718782424927,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 127,
+      "history_start": "2026-08-06T07:00",
+      "analysis_time": "2026-08-06T18:00",
+      "valid_fraction": 0.31624823808670044,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 128,
+      "history_start": "2026-08-06T08:00",
+      "analysis_time": "2026-08-06T19:00",
+      "valid_fraction": 0.3158995807170868,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 129,
+      "history_start": "2026-08-06T09:00",
+      "analysis_time": "2026-08-06T20:00",
+      "valid_fraction": 0.3158995807170868,
+      "stations_present_min": 161,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 130,
+      "history_start": "2026-08-06T10:00",
+      "analysis_time": "2026-08-06T21:00",
+      "valid_fraction": 0.3158298432826996,
+      "stations_present_min": 161,
+      "stations_present_max": 163,
+      "finite": true
+    },
+    {
+      "window": 131,
+      "history_start": "2026-08-06T11:00",
+      "analysis_time": "2026-08-06T22:00",
+      "valid_fraction": 0.31569036841392517,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 132,
+      "history_start": "2026-08-06T12:00",
+      "analysis_time": "2026-08-06T23:00",
+      "valid_fraction": 0.31534168124198914,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 133,
+      "history_start": "2026-08-06T13:00",
+      "analysis_time": "2026-08-07T00:00",
+      "valid_fraction": 0.31652718782424927,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 134,
+      "history_start": "2026-08-06T14:00",
+      "analysis_time": "2026-08-07T01:00",
+      "valid_fraction": 0.31617850065231323,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 135,
+      "history_start": "2026-08-06T15:00",
+      "analysis_time": "2026-08-07T02:00",
+      "valid_fraction": 0.31652718782424927,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 136,
+      "history_start": "2026-08-06T16:00",
+      "analysis_time": "2026-08-07T03:00",
+      "valid_fraction": 0.3166666626930237,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 137,
+      "history_start": "2026-08-06T17:00",
+      "analysis_time": "2026-08-07T04:00",
+      "valid_fraction": 0.31708505749702454,
+      "stations_present_min": 161,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 138,
+      "history_start": "2026-08-06T18:00",
+      "analysis_time": "2026-08-07T05:00",
+      "valid_fraction": 0.31736400723457336,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 139,
+      "history_start": "2026-08-06T19:00",
+      "analysis_time": "2026-08-07T06:00",
+      "valid_fraction": 0.31736400723457336,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 140,
+      "history_start": "2026-08-06T20:00",
+      "analysis_time": "2026-08-07T07:00",
+      "valid_fraction": 0.31715479493141174,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 141,
+      "history_start": "2026-08-06T21:00",
+      "analysis_time": "2026-08-07T08:00",
+      "valid_fraction": 0.31743374466896057,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 142,
+      "history_start": "2026-08-06T22:00",
+      "analysis_time": "2026-08-07T09:00",
+      "valid_fraction": 0.31715479493141174,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 143,
+      "history_start": "2026-08-06T23:00",
+      "analysis_time": "2026-08-07T10:00",
+      "valid_fraction": 0.31708505749702454,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 144,
+      "history_start": "2026-08-07T00:00",
+      "analysis_time": "2026-08-07T11:00",
+      "valid_fraction": 0.31736400723457336,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 145,
+      "history_start": "2026-08-07T01:00",
+      "analysis_time": "2026-08-07T12:00",
+      "valid_fraction": 0.316108763217926,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 146,
+      "history_start": "2026-08-07T02:00",
+      "analysis_time": "2026-08-07T13:00",
+      "valid_fraction": 0.316108763217926,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 147,
+      "history_start": "2026-08-07T03:00",
+      "analysis_time": "2026-08-07T14:00",
+      "valid_fraction": 0.3158995807170868,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 148,
+      "history_start": "2026-08-07T04:00",
+      "analysis_time": "2026-08-07T15:00",
+      "valid_fraction": 0.31541141867637634,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 149,
+      "history_start": "2026-08-07T05:00",
+      "analysis_time": "2026-08-07T16:00",
+      "valid_fraction": 0.3149232864379883,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 150,
+      "history_start": "2026-08-07T06:00",
+      "analysis_time": "2026-08-07T17:00",
+      "valid_fraction": 0.3148535490036011,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    },
+    {
+      "window": 151,
+      "history_start": "2026-08-07T07:00",
+      "analysis_time": "2026-08-07T18:00",
+      "valid_fraction": 0.3149930238723755,
+      "stations_present_min": 162,
+      "stations_present_max": 164,
+      "finite": true
+    }
+  ]
+}

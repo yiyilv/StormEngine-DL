@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "model": "V7-A",
+  "status": "frozen",
+  "definition": "239 physical stations; 12h history; u10,v10,i10fg,t2m,tp; +1..+6h grid forecast",
+  "git_commit": "c14cf004a4bf20765c3922919e5c88c942509980",
+  "checkpoint": {
+    "path": "artifacts/v7_a_2010_2017/best.pt",
+    "sha256": "07a7bd4c78fa271a83b4315b2640ee833c375dc2a57d093e4fa87a8a68551e95",
+    "bytes": 6313492
+  },
+  "config": {
+    "path": "configs/v7_a.yaml",
+    "sha256": "5d4b68b4682a69a1c824ac03ebb95ff1c9769a584ef506afd473eaf0926f3cf5"
+  },
+  "evaluation_files": [
+    {
+      "path": "artifacts/v7_a_2010_2017/evaluation_2017_clean_seed42/metrics.json",
+      "sha256": "16f7bac65219f700a742760dc0e4035292869f97737a2a839f46e990d443b86b"
+    },
+    {
+      "path": "artifacts/v7_a_2010_2017/evaluation_2017_missing_seed123/metrics.json",
+      "sha256": "87e85f8acbbc3f3651d5ad593b0a332b5750704115681d9e33d02c8c0aec21c5"
+    },
+    {
+      "path": "artifacts/v7_a_2010_2017/evaluation_2017_missing_seed2026/metrics.json",
+      "sha256": "dbf719923859b78c1580d21accbca7b674b7ed9c5141e1362e3fe637aacacc98"
+    },
+    {
+      "path": "artifacts/v7_a_2010_2017/evaluation_2017_missing_seed42/metrics.json",
+      "sha256": "6ef48dfeb0ff71e8f5f6b7674b1403a0791848e20d473d086997a3b80635b4b1"
+    }
+  ],
+  "dpc_replay": {
+    "path": "artifacts/v7_a_2010_2017/dpc_replay_20260801_20260808/replay_summary.json",
+    "sha256": "5cdf6a516d4e7995e99da826754322b7dc98e665d72eb70aa48ebb26e1b026c9"
+  },
+  "dpc_observation_evaluation": {
+    "path": "artifacts/v7_a_2010_2017/dpc_observation_evaluation_20260801_20260808/metrics.json",
+    "sha256": "38a470b935c478bbd323ad98da70d8a68be08862bdb0835bdef71b9990402409"
+  },
+  "note": "Checkpoint remains a local external artifact and should not be committed to ordinary Git."
+}

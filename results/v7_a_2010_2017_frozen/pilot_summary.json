@@ -1,0 +1,62 @@
+{
+  "mode": "pilot",
+  "device": "cuda",
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "contract": {
+    "version": "stormengine-v7-mask-aware-v1",
+    "input_variables": [
+      "u10",
+      "v10",
+      "i10fg",
+      "t2m",
+      "tp"
+    ],
+    "include_age": true,
+    "observation_age_units": "hours_capped_at_1",
+    "station_count": 239,
+    "cache_identity": "v7_cache_identity_2010_2017.json",
+    "static_fields": "adriatic_physical_239_fields.npz",
+    "model": {
+      "include_age": true,
+      "point_hidden": 64,
+      "latent_channels": 64,
+      "processor_layers": 2,
+      "kernel_size": 3,
+      "gaussian_sigma": 0.1,
+      "static_channels": 2,
+      "point_static_channels": 2
+    }
+  },
+  "validation_missingness": "clean",
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.8565729653835297,
+      "validation_loss": 1.1064421888192495
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.7089324251810709,
+      "validation_loss": 1.0146581679582596
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.6278263701995214,
+      "validation_loss": 0.8749776925643286
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.6184983398516973,
+      "validation_loss": 0.8184827611843745
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.5897485572099685,
+      "validation_loss": 0.7585825256506602
+    }
+  ],
+  "timed_batches": 1500,
+  "mean_batch_seconds": 0.16636981553335983,
+  "estimated_epoch_seconds": 546.6912138426204,
+  "peak_cuda_bytes": 1067413504
+}
