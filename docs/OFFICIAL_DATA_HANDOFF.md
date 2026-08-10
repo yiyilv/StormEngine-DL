@@ -107,6 +107,17 @@ The authoritative filenames, sizes, line counts, hashes, network membership,
 and request names are in
 `data/manifests/meteohub_20260801_20260808.json`.
 
+Validate the four production QC extracts before processing:
+
+```text
+python scripts/validate_meteohub_manifest.py --qc-only
+```
+
+Run the command without `--qc-only` only when the optional FVG no-QC control
+file is also available. The validator streams the files and checks their
+filenames, sizes, JSONL record counts, and SHA-256 hashes without loading the
+full dataset into memory.
+
 ### Validated coverage
 
 ARPAFVG:
@@ -292,6 +303,26 @@ train a new experiment.
 - all relevant tests pass;
 - model-interface changes are documented as checkpoint-incompatible and use a
   new experiment configuration.
+
+## Operational tensor adapter
+
+The official-observation adapter is implemented separately from the frozen V6
+training input. Build the one-week physical-station tensor with:
+
+```text
+python scripts/build_operational_tensors.py <four QC JSON files> \
+  --from-utc 2026-08-01T00 --to-utc 2026-08-08T00 \
+  --max-age-minutes 60 \
+  --output data_external/meteohub/processed/20260801_20260808/official_hourly_physical.npz
+```
+
+The output contains `values`, `value_mask`, `source_time`,
+`observation_age_minutes`, `station_present`, fixed-order station IDs,
+coordinates, and static source types. Pressure remains
+`station_pressure_hpa`; wind components require a same-context speed/direction
+pair; precipitation is valid only when non-overlapping source intervals cover
+the complete preceding hour. This seven-channel operational representation is
+checkpoint-incompatible with frozen V6 and must be used by a new experiment.
 
 ## Deferred work
 

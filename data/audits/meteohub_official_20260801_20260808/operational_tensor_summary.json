@@ -1,0 +1,78 @@
+{
+  "snapshot_id": "meteohub_official_20260801_20260808",
+  "external_tensor": "data_external/meteohub/processed/20260801_20260808/official_hourly_physical.npz",
+  "from_utc": "2026-08-01T00:00:00Z",
+  "to_utc": "2026-08-08T00:00:00Z",
+  "hour_count": 169,
+  "fixed_physical_station_count": 239,
+  "max_age_minutes": 60,
+  "input_observation_count": 5776044,
+  "diagnostics": {
+    "unknown_station_measurements": 3829752,
+    "unsupported_or_ineligible_measurements": 107065,
+    "unpaired_wind_contexts": 11449,
+    "unpaired_wind_direction_only": 0,
+    "unpaired_wind_speed_only": 11449,
+    "precipitation_candidate_hours": 25944,
+    "accepted_precipitation_hours": 24215,
+    "rejected_precipitation_hours": 1729
+  },
+  "variable_coverage": {
+    "station_pressure_hpa": {"valid_cells": 2193, "stations_with_any": 13},
+    "u10": {"valid_cells": 6832, "stations_with_any": 41},
+    "v10": {"valid_cells": 6832, "stations_with_any": 41},
+    "wind_gust_max": {"valid_cells": 3543, "stations_with_any": 21},
+    "t2m": {"valid_cells": 22175, "stations_with_any": 132},
+    "relative_humidity": {"valid_cells": 14742, "stations_with_any": 88},
+    "tp": {"valid_cells": 24215, "stations_with_any": 154}
+  },
+  "network_acceptance_checks": {
+    "arpafvg": {
+      "fixed_stations": 22,
+      "station_pressure_hpa": 6,
+      "u10_v10": 13,
+      "wind_gust_max": 14,
+      "t2m": 13,
+      "relative_humidity": 11,
+      "tp": 18
+    },
+    "dpcn_puglia": {
+      "fixed_stations": 61,
+      "station_pressure_hpa": 0,
+      "u10_v10": 10,
+      "wind_gust_max": 0,
+      "t2m": 56,
+      "relative_humidity": 29,
+      "tp": 57
+    },
+    "dpcn_veneto": {
+      "fixed_stations": 22,
+      "station_pressure_hpa": 0,
+      "u10_v10": 9,
+      "wind_gust_max": 2,
+      "t2m": 15,
+      "relative_humidity": 14,
+      "tp": 15
+    },
+    "regione_abruzzo_polaris": {
+      "fixed_stations": 22,
+      "stations_with_any_operational_input": 0
+    }
+  },
+  "invariants": {
+    "finite_valid_values": true,
+    "masked_values_are_zero": true,
+    "valid_age_within_limit": true,
+    "masked_age_is_minus_one": true,
+    "no_future_source": true,
+    "uv_masks_equal": true,
+    "station_present_matches_mask": true
+  },
+  "interpretation": [
+    "Raw station presence and usable model-input presence are different quantities.",
+    "Station pressure remains station_pressure_hpa and is never labelled ERA5 msl.",
+    "Wind speed without a same-context direction is masked for both u10 and v10.",
+    "Precipitation is accepted only when source intervals cover a complete hour without overlap or gaps.",
+    "The tensor excludes the 151 virtual marine coordinates and is incompatible with the frozen V6 checkpoint."
+  ]
+}

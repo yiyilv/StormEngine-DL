@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sqlite3
 import statistics
 from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass
@@ -287,3 +288,285 @@ def audit_observations(
     if include_observations:
         report["observations"] = [asdict(row) for row in rows]
     return report
+
+
+_SQLITE_COLUMNS = tuple(Observation.__dataclass_fields__)
+_SQLITE_TYPES = {
+    "latitude": "REAL",
+    "longitude": "REAL",
+    "elevation_m": "REAL",
+    "raw_value": "REAL",
+    "canonical_value": "REAL",
+    "timerange_indicator": "INTEGER",
+    "timerange_start_seconds": "INTEGER",
+    "timerange_end_seconds": "INTEGER",
+    "aggregation_seconds": "INTEGER",
+    "level_type": "INTEGER",
+    "level_value_raw": "REAL",
+    "height_above_ground_m": "REAL",
+}
+
+
+def _identity_digest(observation: Observation) -> bytes:
+    encoded = json.dumps(observation.identity, separators=(",", ":")).encode()
+    return hashlib.sha256(encoded).digest()
+
+
+def _observation_values(observation: Observation) -> tuple[object, ...]:
+    return (_identity_digest(observation),) + tuple(
+        getattr(observation, name) for name in _SQLITE_COLUMNS
+    )
+
+
+def _weighted_median(counts: Sequence[tuple[float, int]]) -> float | str:
+    total = sum(count for _, count in counts)
+    if total == 0:
+        return ""
+    left_rank = (total - 1) // 2
+    right_rank = total // 2
+    cumulative = 0
+    left_value: float | None = None
+    for value, count in counts:
+        next_cumulative = cumulative + count
+        if left_value is None and left_rank < next_cumulative:
+            left_value = value
+        if right_rank < next_cumulative:
+            assert left_value is not None
+            return (left_value + value) / 2.0
+        cumulative = next_cumulative
+    raise AssertionError("Weighted median ranks exceeded interval counts")
+
+
+def audit_observations_sqlite(
+    observations: Iterable[Observation],
+    database_path: str | Path,
+    selected_station_ids: set[str] | None = None,
+    *,
+    batch_size: int = 10_000,
+) -> dict[str, list[dict[str, object]] | dict[str, object]]:
+    """Build the standard audit report using a disk-backed exact deduplication store."""
+    path = Path(database_path)
+    if path.exists():
+        raise FileExistsError(f"Refusing to overwrite streaming audit database: {path}")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    connection = sqlite3.connect(path)
+    try:
+        connection.execute("PRAGMA journal_mode=OFF")
+        connection.execute("PRAGMA synchronous=OFF")
+        connection.execute("PRAGMA temp_store=FILE")
+        connection.execute("PRAGMA cache_size=-131072")
+        column_sql = ",\n".join(
+            ["identity_key BLOB PRIMARY KEY"]
+            + [f"{name} {_SQLITE_TYPES.get(name, 'TEXT')}" for name in _SQLITE_COLUMNS]
+        )
+        connection.execute(f"CREATE TABLE observations ({column_sql})")
+        connection.execute("CREATE TABLE corrected_revisions (marker INTEGER)")
+        connection.execute(
+            """
+            CREATE TRIGGER count_corrected_revision BEFORE UPDATE ON observations
+            WHEN OLD.raw_value != NEW.raw_value
+            BEGIN
+                INSERT INTO corrected_revisions VALUES (1);
+            END
+            """
+        )
+        placeholders = ",".join("?" for _ in range(len(_SQLITE_COLUMNS) + 1))
+        updates = ",".join(f"{name}=excluded.{name}" for name in _SQLITE_COLUMNS)
+        insert_sql = (
+            f"INSERT INTO observations VALUES ({placeholders}) "
+            f"ON CONFLICT(identity_key) DO UPDATE SET {updates}"
+        )
+        raw_count = 0
+        source_files: set[str] = set()
+        batch: list[tuple[object, ...]] = []
+        for observation in observations:
+            raw_count += 1
+            source_files.add(observation.source_file)
+            batch.append(_observation_values(observation))
+            if len(batch) >= batch_size:
+                connection.executemany(insert_sql, batch)
+                batch.clear()
+        if batch:
+            connection.executemany(insert_sql, batch)
+        connection.commit()
+
+        connection.execute(
+            "CREATE INDEX observation_station_variable_time "
+            "ON observations(station_id, bufr_code, observation_time)"
+        )
+        connection.execute(
+            "CREATE INDEX observation_variable ON observations(bufr_code)"
+        )
+        connection.execute(
+            "CREATE TEMP TABLE selected_stations (station_id TEXT PRIMARY KEY)"
+        )
+        if selected_station_ids:
+            connection.executemany(
+                "INSERT INTO selected_stations VALUES (?)",
+                ((station_id,) for station_id in selected_station_ids),
+            )
+
+        interval_counts: dict[tuple[str, str], list[tuple[float, int]]] = defaultdict(list)
+        interval_query = """
+            WITH distinct_times AS (
+                SELECT station_id, bufr_code, observation_time
+                FROM observations
+                GROUP BY station_id, bufr_code, observation_time
+            ), intervals AS (
+                SELECT station_id, bufr_code,
+                       CAST(strftime('%s', observation_time) AS INTEGER) -
+                       LAG(CAST(strftime('%s', observation_time) AS INTEGER)) OVER (
+                           PARTITION BY station_id, bufr_code ORDER BY observation_time
+                       ) AS delta
+                FROM distinct_times
+            )
+            SELECT station_id, bufr_code, delta, COUNT(*)
+            FROM intervals
+            WHERE delta > 0
+            GROUP BY station_id, bufr_code, delta
+            ORDER BY station_id, bufr_code, delta
+        """
+        for station_id, code, delta, count in connection.execute(interval_query):
+            interval_counts[(station_id, code)].append((float(delta), int(count)))
+
+        variable_summary = [
+            {
+                "bufr_code": row[0],
+                "canonical_variable": row[1],
+                "canonical_unit": row[2] or "",
+                "observation_count": row[3],
+                "station_count": row[4],
+                "selected_station_count": row[5],
+                "first_time": row[6],
+                "last_time": row[7],
+            }
+            for row in connection.execute(
+                """
+                SELECT o.bufr_code, MIN(o.canonical_variable), MIN(o.canonical_unit),
+                       COUNT(*), COUNT(DISTINCT o.station_id),
+                       COUNT(DISTINCT CASE WHEN s.station_id IS NOT NULL THEN o.station_id END),
+                       MIN(o.observation_time), MAX(o.observation_time)
+                FROM observations o
+                LEFT JOIN selected_stations s USING (station_id)
+                GROUP BY o.bufr_code
+                ORDER BY o.bufr_code
+                """
+            )
+        ]
+
+        station_variable_summary = []
+        station_variable_query = """
+            SELECT o.station_id, MIN(o.station_name), MIN(o.network),
+                   MIN(CAST(o.latitude AS REAL)), MIN(CAST(o.longitude AS REAL)),
+                   MAX(s.station_id IS NOT NULL), o.bufr_code,
+                   MIN(o.canonical_variable), COUNT(*),
+                   COUNT(DISTINCT o.observation_time),
+                   MIN(o.observation_time), MAX(o.observation_time)
+            FROM observations o
+            LEFT JOIN selected_stations s USING (station_id)
+            GROUP BY o.station_id, o.bufr_code
+            ORDER BY o.station_id, o.bufr_code
+        """
+        for row in connection.execute(station_variable_query):
+            station_variable_summary.append({
+                "station_id": row[0],
+                "station_name": row[1],
+                "network": row[2],
+                "latitude": row[3],
+                "longitude": row[4],
+                "selected_for_project": bool(row[5]),
+                "bufr_code": row[6],
+                "canonical_variable": row[7],
+                "observation_count": row[8],
+                "unique_timestamp_count": row[9],
+                "first_time": row[10],
+                "last_time": row[11],
+                "median_interval_seconds": _weighted_median(
+                    interval_counts.get((row[0], row[6]), [])
+                ),
+            })
+
+        variables_by_station: dict[str, list[str]] = defaultdict(list)
+        for station_id, code in connection.execute(
+            "SELECT DISTINCT station_id, bufr_code FROM observations ORDER BY station_id, bufr_code"
+        ):
+            variables_by_station[station_id].append(code)
+        station_summary = [
+            {
+                "station_id": row[0],
+                "station_name": row[1],
+                "network": row[2],
+                "latitude": row[3],
+                "longitude": row[4],
+                "elevation_m": row[5] if row[5] is not None else "",
+                "selected_for_project": bool(row[6]),
+                "variable_count": len(variables_by_station[row[0]]),
+                "variables": "|".join(variables_by_station[row[0]]),
+            }
+            for row in connection.execute(
+                """
+                SELECT o.station_id, MIN(o.station_name), MIN(o.network),
+                       MIN(CAST(o.latitude AS REAL)), MIN(CAST(o.longitude AS REAL)),
+                       MIN(CAST(o.elevation_m AS REAL)), MAX(s.station_id IS NOT NULL)
+                FROM observations o
+                LEFT JOIN selected_stations s USING (station_id)
+                GROUP BY o.station_id
+                ORDER BY o.station_id
+                """
+            )
+        ]
+
+        timerange_summary = [
+            {
+                "bufr_code": row[0],
+                "timerange_indicator": row[1],
+                "timerange_start_seconds": row[2],
+                "timerange_end_seconds": row[3],
+                "aggregation_seconds": row[4],
+                "observation_count": row[5],
+            }
+            for row in connection.execute(
+                """
+                SELECT bufr_code, timerange_indicator, timerange_start_seconds,
+                       timerange_end_seconds, aggregation_seconds, COUNT(*)
+                FROM observations
+                GROUP BY bufr_code, timerange_indicator, timerange_start_seconds,
+                         timerange_end_seconds, aggregation_seconds
+                ORDER BY bufr_code, timerange_indicator, timerange_start_seconds,
+                         timerange_end_seconds, aggregation_seconds
+                """
+            )
+        ]
+
+        unique_count = int(connection.execute("SELECT COUNT(*) FROM observations").fetchone()[0])
+        corrected_count = int(
+            connection.execute("SELECT COUNT(*) FROM corrected_revisions").fetchone()[0]
+        )
+        station_ids = {row["station_id"] for row in station_summary}
+        summary = {
+            "source_files": sorted(source_files),
+            "raw_measurement_count": raw_count,
+            "unique_measurement_count": unique_count,
+            "duplicate_measurement_count": raw_count - unique_count,
+            "corrected_overlap_count": corrected_count,
+            "station_count": len(station_summary),
+            "selected_station_count": (
+                len(station_ids & selected_station_ids)
+                if selected_station_ids is not None else None
+            ),
+            "unmapped_bufr_codes": [
+                row[0] for row in connection.execute(
+                    "SELECT DISTINCT bufr_code FROM observations "
+                    "WHERE canonical_variable LIKE 'unmapped_%' ORDER BY bufr_code"
+                )
+            ],
+        }
+        return {
+            "summary": summary,
+            "variable_summary": variable_summary,
+            "station_variable_summary": station_variable_summary,
+            "station_summary": station_summary,
+            "timerange_summary": timerange_summary,
+        }
+    finally:
+        connection.close()

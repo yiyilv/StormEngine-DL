@@ -5,6 +5,7 @@ from pathlib import Path
 
 from stormengine_dl.data.official_observations import (
     audit_observations,
+    audit_observations_sqlite,
     iter_meteohub_observations,
     parse_meteohub_record,
 )
@@ -52,6 +53,25 @@ class OfficialObservationTests(unittest.TestCase):
             self.assertEqual(report["summary"]["unique_measurement_count"], 7)
             self.assertEqual(report["summary"]["selected_station_count"], 1)
             self.assertEqual(report["summary"]["unmapped_bufr_codes"], [])
+
+    def test_streaming_audit_matches_in_memory_summary(self) -> None:
+        revised = json.loads(json.dumps(SAMPLE))
+        revised["data"][1]["vars"]["B13011"]["v"] = 2.4
+        rows = parse_meteohub_record(SAMPLE, "first.json")
+        rows.extend(parse_meteohub_record(revised, "second.json"))
+        selected = {rows[0].station_id}
+        expected = audit_observations(rows, selected)
+        with tempfile.TemporaryDirectory() as directory:
+            actual = audit_observations_sqlite(
+                rows,
+                Path(directory) / "audit.sqlite3",
+                selected,
+                batch_size=3,
+            )
+        self.assertEqual(actual["summary"], expected["summary"])
+        self.assertEqual(actual["variable_summary"], expected["variable_summary"])
+        self.assertEqual(actual["timerange_summary"], expected["timerange_summary"])
+        self.assertEqual(actual["station_variable_summary"], expected["station_variable_summary"])
 
 
 if __name__ == "__main__":

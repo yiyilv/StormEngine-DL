@@ -1,0 +1,69 @@
+{
+  "generated_utc": "2026-08-10",
+  "purpose": "Record important local-only artifacts that are excluded from ordinary Git history.",
+  "policy": "Do not commit raw licensed observations, ERA5 NetCDF files, generated caches, or binary model checkpoints. Verify local copies with the recorded hashes and regenerate derived files where documented.",
+  "artifacts": [
+    {
+      "logical_name": "frozen_v6_best_checkpoint",
+      "path": "artifacts/v6_2010_2017/best.pt",
+      "bytes": 6306388,
+      "sha256": "2656d9e32cf2d749c582f1fbe24b24d02094d970f333b4691b45fd4a2b37376a",
+      "git_policy": "excluded binary checkpoint",
+      "importance": "Frozen checkpoint used for the formal 2017 evaluation."
+    },
+    {
+      "logical_name": "v6_last_training_checkpoint",
+      "path": "artifacts/v6_2010_2017/last.pt",
+      "bytes": 6307284,
+      "sha256": "fde1f41e04f9ebfc5fec9e3cdcc8af8f62578b76489559282dbcbb61e482f37d",
+      "git_policy": "excluded binary checkpoint",
+      "importance": "Final resumable V6 training state; not used as the frozen evaluation model."
+    },
+    {
+      "logical_name": "reconstruction_diagnostic_best_checkpoint",
+      "path": "artifacts/v6_reconstruction/best.pt",
+      "bytes": 333896,
+      "sha256": "3df797e78e181444521e87a5d5bc3ebbc658ac3ffc137dc928fa0e028998a756",
+      "git_policy": "excluded binary checkpoint",
+      "importance": "Best epoch 75 spatial reconstruction diagnostic checkpoint."
+    },
+    {
+      "logical_name": "official_hourly_physical_tensor",
+      "path": "data_external/meteohub/processed/20260801_20260808/official_hourly_physical.npz",
+      "bytes": 281616,
+      "sha256": "89f683b1c8e9aacc05ff19c4f4ec563afad23fd943caa87437adfb2b393b3b13",
+      "git_policy": "external derived observation data; redistribution terms not yet verified",
+      "regenerate": "scripts/build_operational_tensors.py using the four QC files in data/manifests/meteohub_20260801_20260808.json"
+    },
+    {
+      "logical_name": "official_hourly_physical_tensor_metadata",
+      "path": "data_external/meteohub/processed/20260801_20260808/official_hourly_physical.json",
+      "bytes": 2537,
+      "sha256": "2a9db39da80b323afae110f352581a2052f53788a19644f787d31fd50882ad3a",
+      "git_policy": "external companion metadata; compact scientific summary is versioned under data/audits"
+    },
+    {
+      "logical_name": "era5_2010_2017_archive",
+      "path": "../DownloadDate/*.nc",
+      "file_count": 192,
+      "total_bytes": 886488125,
+      "git_policy": "external ERA5 NetCDF archive",
+      "integrity_reference": "data/manifests/era5_manifest.csv"
+    },
+    {
+      "logical_name": "era5_training_cache",
+      "path": "../DownloadDate/cache/stormengine_2010_2017/",
+      "file_count": 6,
+      "total_bytes": 1982386007,
+      "git_policy": "generated cache; never commit",
+      "regenerate": "scripts/build_training_cache.py with configs/era5_2010_2017.yaml"
+    },
+    {
+      "logical_name": "meteohub_august_raw_qc",
+      "path": "data_external/meteohub/raw/20260801_20260808/",
+      "file_count": 4,
+      "git_policy": "raw external observations; retain attribution and verify redistribution terms",
+      "integrity_reference": "data/manifests/meteohub_20260801_20260808.json"
+    }
+  ]
+}

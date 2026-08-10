@@ -15,6 +15,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from stormengine_dl.data.official_observations import (  # noqa: E402
     audit_observations,
+    audit_observations_sqlite,
     iter_meteohub_observations,
 )
 
@@ -25,6 +26,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--registry", type=Path, default=ROOT / "data" / "stations_registry.csv")
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--write-observations", action="store_true")
+    parser.add_argument(
+        "--streaming-database",
+        type=Path,
+        help="Use this new SQLite file for memory-bounded exact deduplication.",
+    )
     return parser.parse_args()
 
 
@@ -52,11 +58,20 @@ def main() -> None:
     args = parse_args()
     registry = selected_station_registry(args.registry)
     selected = set(registry)
-    report = audit_observations(
-        iter_meteohub_observations(args.jsonl),
-        selected,
-        include_observations=args.write_observations,
-    )
+    if args.streaming_database is not None:
+        if args.write_observations:
+            raise ValueError("--write-observations is not supported with --streaming-database")
+        report = audit_observations_sqlite(
+            iter_meteohub_observations(args.jsonl),
+            args.streaming_database,
+            selected,
+        )
+    else:
+        report = audit_observations(
+            iter_meteohub_observations(args.jsonl),
+            selected,
+            include_observations=args.write_observations,
+        )
     args.output_dir.mkdir(parents=True, exist_ok=True)
     for name in ("variable_summary", "station_variable_summary", "station_summary", "timerange_summary"):
         write_csv(args.output_dir / f"{name}.csv", report[name])  # type: ignore[arg-type]
