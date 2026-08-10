@@ -19,5 +19,6 @@ wandb/
 *.zarr/
 data/raw/
 data/processed/
+data_external/
 configs/*.local.yaml
 cache/

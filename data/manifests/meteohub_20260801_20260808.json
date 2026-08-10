@@ -1,0 +1,73 @@
+{
+  "snapshot_id": "meteohub_official_20260801_20260808",
+  "source": "Agenzia ItaliaMeteo MeteoHub data extraction portal",
+  "source_url": "https://meteohub.agenziaitaliameteo.it/app/data/datasets",
+  "requested_from_utc": "2026-08-01T00:00:00Z",
+  "requested_to_utc": "2026-08-08T00:00:00Z",
+  "selection": "All available products, levels, and timeranges for each selected network",
+  "format": "JSON Lines",
+  "raw_root": "data_external/meteohub/raw/20260801_20260808",
+  "git_policy": "Raw files are external and ignored; only this manifest and compact audits are versioned",
+  "license_note": "Retain the attribution and per-dataset terms displayed by MeteoHub; verify reuse terms before redistribution",
+  "files": [
+    {
+      "logical_name": "arpafvg_no_qc_control",
+      "filename": "meteohub_arpafvg_20260801_20260808_no_qc.json",
+      "request_name": "stormengine_arpafvg_audit_20260801_20260808_no_qc",
+      "networks": ["arpafvg"],
+      "quality_controlled_only": false,
+      "bytes": 14486502,
+      "jsonl_records": 25597,
+      "sha256": "0cc609999f3a5dd2698cb44cfe92eed607758914a2154779cb47f6c14a8c9df9"
+    },
+    {
+      "logical_name": "arpafvg_qc",
+      "filename": "meteohub_arpafvg_20260801_20260808_qc.json",
+      "request_name": "stormengine_arpafvg_audit_20260801_20260808_qc",
+      "networks": ["arpafvg"],
+      "quality_controlled_only": true,
+      "bytes": 14486141,
+      "jsonl_records": 25597,
+      "sha256": "712c758cb5d56d93a99e4605d6122c32050cdd2567667f3e16aa7eb5a6a88765"
+    },
+    {
+      "logical_name": "central_and_emilia_romagna_qc",
+      "filename": "meteohub_batch1_central_er_20260801_20260808_qc.json",
+      "request_name": "stormengine_batch1_central_er_20260801_20260808_qc",
+      "networks": [
+        "dpcn-marche",
+        "dpcn-molise",
+        "agrmet",
+        "boa",
+        "simnbo",
+        "spdsra",
+        "urbane",
+        "marefe"
+      ],
+      "quality_controlled_only": true,
+      "bytes": 301233133,
+      "jsonl_records": 598798,
+      "sha256": "03dbed6cf8280e9ade9ab0c8fe8369dadb5327ee07db222f8b88ce8379dfa9e8"
+    },
+    {
+      "logical_name": "puglia_qc",
+      "filename": "meteohub_puglia_20260801_20260808_qc.json",
+      "request_name": "stormengine_puglia_20260801_20260808_qc",
+      "networks": ["dpcn-puglia"],
+      "quality_controlled_only": true,
+      "bytes": 748828931,
+      "jsonl_records": 1366544,
+      "sha256": "1301e209783e7e4069da906b8431f9d2d91a31cc0ca26fb31c2280217e7eee8c"
+    },
+    {
+      "logical_name": "veneto_qc",
+      "filename": "meteohub_veneto_20260801_20260808_qc.json",
+      "request_name": "stormengine_veneto_20260801_20260808_qc",
+      "networks": ["dpcn-veneto"],
+      "quality_controlled_only": true,
+      "bytes": 209581417,
+      "jsonl_records": 415304,
+      "sha256": "aec2bb034ba30ec3d29b01d837a9a792f9897a6e8efbefb84fe110fc0699e1c1"
+    }
+  ]
+}

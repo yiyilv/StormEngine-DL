@@ -1,0 +1,135 @@
+station_id,station_name,network,latitude,longitude,elevation_m,selected_for_project,variable_count,variables
+MH::agrmet::5e7f0458de15,Carpineta,agrmet,44.08903,12.27459,113.0,True,3,B12101|B13003|B13011
+MH::agrmet::961d46e49b22,S. Pietro in Vincoli,agrmet,44.31392,12.1602,5.0,True,3,B12101|B13003|B13011
+MH::agrmet::a555f8e2069e,Vergiano,agrmet,44.03456,12.5005,36.0,True,3,B12101|B13003|B13011
+MH::boa::15070855aa5c,Cervia Porto,boa,44.26714,12.35751,0.0,True,1,B22037
+MH::boa::2bb2ab382da0,Cattolica Porto radar,boa,43.97027,12.75068,0.0,True,1,B22037
+MH::boa::396335aa9517,Cervia Porto radar,boa,44.26714,12.35752,0.0,True,1,B22037
+MH::boa::4b091b931c3f,Nausicaa 2,boa,44.21458,12.47587,0.0,True,10,B12101|B22001|B22004|B22032|B22043|B22070|B22071|B22073|B22074|B22196
+MH::boa::a126d939a199,Cattolica Porto,boa,43.97027,12.75067,0.0,True,1,B22037
+MH::dpcn-marche::006ea0f88bf6,Baraccola,dpcn-marche,43.57445,13.52388,-1.0,True,3,B12101|B13003|B13011
+MH::dpcn-marche::010b8f07c3bf,Villa Potenza,dpcn-marche,43.32726,13.42604,90.0,True,4,B12101|B13003|B13011|B13215
+MH::dpcn-marche::0dc29a9737d7,Valmir,dpcn-marche,43.0413,13.67875,-1.0,True,1,B13215
+MH::dpcn-marche::101b7b974c9d,Pianello di Ostra,dpcn-marche,43.62458,13.12703,0.0,True,1,B13215
+MH::dpcn-marche::10b908b4b6b6,Piagge,dpcn-marche,43.7375,12.96922,-1.0,True,3,B12101|B13003|B13011
+MH::dpcn-marche::13c1a83002d2,Svarchi,dpcn-marche,43.47547,13.59435,-1.0,True,3,B12101|B13011|B13215
+MH::dpcn-marche::1d28cc35dfb7,Ete Vivo,dpcn-marche,43.1358,13.7131,41.0,True,3,B12101|B13003|B13215
+MH::dpcn-marche::1e201ff6d532,Agugliano,dpcn-marche,43.5433,13.3806,141.0,True,1,B13011
+MH::dpcn-marche::26b2974cd07d,Ripatransone,dpcn-marche,42.99213,13.785,-1.0,True,3,B12101|B13003|B13011
+MH::dpcn-marche::28f62c68c686,Passatempo,dpcn-marche,43.44728,13.4492,62.0,True,4,B12101|B13003|B13011|B13215
+MH::dpcn-marche::29bc6beb8023,Metauro,dpcn-marche,43.76256,12.96747,47.0,True,4,B12101|B13003|B13011|B13215
+MH::dpcn-marche::2ddc53ead8f4,Ete Morto,dpcn-marche,43.2364,13.6719,33.0,True,1,B13215
+MH::dpcn-marche::398e07751e20,Foce Metauro,dpcn-marche,43.82704,13.05262,5.0,True,2,B13011|B13215
+MH::dpcn-marche::4387fff0c9da,Chienti 2,dpcn-marche,43.2608,13.59,65.0,True,4,B12101|B13003|B13011|B13215
+MH::dpcn-marche::453a44434e87,Carassai,dpcn-marche,43.02597,13.64595,-1.0,True,3,B12101|B13003|B13011
+MH::dpcn-marche::47d9180dcdd8,Foglia 2,dpcn-marche,43.85179,12.7868,45.0,True,2,B13011|B13215
+MH::dpcn-marche::4b30ece76f74,Marina di Montemarciano,dpcn-marche,43.6463,13.34047,-1.0,True,2,B13011|B13215
+MH::dpcn-marche::4b4a9f7399a2,Musone,dpcn-marche,43.4756,13.38844,124.0,True,3,B12101|B13011|B13215
+MH::dpcn-marche::5604e8920253,Aso,dpcn-marche,43.02143,13.61847,-1.0,True,1,B13215
+MH::dpcn-marche::5b2f428cb313,San Benedetto,dpcn-marche,42.9333,13.8892,1.0,True,6,B10004|B11001|B11002|B12101|B13003|B13011
+MH::dpcn-marche::6338346c8bdf,Conca 2,dpcn-marche,43.8839,12.5289,228.0,True,2,B13011|B13215
+MH::dpcn-marche::6ae00920b079,Potenza 2,dpcn-marche,43.36473,13.55058,40.0,True,1,B13215
+MH::dpcn-marche::726fc555cbad,Foce Musone,dpcn-marche,43.47352,13.63888,3.0,True,1,B13215
+MH::dpcn-marche::73546d2b9873,Senigallia,dpcn-marche,43.70103,13.20577,-1.0,True,3,B12101|B13003|B13011
+MH::dpcn-marche::8909bd7fffab,Misa,dpcn-marche,43.66254,13.16497,38.0,True,4,B12101|B13003|B13011|B13215
+MH::dpcn-marche::8e076a8579bf,Tavoleto,dpcn-marche,43.84342,12.5911,-1.0,True,1,B13011
+MH::dpcn-marche::8e8c478988f1,Villa Fastiggi,dpcn-marche,43.8906,12.8694,25.0,True,6,B10004|B11001|B11002|B12101|B13003|B13011
+MH::dpcn-marche::8edbd0ebf693,Grottazzolina,dpcn-marche,43.1061,13.5986,195.0,True,2,B12101|B13011
+MH::dpcn-marche::92cc06e7381f,Monocchia,dpcn-marche,43.36286,13.50756,64.0,True,1,B13215
+MH::dpcn-marche::938a23bbc689,Montefano,dpcn-marche,43.4094,13.4369,202.0,True,3,B12101|B13003|B13011
+MH::dpcn-marche::95781f3ab475,Ancona Torrette,dpcn-marche,43.61095,13.4498,-1.0,True,3,B12101|B13003|B13011
+MH::dpcn-marche::96bede171db0,Recanati,dpcn-marche,43.3836,13.5933,27.0,True,1,B13011
+MH::dpcn-marche::9bcb8877b6a1,Corinaldo,dpcn-marche,43.6605,13.04638,-1.0,True,3,B12101|B13003|B13011
+MH::dpcn-marche::9c7408e1afe2,Monte San Vito,dpcn-marche,43.60927,13.29086,36.0,True,1,B13215
+MH::dpcn-marche::a76c1ba93810,Rostighello,dpcn-marche,43.43805,13.53805,-1.0,True,3,B12101|B13011|B13215
+MH::dpcn-marche::aa0b4cdc75f0,Tesino,dpcn-marche,42.96805,13.71175,-1.0,True,2,B13011|B13215
+MH::dpcn-marche::b07946f4b0fd,Arzilla,dpcn-marche,43.84,12.8947,64.0,True,2,B13011|B13215
+MH::dpcn-marche::b1c5c8a80820,Foglia 3,dpcn-marche,43.90758,12.89751,9.0,True,2,B13011|B13215
+MH::dpcn-marche::b2ad5d3cbbec,Foce Cesano,dpcn-marche,43.74958,13.17091,8.0,True,2,B13011|B13215
+MH::dpcn-marche::b480cef512bd,Loreto,dpcn-marche,43.43578,13.61955,-1.0,True,3,B12101|B13003|B13011
+MH::dpcn-marche::b738a6e21c00,Porto S.Elpidio,dpcn-marche,43.23261,13.77223,5.0,True,7,B10004|B11001|B11002|B12101|B13003|B13011|B13215
+MH::dpcn-marche::ba82e5485bd1,Foce Chienti,dpcn-marche,43.2972,13.72883,4.0,True,4,B12101|B13003|B13011|B13215
+MH::dpcn-marche::c007f1337e8b,Foce Tesino,dpcn-marche,42.97552,13.86875,66.0,True,3,B12101|B13011|B13215
+MH::dpcn-marche::c736667faf7e,Foce Aso,dpcn-marche,43.1019,13.8375,4.0,True,1,B13215
+MH::dpcn-marche::d652eedff07d,Briglia Volpi,dpcn-marche,42.89038,13.87938,-1.0,True,1,B13215
+MH::dpcn-marche::d9512702c69f,Fermo,dpcn-marche,43.1575,13.7144,140.0,True,3,B12101|B13003|B13011
+MH::dpcn-marche::e5a18b29a68f,Nevola,dpcn-marche,43.63852,13.0769,71.0,True,1,B13215
+MH::dpcn-marche::eb8cf656b14b,Aspio,dpcn-marche,43.51722,13.53285,24.0,True,1,B13215
+MH::dpcn-marche::ec60f1eff25e,Porto Recanati,dpcn-marche,43.41521,13.65162,14.0,True,1,B13215
+MH::dpcn-marche::ee28b7fb66ee,Ancona Regione,dpcn-marche,43.6103,13.5083,47.0,True,6,B10004|B11001|B11002|B12101|B13003|B13011
+MH::dpcn-marche::f186bdcc9baf,Cesano,dpcn-marche,43.6649,13.01444,89.0,True,4,B12101|B13003|B13011|B13215
+MH::dpcn-marche::f20c7d063dd5,Osimo Monteragolo,dpcn-marche,43.49232,13.50175,-1.0,True,3,B12101|B13003|B13011
+MH::dpcn-marche::f946a97dfcd5,Fiumesino,dpcn-marche,43.62947,13.37233,-1.0,True,2,B13011|B13215
+MH::dpcn-marche::fdb08f19e790,Aspio 2,dpcn-marche,43.49395,13.56658,11.0,True,1,B13215
+MH::dpcn-molise::1f63b49c8d80,Termoli,dpcn-molise,41.97194,14.99472,10.0,True,2,B12101|B13011
+MH::dpcn-molise::1fc8819939e3,Altopantano,dpcn-molise,41.92656,14.98981,17.0,True,1,B13215
+MH::dpcn-molise::4a33a824a3ee,Mafalda,dpcn-molise,41.94222,14.70306,442.0,True,2,B12101|B13011
+MH::dpcn-molise::7ff0961c6b63,Palata,dpcn-molise,41.89,14.78583,505.0,True,2,B12101|B13011
+MH::dpcn-puglia::07aadb2f2aac,Adelfia,dpcn-puglia,41.00083,16.86717,156.0,True,1,B13011
+MH::dpcn-puglia::274e683c4d9e,Conversano,dpcn-puglia,40.9205,17.12583,201.0,True,1,B13011
+MH::dpcn-puglia::317ca2ca67bf,Casamassima,dpcn-puglia,40.9535,16.9175,222.0,True,1,B13011
+MH::dpcn-puglia::863486f2d299,Castellana Grotte,dpcn-puglia,40.87583,17.208,310.0,True,1,B13011
+MH::dpcn-puglia::a1c4d6edae1a,Turi,dpcn-puglia,40.90067,17.05267,221.0,True,1,B13011
+MH::dpcn-puglia::c429e9e90bdc,Bitonto,dpcn-puglia,41.093,16.705,108.0,True,1,B13011
+MH::dpcn-puglia::d0a79677adb2,Grumo Appula,dpcn-puglia,40.998,16.73117,180.0,True,1,B13011
+MH::dpcn-puglia::e28ff345fcd2,Bari Osservatorio,dpcn-puglia,41.11517,16.87733,7.0,True,1,B13011
+MH::dpcn-puglia::ec36a7a4aa8e,Bari Campus,dpcn-puglia,41.09533,16.8715,14.0,True,1,B13011
+MH::dpcn-veneto::08e720c67d9b,Chioggia CMT,dpcn-veneto,45.21813,12.28305,0.0,True,2,B12101|B13011
+MH::dpcn-veneto::135f658a5ce6,Latisana,dpcn-veneto,45.75583,12.9975,6.0,True,1,B13215
+MH::dpcn-veneto::2054e6a7e1d3,Zuccarello CMT,dpcn-veneto,45.53739,12.37831,0.0,True,6,B11001|B11002|B11041|B12101|B13003|B13011
+MH::dpcn-veneto::24018eecb525,Venezia-Treporti CMT,dpcn-veneto,45.45872,12.48626,1.0,True,5,B11001|B11002|B12101|B13003|B13011
+MH::dpcn-veneto::2f4aa3ec9c79,Pradon CMT,dpcn-veneto,44.91734,12.3691,0.0,True,5,B11001|B11002|B12101|B13003|B13011
+MH::dpcn-veneto::30b3f292c4ec,Cortellazzo CMT,dpcn-veneto,45.53585,12.65882,0.0,True,6,B11001|B11002|B11041|B12101|B13003|B13011
+MH::dpcn-veneto::416672aef3b8,Lugugnana di Portogruaro CMT,dpcn-veneto,45.70491,12.94669,0.0,True,3,B12101|B13003|B13011
+MH::dpcn-veneto::49a4895d3e55,Mira CMT,dpcn-veneto,45.43596,12.11748,6.0,True,3,B12101|B13003|B13011
+MH::dpcn-veneto::5a81c83da11f,Eraclea CMT,dpcn-veneto,45.60317,12.70706,1.0,True,5,B11001|B11002|B12101|B13003|B13011
+MH::dpcn-veneto::5eea91b2ada3,Bibione CMT,dpcn-veneto,45.64137,13.07747,1.0,True,5,B11001|B11002|B12101|B13003|B13011
+MH::dpcn-veneto::5fe7e65212b8,Chioggia S.Anna CMT,dpcn-veneto,45.14466,12.27579,1.0,True,3,B12101|B13003|B13011
+MH::dpcn-veneto::61b7a7acda54,Porto Barricata,dpcn-veneto,44.84861,12.465,2.0,True,1,B13215
+MH::dpcn-veneto::733580dd0906,Noventa di Piave CMT,dpcn-veneto,45.66841,12.58851,1.0,True,3,B12101|B13003|B13011
+MH::dpcn-veneto::79559cf26111,Porto Levante,dpcn-veneto,45.0481,12.36196,1.0,True,1,B13215
+MH::dpcn-veneto::9363f034f205,Portogruaro CMT,dpcn-veneto,45.74549,12.76129,2.0,True,5,B11001|B11002|B12101|B13003|B13011
+MH::dpcn-veneto::a0023f1d93b4,Eraclea,dpcn-veneto,45.57362,12.67387,0.0,True,1,B13215
+MH::dpcn-veneto::c84a4d8b78c1,S.Dona'di Piave,dpcn-veneto,45.62541,12.56309,3.0,True,1,B13215
+MH::dpcn-veneto::caaff0685441,La Salute di Livenza,dpcn-veneto,45.65563,12.80028,5.0,True,1,B13215
+MH::dpcn-veneto::d2e618e555a9,Cavarzere,dpcn-veneto,45.13833,12.08186,3.0,True,1,B13215
+MH::dpcn-veneto::d7b4884092c3,Mogliano Veneto CMT,dpcn-veneto,45.58074,12.30779,5.0,True,5,B11001|B11002|B12101|B13003|B13011
+MH::dpcn-veneto::dc91bc84a811,Fossalta di Portogruaro CMT,dpcn-veneto,45.77567,12.89394,3.0,True,3,B12101|B13003|B13011
+MH::dpcn-veneto::f21d799c4de8,Gesia-Cavarzere CMT,dpcn-veneto,45.1615,12.0872,0.0,True,5,B11001|B11002|B12101|B13003|B13011
+MH::marefe::7a2a1b698d6b,Bellocchio,marefe,44.62028,12.23556,0.0,True,6,B13080|B13083|B13215|B13231|B22043|B22062
+MH::simnbo::1860f6bdc972,Cattolica,simnbo,43.95847,12.7394,5.0,True,2,B12101|B13011
+MH::simnbo::1a848d255777,Guagnino,simnbo,44.6884,12.21161,1.0,True,7,B10004|B11001|B11002|B11041|B11043|B12101|B13011
+MH::simnbo::1bf29cf54b21,Marina di Ravenna,simnbo,44.48044,12.27744,-1.0,True,3,B12101|B13003|B13011
+MH::simnbo::3f65f03746ee,GIRALDA meteo,simnbo,44.81376,12.24834,-1.0,True,7,B11001|B11002|B11041|B11043|B12101|B13003|B13011
+MH::simnbo::417ddafb4996,Santarcangelo di Romagna,simnbo,44.06832,12.43751,38.0,True,2,B13011|B13215
+MH::simnbo::52a2cdf8c3d4,Rimini SS16,simnbo,44.06141,12.54197,10.0,True,1,B13215
+MH::simnbo::56aeb0b697d8,Umana,simnbo,44.57337,12.10134,-1.0,True,8,B11001|B11002|B11041|B11043|B12101|B13003|B13011|B14198
+MH::simnbo::5ac069a1cdcf,Morciano di Romagna,simnbo,43.91441,12.64204,79.0,True,1,B13215
+MH::simnbo::5d2f6a8ff10b,Saludecio,simnbo,43.87389,12.66972,328.0,True,3,B12101|B13003|B13011
+MH::simnbo::82580a6c5a44,Rimini Ausa,simnbo,44.05651,12.54549,10.0,True,3,B12101|B13011|B13215
+MH::simnbo::a2d2fe0f64e1,Idrovora Fosso Ghiaia,simnbo,44.35313,12.26505,-2.0,True,3,B12101|B13003|B13011
+MH::simnbo::bfa3f23ef23a,Monte Colombo,simnbo,43.92705,12.58065,217.0,True,3,B12101|B13003|B13011
+MH::simnbo::c150e298e287,Ponte Verucchio,simnbo,43.9829,12.40511,116.0,True,2,B13011|B13215
+MH::simnbo::f610fd893a86,S. Marino,simnbo,43.93753,12.44649,680.0,True,3,B12101|B13011|B13013
+MH::spdsra::00e1b0bcbaa0,Cesena,spdsra,44.13971,12.23505,31.0,True,1,B13215
+MH::spdsra::2d63f153d09f,Mesola,spdsra,44.19069,12.34962,6.0,True,2,B13011|B13215
+MH::spdsra::31a992b181ed,S. Paola,spdsra,44.03806,12.29306,278.0,True,1,B13011
+MH::spdsra::5059d084c552,S. Maria Nova,spdsra,44.21506,12.16992,21.0,True,2,B13011|B13215
+MH::spdsra::554e28ec2873,Coccolia,spdsra,44.29769,12.11085,14.0,True,2,B13011|B13215
+MH::spdsra::68d811e822c8,Museo della marineria,spdsra,44.19901,12.39485,2.0,True,2,B10004|B13215
+MH::spdsra::8010679174b0,Savio,spdsra,44.30563,12.29549,10.0,True,1,B13215
+MH::spdsra::865471505bc8,Museo della marineria,spdsra,44.19897,12.39488,2.0,True,1,B13215
+MH::spdsra::86d9406ba700,Rasponi,spdsra,44.39398,12.27311,5.0,True,1,B13215
+MH::spdsra::88c0d7b8e682,S. Marco,spdsra,44.38896,12.16847,11.0,True,1,B13215
+MH::spdsra::8e535ff1a37e,Savignano,spdsra,44.09379,12.39636,30.0,True,1,B13215
+MH::spdsra::9ea92a63bd8e,Conca Diga,spdsra,43.95818,12.70026,19.0,True,3,B12101|B13011|B13215
+MH::spdsra::b6a09a433a03,Calisese,spdsra,44.11339,12.29599,40.0,True,1,B13215
+MH::spdsra::c0404d8708c8,Mezzano,spdsra,44.46959,12.08286,12.0,True,1,B13215
+MH::spdsra::cb232ec05823,Cesenatico porto,spdsra,44.20645,12.40132,1.0,True,2,B12101|B13215
+MH::spdsra::d688e8f91922,Bevano Adriatica,spdsra,44.3245,12.27984,6.0,True,1,B13215
+MH::spdsra::de92eaf1984e,Castiglione,spdsra,44.25901,12.2609,14.0,True,1,B13215
+MH::spdsra::e02db82cdedb,Due Tigli,spdsra,44.16415,12.39269,10.0,True,2,B13011|B13215
+MH::spdsra::e236646716f4,Matellica,spdsra,44.23218,12.23401,19.0,True,2,B13011|B13215
+MH::spdsra::f3fb43498388,S. Bartolo,spdsra,44.36791,12.17268,11.0,True,1,B13215
+MH::spdsra::f8f5632ffbe7,S. Zaccaria,spdsra,44.25728,12.21407,10.0,True,1,B13215
+MH::urbane::09f34ba4f8b2,Rimini urbana,urbane,44.05919,12.57354,16.0,True,16,B11001|B11002|B11041|B11043|B11209|B11210|B11211|B11212|B11213|B11214|B11215|B11216|B12101|B13003|B13011|B14198

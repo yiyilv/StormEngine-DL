@@ -176,6 +176,12 @@ the non-public portion of the current Abruzzo station registry. The next model
 milestones are a full CUDA pilot run, baseline comparison, and operational
 inference with real-time observations.
 
+The frozen 1--8 August 2026 MeteoHub observation snapshot and the next
+operational data-engineering tasks are documented in
+[`docs/OFFICIAL_DATA_HANDOFF.md`](docs/OFFICIAL_DATA_HANDOFF.md). Raw JSON files
+remain outside Git; their hashes and request provenance are versioned in
+`data/manifests/meteohub_20260801_20260808.json`.
+
 ## V6 end-to-end training
 
 The new V6 keeps the original mean-normalized sea-weighted MSE definition

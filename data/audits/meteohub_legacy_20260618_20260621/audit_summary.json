@@ -1,0 +1,37 @@
+{
+  "source_files": [
+    "data-20260621T112251Z-168e9500-caf8-4e64-88bc-d67d2632c176.json",
+    "data-20260621T113705Z-c911e70e-405a-46fa-98e6-8cafae6718b8.json",
+    "data-20260621T164546Z-af5817d4-c864-4b8d-bd8d-5d497ff0a3d0.json"
+  ],
+  "raw_measurement_count": 853256,
+  "unique_measurement_count": 409605,
+  "duplicate_measurement_count": 443651,
+  "corrected_overlap_count": 5,
+  "station_count": 397,
+  "selected_station_count": 85,
+  "unmapped_bufr_codes": [
+    "B13013",
+    "B13215"
+  ],
+  "registered_project_station_count": 239,
+  "registered_observed_by_network": {
+    "dpcn-marche": 54,
+    "dpcn-puglia": 9,
+    "dpcn-veneto": 22
+  },
+  "registered_total_by_network": {
+    "agrmet": 3,
+    "arpafvg": 22,
+    "boa": 6,
+    "dpcn-marche": 54,
+    "dpcn-molise": 4,
+    "dpcn-puglia": 61,
+    "dpcn-veneto": 22,
+    "marefe": 9,
+    "regione-abruzzo-polaris": 22,
+    "simnbo": 14,
+    "spdsra": 21,
+    "urbane": 1
+  }
+}
