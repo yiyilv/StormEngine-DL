@@ -52,6 +52,7 @@ training:
   gradient_clip: 1.0
   mixed_precision: true
   num_workers: 0
+  progress_every_batches: 100
   sea_weight: 2.0
   smoke_train_batches: 10
   smoke_validation_batches: 5

@@ -214,11 +214,18 @@ def main() -> int:
     max_validation = int(training["smoke_validation_batches"] if args.mode == "smoke" else training["pilot_validation_batches"] if args.mode == "pilot" else len(validation_loader))
     max_epochs = int(args.epochs or (training["pilot_epochs"] if args.mode == "pilot" else training.get("max_epochs", 1) if args.mode == "train" else 1))
     warmup = int(training["benchmark_warmup_batches"] if args.mode == "benchmark" else 0)
+    progress_every = int(training.get("progress_every_batches", 100))
     timings: list[float] = []
     output = resolve(training["output_dir"])
     output.mkdir(parents=True, exist_ok=True)
     if device.type == "cuda": torch.cuda.reset_peak_memory_stats(); torch.cuda.synchronize()
     for epoch in range(start_epoch, max_epochs):
+        epoch_started = time.perf_counter()
+        expected_train_batches = min(len(train_loader), max_train + warmup)
+        print(
+            f"Epoch {epoch + 1}/{max_epochs} | train: {expected_train_batches} batches",
+            flush=True,
+        )
         train.set_epoch(epoch)
         model.train(); total = 0.0; count = 0
         for raw in train_loader:
@@ -232,13 +239,40 @@ def main() -> int:
             if device.type == "cuda": torch.cuda.synchronize()
             if count >= warmup: timings.append(time.perf_counter() - started); total += float(loss.detach())
             count += 1
+            if progress_every > 0 and (
+                count % progress_every == 0 or count == expected_train_batches
+            ):
+                elapsed = time.perf_counter() - epoch_started
+                eta = elapsed / count * max(0, expected_train_batches - count)
+                print(
+                    f"  train {count}/{expected_train_batches} "
+                    f"({100 * count / expected_train_batches:5.1f}%) "
+                    f"loss={float(loss.detach()):.5f} elapsed={elapsed / 60:.1f}m "
+                    f"ETA={eta / 60:.1f}m",
+                    flush=True,
+                )
         train_loss = total / max(1, count - warmup)
         model.eval(); val_total = 0.0; val_count = 0
         if args.mode != "benchmark":
+            expected_validation_batches = min(len(validation_loader), max_validation)
+            validation_started = time.perf_counter()
+            print(f"Epoch {epoch + 1}/{max_epochs} | validation: {expected_validation_batches} batches", flush=True)
             with torch.no_grad():
                 for raw in validation_loader:
                     if val_count >= max_validation: break
                     batch = move(raw, device); val_total += float(weighted_mse(forward(model, batch, static), batch["target"], weights)); val_count += 1
+                    if progress_every > 0 and (
+                        val_count % progress_every == 0
+                        or val_count == expected_validation_batches
+                    ):
+                        elapsed = time.perf_counter() - validation_started
+                        eta = elapsed / val_count * max(0, expected_validation_batches - val_count)
+                        print(
+                            f"  validation {val_count}/{expected_validation_batches} "
+                            f"({100 * val_count / expected_validation_batches:5.1f}%) "
+                            f"elapsed={elapsed / 60:.1f}m ETA={eta / 60:.1f}m",
+                            flush=True,
+                        )
         validation_loss = val_total / val_count if val_count else None
         history.append({"epoch": epoch + 1, "train_loss": train_loss, "validation_loss": validation_loss})
         if args.mode in {"pilot", "train"}:
@@ -263,7 +297,21 @@ def main() -> int:
             torch.save(checkpoint, output / f"{prefix}last.pt")
             if improved:
                 torch.save(checkpoint, output / f"{prefix}best.pt")
+            epoch_elapsed = time.perf_counter() - epoch_started
+            remaining = max_epochs - epoch - 1
+            print(
+                f"Epoch {epoch + 1}/{max_epochs} complete | "
+                f"train_loss={train_loss:.6f} validation_loss={validation_loss:.6f} "
+                f"best={best_validation:.6f} improved={improved} "
+                f"elapsed={epoch_elapsed / 60:.1f}m "
+                f"max_remaining≈{epoch_elapsed * remaining / 3600:.1f}h",
+                flush=True,
+            )
             if epochs_without_improvement >= int(training.get("early_stopping_patience", 3)):
+                print(
+                    f"Early stopping after {epochs_without_improvement} epochs without improvement.",
+                    flush=True,
+                )
                 break
     mean_batch = float(np.mean(timings)) if timings else None
     result = {"mode": args.mode, "device": str(device), "gpu": torch.cuda.get_device_name(0) if device.type == "cuda" else None, "contract": model_contract, "validation_missingness": validation_missingness, "history": history, "timed_batches": len(timings), "mean_batch_seconds": mean_batch, "estimated_epoch_seconds": mean_batch * math.ceil(len(train) / options["batch_size"]) if mean_batch else None, "peak_cuda_bytes": int(torch.cuda.max_memory_allocated()) if device.type == "cuda" else None}
