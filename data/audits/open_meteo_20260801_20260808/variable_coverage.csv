@@ -1,0 +1,6 @@
+variable,valid_cells,total_cells,coverage_fraction,stations_with_any,hours_with_any,unit
+u10,25519,25519,1.0,151,169,m/s
+v10,25519,25519,1.0,151,169,m/s
+i10fg,25519,25519,1.0,151,169,m/s
+t2m,25519,25519,1.0,151,169,degC
+tp,25519,25519,1.0,151,169,mm
