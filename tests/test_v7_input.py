@@ -43,6 +43,8 @@ class V7InputTests(unittest.TestCase):
         )
         np.testing.assert_allclose(batch.coordinates, [[0, 0], [1, 1]])
         self.assertEqual(batch.variable_names, ("u10", "v10", "i10fg", "t2m", "tp"))
+        self.assertEqual(batch.source_type, ("physical", "physical"))
+        np.testing.assert_array_equal(batch.station_present, batch.value_mask.any(axis=-1))
 
     def test_wrong_station_order_is_rejected(self) -> None:
         shape = (1, 2, 5)

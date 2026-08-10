@@ -26,6 +26,7 @@ class V7InputBatch:
     station_present: np.ndarray
     coordinates: np.ndarray
     station_static: np.ndarray
+    source_type: tuple[str, ...]
 
 
 def _normalize_coordinates(
@@ -128,6 +129,7 @@ def adapt_dpc_to_v7(
         station_present=station_present,
         coordinates=normalized_coordinates,
         station_static=np.asarray(station_static, dtype=np.float32).copy(),
+        source_type=tuple("physical" for _ in ids),
     )
 
 

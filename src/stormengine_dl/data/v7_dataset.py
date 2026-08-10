@@ -437,6 +437,8 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
             "value_mask": torch.from_numpy(mask),
             "observation_age": torch.from_numpy(age),
             "point_mask": torch.from_numpy(mask.any(axis=-1).astype(np.float32)),
+            "station_present": torch.from_numpy(mask.any(axis=-1)),
+            "source_type": torch.zeros(self.station_indices.size, dtype=torch.long),
             "point_coords": self._coords,
             "point_static": self._static,
             "target": torch.from_numpy(target),

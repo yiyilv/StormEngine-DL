@@ -17,6 +17,7 @@ data:
   window_stride_hours: 1
   train_years: [2010, 2011, 2012]
   validation_years: [2016]
+  test_years: [2017]
 
 model:
   include_age: true
@@ -32,7 +33,7 @@ missingness:
   empirical_tensor: data_external/meteohub/processed/20260801_20260808/official_hourly_physical.npz
   empirical_manifest: data/manifests/v7_dpc_mask_profile_20260801_20260808.json
   use_real_templates_for_training: false
-  use_real_templates_for_validation: true
+  use_real_templates_for_validation: false
   # Generic random training corruption; it does not depend on specific station IDs.
   variable_dropout: {}
   variable_dropout_range: [0.0, 0.4]

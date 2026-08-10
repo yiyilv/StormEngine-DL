@@ -151,8 +151,8 @@ def forward(model: StormEngineV7ForecastModel, batch: dict[str, torch.Tensor], s
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("mode", choices=("forward", "smoke", "benchmark", "pilot"))
-    parser.add_argument("--config", default="configs/v7_a1.yaml")
+    parser.add_argument("mode", choices=("preflight", "forward", "smoke", "benchmark", "pilot", "train"))
+    parser.add_argument("--config", default="configs/v7_a.yaml")
     parser.add_argument("--device", choices=("auto", "cuda", "cpu"), default="auto")
     parser.add_argument("--batches", type=int)
     parser.add_argument("--epochs", type=int)
@@ -194,13 +194,13 @@ def main() -> int:
         epochs_without_improvement = int(saved.get("epochs_without_improvement", 0))
         history = list(saved.get("history", []))
 
-    if args.mode == "forward":
+    if args.mode in {"preflight", "forward"}:
         batch = move(next(iter(train_loader)), device)
         with torch.no_grad():
             prediction = forward(model, batch, static)
         present = batch["value_mask"].any(dim=-1).sum(dim=-1).float()
         valid_age = batch["observation_age"][batch["value_mask"]]
-        result = {"device": str(device), "point_values": list(batch["point_values"].shape), "value_mask": list(batch["value_mask"].shape), "observation_age": list(batch["observation_age"].shape), "prediction": list(prediction.shape), "finite": bool(torch.isfinite(prediction).all()), "valid_fraction": float(batch["value_mask"].float().mean()), "stations_present_per_hour": {"min": int(present.min()), "median": float(present.median()), "max": int(present.max())}, "nonzero_age_fraction_of_valid": float((valid_age > 0).float().mean()), "contract": model_contract}
+        result = {"mode": "preflight", "device": str(device), "splits": {"train_samples": len(train), "validation_samples": len(validation), "test_years": list(config["data"]["test_years"])}, "point_values": list(batch["point_values"].shape), "value_mask": list(batch["value_mask"].shape), "observation_age": list(batch["observation_age"].shape), "prediction": list(prediction.shape), "finite": bool(torch.isfinite(prediction).all()), "valid_fraction": float(batch["value_mask"].float().mean()), "stations_present_per_hour": {"min": int(present.min()), "median": float(present.median()), "max": int(present.max())}, "nonzero_age_fraction_of_valid": float((valid_age > 0).float().mean()), "contract": model_contract}
         print(json.dumps(result, indent=2)); train.close(); validation.close(); return 0
 
     training = config["training"]
@@ -209,10 +209,10 @@ def main() -> int:
         if config["missingness"].get("use_real_templates_for_validation", False)
         else "clean"
     )
-    default_batches = training["benchmark_batches"] if args.mode == "benchmark" else training["smoke_train_batches"] if args.mode == "smoke" else training["pilot_train_batches"]
+    default_batches = training["benchmark_batches"] if args.mode == "benchmark" else training["smoke_train_batches"] if args.mode == "smoke" else training["pilot_train_batches"] if args.mode == "pilot" else len(train_loader)
     max_train = int(args.batches or default_batches)
-    max_validation = int(training["smoke_validation_batches"] if args.mode == "smoke" else training["pilot_validation_batches"])
-    max_epochs = int(args.epochs or (training["pilot_epochs"] if args.mode == "pilot" else 1))
+    max_validation = int(training["smoke_validation_batches"] if args.mode == "smoke" else training["pilot_validation_batches"] if args.mode == "pilot" else len(validation_loader))
+    max_epochs = int(args.epochs or (training["pilot_epochs"] if args.mode == "pilot" else training.get("max_epochs", 1) if args.mode == "train" else 1))
     warmup = int(training["benchmark_warmup_batches"] if args.mode == "benchmark" else 0)
     timings: list[float] = []
     output = resolve(training["output_dir"])
@@ -241,7 +241,7 @@ def main() -> int:
                     batch = move(raw, device); val_total += float(weighted_mse(forward(model, batch, static), batch["target"], weights)); val_count += 1
         validation_loss = val_total / val_count if val_count else None
         history.append({"epoch": epoch + 1, "train_loss": train_loss, "validation_loss": validation_loss})
-        if args.mode == "pilot":
+        if args.mode in {"pilot", "train"}:
             improved = validation_loss is not None and validation_loss < best_validation
             if improved:
                 best_validation = float(validation_loss)
@@ -259,9 +259,10 @@ def main() -> int:
                 "config": config,
                 "history": history,
             }
-            torch.save(checkpoint, output / "pilot_last.pt")
+            prefix = "pilot_" if args.mode == "pilot" else ""
+            torch.save(checkpoint, output / f"{prefix}last.pt")
             if improved:
-                torch.save(checkpoint, output / "pilot_best.pt")
+                torch.save(checkpoint, output / f"{prefix}best.pt")
             if epochs_without_improvement >= int(training.get("early_stopping_patience", 3)):
                 break
     mean_batch = float(np.mean(timings)) if timings else None
