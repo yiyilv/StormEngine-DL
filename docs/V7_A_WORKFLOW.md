@@ -15,7 +15,8 @@ separate:
 4. Full 2010-2015 training with 2016 model selection.
 5. Frozen 2017 clean and missing-input evaluation.
 6. 152-window real DPC replay for 2026-08-01 through 2026-08-08.
-7. Frozen-manifest creation.
+7. External station-space evaluation against future DPC observations.
+8. Frozen-manifest creation.
 
 Formal training, full evaluation, and replay are disabled by default in the
 notebook. The user must enable each gate explicitly after inspecting the prior
@@ -24,9 +25,10 @@ stage.
 Training uses generic randomized variable dropout, whole-station dropout,
 contiguous network outages, and true one-hour lagged values for simulated age.
 The empirical DPC week is never a training template. It is used by the DPC
-Adapter and the final runtime replay.
+Adapter, runtime replay, and an external observation evaluation. That evaluation
+samples the forecast grid at DPC coordinates and scores only future observed
+`u10`, `v10`, `t2m`, and hourly `tp` cells. It is not a full-grid 2026 claim.
 
 Large local outputs under `artifacts/v7_a_2010_2017/`, especially `best.pt`,
 `last.pt`, and optional prediction arrays, must remain outside ordinary Git.
 The small frozen manifest records their hashes for synchronization.
-

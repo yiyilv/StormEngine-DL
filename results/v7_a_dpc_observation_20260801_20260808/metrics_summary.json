@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "model": "V7-A",
+  "evaluation": "future DPC observations sampled at physical station coordinates",
+  "period": ["2026-08-01T00:00:00Z", "2026-08-08T00:00:00Z"],
+  "windows": 152,
+  "history_hours": 12,
+  "forecast_hours": 6,
+  "station_count": 239,
+  "metrics": {
+    "u10": {"count": 36825, "mae": 1.1823600724499321, "rmse": 1.6584627360503383, "skill_vs_persistence": 0.15015945208253123},
+    "v10": {"count": 36825, "mae": 1.1374898771970998, "rmse": 1.4868961515848882, "skill_vs_persistence": 0.15988213239723914},
+    "t2m": {"count": 119598, "mae": 2.590284970112115, "rmse": 3.245710373683184, "skill_vs_persistence": 0.1662684721026223},
+    "tp": {"count": 131105, "mae": 0.022180622456243883, "rmse": 0.2197213260417901, "skill_vs_persistence": 0.26060901279282045}
+  },
+  "excluded": {
+    "msl": "DPC station pressure is not directly comparable to ERA5 mean-sea-level pressure",
+    "i10fg": "V7-A does not forecast gust"
+  },
+  "claim_limit": "station-space external observation evaluation; not full-grid 2026 accuracy"
+}

@@ -110,12 +110,16 @@ def main() -> int:
                 stat = normalization.variables[name]
                 latest_physical[:, :, channel] = latest_physical[:, :, channel] * stat.std + stat.mean
             sparse = _masked_idw(latest_physical.to(device), available, batch["point_coords"], static.shape[-2], static.shape[-1], hours, targets, inputs)
+            # V7-A has no pressure input. Use the train-only ERA5 climatological
+            # mean instead of the physically meaningless 0 hPa fallback.
+            if "msl" not in inputs and "msl" in targets:
+                sparse[:, :, targets.index("msl")] = normalization.variables["msl"].mean
             metrics["v7_a"].update(prediction, target, land)
             metrics["dense_persistence"].update(dense_grid_persistence(dense, hours), target, land)
             metrics["sparse_idw_persistence"].update(sparse, target, land)
             processed += target.shape[0]
             if (index + 1) % 100 == 0: print(f"{index + 1}/{len(loader)} batches", flush=True)
-    result = {"schema_version": 1, "model": "V7-A", "scenario": args.scenario, "seed": args.seed, "years": list(config["data"]["test_years"]), "samples": processed, "elapsed_seconds": time.time() - started, "metrics": {name: value.compute() for name, value in metrics.items()}}
+    result = {"schema_version": 1, "model": "V7-A", "scenario": args.scenario, "seed": args.seed, "years": list(config["data"]["test_years"]), "samples": processed, "elapsed_seconds": time.time() - started, "baseline_notes": {"dense_persistence": "last full ERA5 grid; uses more information than V7-A", "sparse_idw_persistence": "latest available sparse inputs; msl uses the 2010-2015 train-only climatological mean because pressure is absent from V7-A inputs"}, "metrics": {name: value.compute() for name, value in metrics.items()}}
     output = resolve(args.output_dir or f"artifacts/v7_a_2010_2017/evaluation_2017_{args.scenario}_seed{args.seed}")
     output.mkdir(parents=True, exist_ok=True)
     (output / "metrics.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")

@@ -29,7 +29,8 @@ def main() -> int:
     required = [checkpoint, config]
     evaluations = sorted(checkpoint.parent.glob("evaluation_2017_*/metrics.json"))
     replay = checkpoint.parent / "dpc_replay_20260801_20260808" / "replay_summary.json"
-    required.extend(evaluations); required.append(replay)
+    dpc_evaluation = checkpoint.parent / "dpc_observation_evaluation_20260801_20260808" / "metrics.json"
+    required.extend(evaluations); required.extend((replay, dpc_evaluation))
     missing = [str(path) for path in required if not path.is_file()]
     if missing or not evaluations:
         raise FileNotFoundError(f"V7-A cannot be frozen before checkpoint, 2017 evaluation, and DPC replay exist: {missing}")
@@ -44,6 +45,7 @@ def main() -> int:
         "config": {"path": str(config.relative_to(root)).replace("\\", "/"), "sha256": sha256(config)},
         "evaluation_files": [{"path": str(path.relative_to(root)).replace("\\", "/"), "sha256": sha256(path)} for path in evaluations],
         "dpc_replay": {"path": str(replay.relative_to(root)).replace("\\", "/"), "sha256": sha256(replay)},
+        "dpc_observation_evaluation": {"path": str(dpc_evaluation.relative_to(root)).replace("\\", "/"), "sha256": sha256(dpc_evaluation)},
         "note": "Checkpoint remains a local external artifact and should not be committed to ordinary Git.",
     }
     output = (root / args.output).resolve(); output.parent.mkdir(parents=True, exist_ok=True)
