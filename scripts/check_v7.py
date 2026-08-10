@@ -71,6 +71,20 @@ def make_dataset(
     config: dict[str, Any], years: list[int], *, augment: bool
 ) -> V7CachedSequenceDataset:
     data = config["data"]
+    missingness = config["missingness"]
+    mode = missingness.get("mode", "synthetic")
+    if mode not in {"synthetic", "empirical_dpc"}:
+        raise ValueError(f"Unknown V7 missingness mode: {mode}")
+    empirical_path = (
+        resolve(missingness["empirical_tensor"])
+        if augment and mode == "empirical_dpc"
+        else None
+    )
+    empirical_manifest = (
+        resolve(missingness["empirical_manifest"])
+        if empirical_path is not None
+        else None
+    )
     return V7CachedSequenceDataset(
         cache_dir(data), resolve(data["station_registry"]), resolve(data["cache_identity"]),
         years=years, input_variables=data["input_variables"],
@@ -78,6 +92,8 @@ def make_dataset(
         strategy=strategy(config) if augment else MissingnessStrategy({}),
         history_hours=int(data["history_hours"]), forecast_hours=int(data["forecast_hours"]),
         window_stride_hours=int(data.get("window_stride_hours", 1)), seed=int(config["seed"]),
+        empirical_mask_path=empirical_path,
+        empirical_mask_manifest_path=empirical_manifest,
     )
 
 
@@ -173,7 +189,9 @@ def main() -> int:
         batch = move(next(iter(train_loader)), device)
         with torch.no_grad():
             prediction = forward(model, batch, static)
-        result = {"device": str(device), "point_values": list(batch["point_values"].shape), "value_mask": list(batch["value_mask"].shape), "observation_age": list(batch["observation_age"].shape), "prediction": list(prediction.shape), "finite": bool(torch.isfinite(prediction).all()), "contract": model_contract}
+        present = batch["value_mask"].any(dim=-1).sum(dim=-1).float()
+        valid_age = batch["observation_age"][batch["value_mask"]]
+        result = {"device": str(device), "point_values": list(batch["point_values"].shape), "value_mask": list(batch["value_mask"].shape), "observation_age": list(batch["observation_age"].shape), "prediction": list(prediction.shape), "finite": bool(torch.isfinite(prediction).all()), "valid_fraction": float(batch["value_mask"].float().mean()), "stations_present_per_hour": {"min": int(present.min()), "median": float(present.median()), "max": int(present.max())}, "nonzero_age_fraction_of_valid": float((valid_age > 0).float().mean()), "contract": model_contract}
         print(json.dumps(result, indent=2)); train.close(); validation.close(); return 0
 
     training = config["training"]

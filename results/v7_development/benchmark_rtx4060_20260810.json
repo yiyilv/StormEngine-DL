@@ -8,9 +8,9 @@
   "batch_size": 16,
   "warmup_batches": 10,
   "timed_batches": 200,
-  "mean_batch_seconds": 0.13827743250265484,
+  "mean_batch_seconds": 0.14245162399922265,
   "development_train_years": [2010, 2011, 2012],
-  "estimated_development_epoch_seconds": 227.1898216018619,
+  "estimated_development_epoch_seconds": 234.04801823072282,
   "peak_cuda_bytes": 1067336704,
   "model_contract": {
     "version": "stormengine-v7-mask-aware-v1",
@@ -21,6 +21,7 @@
   },
   "notes": [
     "Historical TP input is bilinearly sampled at the 239 station coordinates from the existing normalized target-grid cache.",
+    "Training batches replay contiguous 12-hour empirical DPC mask and observation-age templates.",
     "The validation dataset uses clean inputs without synthetic missingness.",
     "This is a development speed gate, not a model-quality result.",
     "No formal V7 training was started."

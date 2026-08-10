@@ -1,0 +1,26 @@
+{
+  "format_version": 1,
+  "purpose": "Empirical 12-hour missingness and observation-age templates for V7-A ERA5 training",
+  "tensor_path": "data_external/meteohub/processed/20260801_20260808/official_hourly_physical.npz",
+  "tensor_bytes": 281616,
+  "tensor_sha256": "89f683b1c8e9aacc05ff19c4f4ec563afad23fd943caa87437adfb2b393b3b13",
+  "source_manifest": "data/manifests/meteohub_20260801_20260808.json",
+  "from_utc": "2026-08-01T00:00:00.000000000",
+  "to_utc": "2026-08-08T00:00:00.000000000",
+  "hour_count": 169,
+  "station_count": 239,
+  "history_hours": 12,
+  "contiguous_template_count": 158,
+  "source_variable_names": [
+    "station_pressure_hpa",
+    "u10",
+    "v10",
+    "wind_gust_max",
+    "t2m",
+    "relative_humidity",
+    "tp"
+  ],
+  "v7_variable_names": ["u10", "v10", "i10fg", "t2m", "tp"],
+  "valid_cell_fraction": 0.3149067861652348,
+  "age_rule": "valid DPC observation age in minutes divided by 60; missing age is zero after masking"
+}

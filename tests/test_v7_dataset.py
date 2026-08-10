@@ -8,6 +8,7 @@ import numpy as np
 import torch
 
 from stormengine_dl.data.v7_dataset import (
+    EmpiricalDPCMaskLibrary,
     MissingnessStrategy,
     V7CachedSequenceDataset,
     build_cache_identity,
@@ -127,6 +128,60 @@ class V7DatasetTests(unittest.TestCase):
             changed = dataset[1]
             self.assertFalse(torch.equal(first["value_mask"], changed["value_mask"]))
             dataset.close()
+
+    def test_empirical_dpc_mask_and_fractional_age_are_replayed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            cache, registry, identity = self._fixture(Path(directory))
+            empirical = Path(directory) / "official.npz"
+            mask = np.ones((2, 2, 2), dtype=bool)
+            mask[1, 1, 1] = False
+            ages = np.zeros((2, 2, 2), dtype=np.float32)
+            ages[0, 0, 0] = 30.0
+            ages[~mask] = -1.0
+            np.savez_compressed(
+                empirical,
+                times=np.arange(
+                    np.datetime64("2026-08-01T00"),
+                    np.datetime64("2026-08-01T02"),
+                    np.timedelta64(1, "h"),
+                ).astype("datetime64[ns]"),
+                station_ids=np.asarray(["LAND::a", "LAND::b"]),
+                variable_names=np.asarray(["u10", "t2m"]),
+                value_mask=mask,
+                observation_age_minutes=ages,
+            )
+            dataset = V7CachedSequenceDataset(
+                cache, registry, identity,
+                years=[2010], input_variables=["u10", "t2m"], target_variables=["u10"],
+                strategy=MissingnessStrategy({}), history_hours=2, forecast_hours=1,
+                empirical_mask_path=empirical,
+            )
+            sample = dataset[1]
+            self.assertAlmostEqual(float(sample["point_values"][0, 0, 0]), 3.0)
+            self.assertAlmostEqual(float(sample["observation_age"][0, 0, 0]), 0.5)
+            self.assertFalse(bool(sample["value_mask"][1, 1, 1]))
+            self.assertEqual(float(sample["point_values"][1, 1, 1]), 0.0)
+            dataset.close()
+
+    def test_empirical_stale_tp_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            tensor = Path(directory) / "stale_tp.npz"
+            np.savez_compressed(
+                tensor,
+                times=np.arange(
+                    np.datetime64("2026-08-01T00"),
+                    np.datetime64("2026-08-01T02"),
+                    np.timedelta64(1, "h"),
+                ).astype("datetime64[ns]"),
+                station_ids=np.asarray(["LAND::a"]),
+                variable_names=np.asarray(["tp"]),
+                value_mask=np.ones((2, 1, 1), dtype=bool),
+                observation_age_minutes=np.asarray([[[0.0]], [[10.0]]], dtype=np.float32),
+            )
+            with self.assertRaisesRegex(ValueError, "TP must end"):
+                EmpiricalDPCMaskLibrary(
+                    tensor, station_ids=["LAND::a"], variables=["tp"], history_hours=2
+                )
 
 
 if __name__ == "__main__":

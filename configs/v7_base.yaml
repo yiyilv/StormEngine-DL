@@ -29,13 +29,16 @@ model:
   point_static_channels: 2
 
 missingness:
-  # Smoke-only probabilities. Formal V7-A will replay empirical DPC masks.
-  variable_dropout: {u10: 0.20, v10: 0.20, i10fg: 0.35, t2m: 0.10, tp: 0.15}
-  station_dropout: 0.10
-  network_dropout: 0.03
-  time_block_probability: 0.10
+  mode: empirical_dpc
+  empirical_tensor: data_external/meteohub/processed/20260801_20260808/official_hourly_physical.npz
+  empirical_manifest: data/manifests/v7_dpc_mask_profile_20260801_20260808.json
+  # Synthetic probabilities are disabled; V7-A replays contiguous empirical DPC masks.
+  variable_dropout: {}
+  station_dropout: 0.0
+  network_dropout: 0.0
+  time_block_probability: 0.0
   time_block_hours: 3
-  age_60_probability: 0.20
+  age_60_probability: 0.0
 
 training:
   batch_size: 16

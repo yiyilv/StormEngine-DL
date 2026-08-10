@@ -3,5 +3,5 @@ extends: v7_base.yaml
 data: {input_variables: [u10, v10, t2m, tp]}
 model: {include_age: true}
 missingness:
-  variable_dropout: {u10: 0.20, v10: 0.20, t2m: 0.10, tp: 0.15}
+  variable_dropout: {}
 training: {output_dir: artifacts/v7_a2_no_gust_dev}

@@ -14,6 +14,15 @@ import torch
 from torch.utils.data import Dataset
 
 
+DPC_VARIABLE_NAMES = {
+    "u10": "u10",
+    "v10": "v10",
+    "i10fg": "wind_gust_max",
+    "t2m": "t2m",
+    "tp": "tp",
+}
+
+
 def sample_normalized_grid_at_points(
     grids: np.ndarray, normalized_coordinates: np.ndarray
 ) -> np.ndarray:
@@ -121,6 +130,86 @@ class MissingnessStrategy:
             raise ValueError("time_block_hours must be positive")
 
 
+class EmpiricalDPCMaskLibrary:
+    """Contiguous DPC mask/age windows replayed during ERA5 training."""
+
+    def __init__(
+        self,
+        tensor_path: str | Path,
+        *,
+        station_ids: Sequence[str],
+        variables: Sequence[str],
+        history_hours: int,
+        manifest_path: str | Path | None = None,
+    ) -> None:
+        tensor = Path(tensor_path)
+        manifest = None
+        if manifest_path is not None:
+            manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+            if tensor.stat().st_size != int(manifest["tensor_bytes"]):
+                raise ValueError("Empirical DPC tensor size does not match its manifest")
+            if sha256_file(tensor) != manifest["tensor_sha256"]:
+                raise ValueError("Empirical DPC tensor SHA-256 does not match its manifest")
+        with np.load(tensor, allow_pickle=False) as source:
+            source_ids = tuple(str(value) for value in source["station_ids"].tolist())
+            if source_ids != tuple(station_ids):
+                raise ValueError("Empirical DPC station order does not match the V7 cache view")
+            source_names = tuple(str(value) for value in source["variable_names"].tolist())
+            mapped_names = tuple(DPC_VARIABLE_NAMES.get(name, name) for name in variables)
+            missing = set(mapped_names) - set(source_names)
+            if missing:
+                raise ValueError(f"Empirical DPC tensor is missing variables: {sorted(missing)}")
+            indices = [source_names.index(name) for name in mapped_names]
+            self.times = np.asarray(source["times"]).astype("datetime64[ns]")
+            self.mask = np.stack(
+                [source["value_mask"][:, :, channel] for channel in indices], axis=-1
+            ).astype(bool)
+            age_minutes = np.stack(
+                [source["observation_age_minutes"][:, :, channel] for channel in indices],
+                axis=-1,
+            ).astype(np.float32)
+        if self.mask.shape[:2] != (len(self.times), len(station_ids)):
+            raise ValueError("Empirical DPC tensor dimensions are inconsistent")
+        if not np.isfinite(age_minutes[self.mask]).all():
+            raise ValueError("Empirical DPC valid ages contain NaN or infinity")
+        if ((age_minutes[self.mask] < 0) | (age_minutes[self.mask] > 60)).any():
+            raise ValueError("Empirical DPC valid ages must be within 0-60 minutes")
+        self.age = np.zeros(age_minutes.shape, dtype=np.float32)
+        self.age[self.mask] = age_minutes[self.mask] / 60.0
+        if "tp" in variables:
+            tp_channel = tuple(variables).index("tp")
+            if (age_minutes[:, :, tp_channel][self.mask[:, :, tp_channel]] != 0).any():
+                raise ValueError("Empirical DPC TP must end at the current valid time")
+        self.starts = np.asarray(
+            [
+                start
+                for start in range(max(0, len(self.times) - history_hours + 1))
+                if self.times[start + history_hours - 1] - self.times[start]
+                == np.timedelta64(history_hours - 1, "h")
+            ],
+            dtype=np.int64,
+        )
+        self.history_hours = history_hours
+        if self.starts.size == 0:
+            raise ValueError("Empirical DPC tensor has no contiguous history window")
+        if manifest is not None:
+            checks = {
+                "hour_count": len(self.times),
+                "station_count": len(station_ids),
+                "history_hours": history_hours,
+                "contiguous_template_count": int(self.starts.size),
+            }
+            differing = [key for key, value in checks.items() if int(manifest[key]) != value]
+            if differing:
+                raise ValueError(f"Empirical DPC manifest metadata mismatch: {differing}")
+
+    def sample(self, rng: np.random.Generator) -> tuple[np.ndarray, np.ndarray, int]:
+        template = int(rng.integers(self.starts.size))
+        start = int(self.starts[template])
+        stop = start + self.history_hours
+        return self.mask[start:stop].copy(), self.age[start:stop].copy(), start
+
+
 class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
     """View the V6 memmaps as physical-only, mask-aware V7 samples."""
 
@@ -138,6 +227,8 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
         forecast_hours: int = 6,
         window_stride_hours: int = 1,
         seed: int = 42,
+        empirical_mask_path: str | Path | None = None,
+        empirical_mask_manifest_path: str | Path | None = None,
     ) -> None:
         if history_hours < 1 or forecast_hours < 1 or window_stride_hours < 1:
             raise ValueError("history, forecast, and stride must be positive")
@@ -210,6 +301,17 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
             )
             for network in sorted(set(self.station_networks))
         }
+        self.empirical_masks = (
+            EmpiricalDPCMaskLibrary(
+                empirical_mask_path,
+                station_ids=self.station_ids,
+                variables=self.input_variables,
+                history_hours=self.history_hours,
+                manifest_path=empirical_mask_manifest_path,
+            )
+            if empirical_mask_path is not None
+            else None
+        )
 
     def _read_input_values(self, indices: slice | np.ndarray) -> np.ndarray:
         point_block: np.ndarray | None = None
@@ -254,6 +356,25 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
             self.seed + self.epoch * 1_000_003 + global_start * 97
         )
 
+        if self.empirical_masks is not None:
+            empirical_mask, empirical_age, _ = self.empirical_masks.sample(rng)
+            stale = empirical_mask & (empirical_age > 0)
+            if stale.any():
+                previous_indices = np.arange(global_start, history_stop, dtype=np.int64) - 1
+                valid_previous = previous_indices >= 0
+                previous = self._read_input_values(previous_indices.clip(0))
+                interpolated = current * (1.0 - empirical_age) + previous * empirical_age
+                for channel, name in enumerate(self.input_variables):
+                    selected = stale[:, :, channel]
+                    if name == "i10fg":
+                        current[:, :, channel][selected] = previous[:, :, channel][selected]
+                    elif name != "tp":
+                        current[:, :, channel][selected] = interpolated[:, :, channel][selected]
+                if not valid_previous.all():
+                    empirical_mask[~valid_previous, :, :] &= ~stale[~valid_previous, :, :]
+            mask &= empirical_mask
+            age[mask] = empirical_age[mask]
+
         for channel, name in enumerate(self.input_variables):
             probability = float(self.strategy.variable_dropout.get(name, 0.0))
             if probability:
@@ -274,6 +395,9 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
 
         shift = rng.random(current.shape) < self.strategy.age_60_probability
         shift &= mask
+        shift &= age == 0
+        if "tp" in self.input_variables:
+            shift[:, :, self.input_variables.index("tp")] = False
         if shift.any():
             previous_indices = np.arange(global_start, history_stop, dtype=np.int64) - 1
             valid_previous = previous_indices >= 0
