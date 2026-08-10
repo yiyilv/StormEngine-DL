@@ -29,6 +29,10 @@ __all__ = [
     "meteorological_wind_to_uv",
     "validate_month",
     "validate_cache_identity",
+    "V7InputBatch",
+    "V7_INPUT_VARIABLES",
+    "adapt_dpc_to_v7",
+    "load_dpc_v7_input",
 ]
 
 _EXPORTS = {
@@ -59,6 +63,10 @@ _EXPORTS = {
     "scan_month_files": (".manifest", "scan_month_files"),
     "validate_month": (".manifest", "validate_month"),
     "validate_cache_identity": (".v7_dataset", "validate_cache_identity"),
+    "V7InputBatch": (".v7_input", "V7InputBatch"),
+    "V7_INPUT_VARIABLES": (".v7_input", "V7_INPUT_VARIABLES"),
+    "adapt_dpc_to_v7": (".v7_input", "adapt_dpc_to_v7"),
+    "load_dpc_v7_input": (".v7_input", "load_dpc_v7_input"),
 }
 
 

@@ -8,7 +8,7 @@ caches.
 
 - 239 enabled physical coastal stations; the 151 virtual marine support points
   are excluded.
-- Four ERA5 proxy inputs: `u10`, `v10`, `i10fg`, and `t2m`.
+- Five ERA5/DPC shared inputs: `u10`, `v10`, `i10fg`, `t2m`, and hourly `tp`.
 - Per-variable `value_mask[T,N,C]` and normalized
   `observation_age[T,N,C]` channels.
 - Observation age is in hours and capped at 1 (the 60-minute operational
@@ -19,8 +19,8 @@ caches.
 
 ## Candidate ladder
 
-- `v7_a0.yaml`: four variables plus per-variable masks, without age channels.
-- `v7_a1.yaml`: four variables plus masks and age channels; primary candidate.
+- `v7_a0.yaml`: five variables plus per-variable masks, without age channels.
+- `v7_a1.yaml`: five variables plus masks and age channels; primary candidate.
 - `v7_a2.yaml`: A1 with gust removed; controlled sparse-gust ablation.
 
 All candidates reuse the immutable 2010-2017 ERA5 memmap cache through a
@@ -37,5 +37,5 @@ generated online, so no duplicate multi-gigabyte cache is required.
 5. Only promising candidates proceed to reconstruction diagnostics and then one
    full 2010-2017 experiment.
 
-`benchmark_rtx4060_20260810.json` is the first A1 speed gate. Local `*.pt`, ERA5
+`benchmark_rtx4060_20260810.json` is the five-channel A1 speed gate. Local `*.pt`, ERA5
 `*.nc`, cache memmaps, and detailed predictions remain outside Git.

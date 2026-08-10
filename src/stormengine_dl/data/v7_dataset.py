@@ -14,6 +14,24 @@ import torch
 from torch.utils.data import Dataset
 
 
+def sample_normalized_grid_at_points(
+    grids: np.ndarray, normalized_coordinates: np.ndarray
+) -> np.ndarray:
+    """Bilinearly sample ``[T,H,W]`` grids at normalized ``[N,2]`` points."""
+    if grids.ndim != 3 or normalized_coordinates.ndim != 2 or normalized_coordinates.shape[1] != 2:
+        raise ValueError("Expected grids [T,H,W] and normalized coordinates [N,2]")
+    _, height, width = grids.shape
+    latitude = np.clip(normalized_coordinates[:, 0], 0.0, 1.0) * (height - 1)
+    longitude = np.clip(normalized_coordinates[:, 1], 0.0, 1.0) * (width - 1)
+    lat_low, lon_low = np.floor(latitude).astype(np.int64), np.floor(longitude).astype(np.int64)
+    lat_high, lon_high = np.ceil(latitude).astype(np.int64), np.ceil(longitude).astype(np.int64)
+    lat_weight = (latitude - lat_low).astype(np.float32)[None]
+    lon_weight = (longitude - lon_low).astype(np.float32)[None]
+    low = grids[:, lat_low, lon_low] * (1.0 - lon_weight) + grids[:, lat_low, lon_high] * lon_weight
+    high = grids[:, lat_high, lon_low] * (1.0 - lon_weight) + grids[:, lat_high, lon_high] * lon_weight
+    return (low * (1.0 - lat_weight) + high * lat_weight).astype(np.float32)
+
+
 def sha256_file(path: str | Path) -> str:
     digest = hashlib.sha256()
     with Path(path).open("rb") as handle:
@@ -130,7 +148,8 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
         )
         cached_inputs = list(self.metadata["input_variables"])
         cached_targets = list(self.metadata["target_variables"])
-        missing_inputs = set(input_variables) - set(cached_inputs)
+        available_inputs = set(cached_inputs) | set(cached_targets)
+        missing_inputs = set(input_variables) - available_inputs
         if missing_inputs:
             raise ValueError(f"V7 input variables absent from cache: {sorted(missing_inputs)}")
         if list(target_variables) != cached_targets:
@@ -150,8 +169,10 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
         self.station_networks = tuple(
             identity["station_networks"][index] for index in self.station_indices  # type: ignore[index]
         )
-        self.variable_indices = np.asarray(
-            [cached_inputs.index(name) for name in self.input_variables], dtype=np.int64
+        self._input_sources = tuple(
+            ("point", cached_inputs.index(name))
+            if name in cached_inputs else ("grid", cached_targets.index(name))
+            for name in self.input_variables
         )
         self.point_values = np.load(self.cache_dir / "point_values.npy", mmap_mode="r")
         self.target_grids = np.load(self.cache_dir / "target_grids.npy", mmap_mode="r")
@@ -190,6 +211,25 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
             for network in sorted(set(self.station_networks))
         }
 
+    def _read_input_values(self, indices: slice | np.ndarray) -> np.ndarray:
+        point_block: np.ndarray | None = None
+        grid_block: np.ndarray | None = None
+        channels: list[np.ndarray] = []
+        for source, channel in self._input_sources:
+            if source == "point":
+                if point_block is None:
+                    point_block = np.asarray(self.point_values[indices], dtype=np.float32)[
+                        :, self.station_indices
+                    ]
+                channels.append(point_block[:, :, channel])
+            else:
+                if grid_block is None:
+                    grid_block = np.asarray(self.target_grids[indices], dtype=np.float32)
+                channels.append(
+                    sample_normalized_grid_at_points(grid_block[:, channel], self._coords.numpy())
+                )
+        return np.stack(channels, axis=-1).astype(np.float32, copy=False)
+
     def set_epoch(self, epoch: int) -> None:
         self.epoch = int(epoch)
 
@@ -207,10 +247,7 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
         global_start = int(self.global_indices[split_start])
         history_stop = global_start + self.history_hours
         target_stop = history_stop + self.forecast_hours
-        current = np.asarray(
-            self.point_values[global_start:history_stop][:, self.station_indices][:, :, self.variable_indices],
-            dtype=np.float32,
-        ).copy()
+        current = self._read_input_values(slice(global_start, history_stop)).copy()
         mask = np.ones(current.shape, dtype=bool)
         age = np.zeros(current.shape, dtype=np.float32)
         rng = np.random.default_rng(
@@ -241,10 +278,7 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
             previous_indices = np.arange(global_start, history_stop, dtype=np.int64) - 1
             valid_previous = previous_indices >= 0
             previous_indices = previous_indices.clip(0)
-            previous = np.asarray(
-                self.point_values[previous_indices][:, self.station_indices][:, :, self.variable_indices],
-                dtype=np.float32,
-            )
+            previous = self._read_input_values(previous_indices)
             current[shift] = previous[shift]
             age[shift] = 1.0
             if not valid_previous.all():

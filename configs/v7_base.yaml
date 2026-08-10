@@ -10,7 +10,7 @@ data:
   static_fields: data/static/adriatic_physical_239_fields.npz
   # Operationally compatible ERA5 proxy channels. Station pressure is excluded:
   # raw B10004 pressure must not be relabelled as ERA5 mean-sea-level pressure.
-  input_variables: [u10, v10, i10fg, t2m]
+  input_variables: [u10, v10, i10fg, t2m, tp]
   target_variables: [msl, u10, v10, t2m, tp]
   history_hours: 12
   forecast_hours: 6
@@ -29,7 +29,8 @@ model:
   point_static_channels: 2
 
 missingness:
-  variable_dropout: {u10: 0.20, v10: 0.20, i10fg: 0.35, t2m: 0.10}
+  # Smoke-only probabilities. Formal V7-A will replay empirical DPC masks.
+  variable_dropout: {u10: 0.20, v10: 0.20, i10fg: 0.35, t2m: 0.10, tp: 0.15}
   station_dropout: 0.10
   network_dropout: 0.03
   time_block_probability: 0.10

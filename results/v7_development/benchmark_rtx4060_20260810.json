@@ -1,6 +1,6 @@
 {
   "date": "2026-08-10",
-  "base_commit": "c511878777922f3cb56d1947f90c786667431f34",
+  "parent_commit": "a758132",
   "config": "configs/v7_a1.yaml",
   "mode": "benchmark",
   "device": "cuda",
@@ -8,18 +8,19 @@
   "batch_size": 16,
   "warmup_batches": 10,
   "timed_batches": 200,
-  "mean_batch_seconds": 0.14493754150025778,
+  "mean_batch_seconds": 0.13827743250265484,
   "development_train_years": [2010, 2011, 2012],
-  "estimated_development_epoch_seconds": 238.13238068492353,
-  "peak_cuda_bytes": 1067278336,
+  "estimated_development_epoch_seconds": 227.1898216018619,
+  "peak_cuda_bytes": 1067336704,
   "model_contract": {
     "version": "stormengine-v7-mask-aware-v1",
     "station_count": 239,
-    "input_variables": ["u10", "v10", "i10fg", "t2m"],
+    "input_variables": ["u10", "v10", "i10fg", "t2m", "tp"],
     "include_age": true,
     "observation_age_units": "hours_capped_at_1"
   },
   "notes": [
+    "Historical TP input is bilinearly sampled at the 239 station coordinates from the existing normalized target-grid cache.",
     "The validation dataset uses clean inputs without synthetic missingness.",
     "This is a development speed gate, not a model-quality result.",
     "No formal V7 training was started."

@@ -80,6 +80,34 @@ class V7DatasetTests(unittest.TestCase):
                     strategy=MissingnessStrategy({}), history_hours=2, forecast_hours=1,
                 )
 
+    def test_target_only_tp_is_bilinearly_sampled_as_an_input(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            cache, registry, identity = self._fixture(Path(directory))
+            metadata_path = cache / "metadata.json"
+            metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+            metadata["target_variables"] = ["u10", "tp"]
+            metadata_path.write_text(json.dumps(metadata), encoding="utf-8")
+            targets = np.zeros((10, 2, 2, 2), dtype=np.float32)
+            for time in range(10):
+                targets[time, 1] = np.asarray(
+                    [[time, time + 2], [time + 4, time + 6]], dtype=np.float32
+                )
+            np.save(cache / "target_grids.npy", targets)
+            identity.write_text(
+                json.dumps(build_cache_identity(cache, registry)), encoding="utf-8"
+            )
+            dataset = V7CachedSequenceDataset(
+                cache, registry, identity,
+                years=[2010], input_variables=["tp"], target_variables=["u10", "tp"],
+                strategy=MissingnessStrategy({}), history_hours=2, forecast_hours=1,
+            )
+            sample = dataset[0]
+            self.assertEqual(tuple(sample["point_values"].shape), (2, 2, 1))
+            self.assertTrue(torch.allclose(
+                sample["point_values"][:, :, 0], torch.tensor([[0., 3.], [1., 4.]])
+            ))
+            dataset.close()
+
     def test_masks_zero_missing_values_and_are_epoch_reproducible(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             cache, registry, identity = self._fixture(Path(directory))
