@@ -37,6 +37,8 @@ __all__ = [
     "OpenMeteoBatch",
     "load_marine_points",
     "load_download_chunks",
+    "V7BInputBatch",
+    "load_v7_b_input",
 ]
 
 _EXPORTS = {
@@ -75,6 +77,8 @@ _EXPORTS = {
     "OpenMeteoBatch": (".open_meteo", "OpenMeteoBatch"),
     "load_marine_points": (".open_meteo", "load_marine_points"),
     "load_download_chunks": (".open_meteo", "load_download_chunks"),
+    "V7BInputBatch": (".v7_b_input", "V7BInputBatch"),
+    "load_v7_b_input": (".v7_b_input", "load_v7_b_input"),
 }
 
 

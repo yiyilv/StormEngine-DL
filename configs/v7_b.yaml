@@ -1,9 +1,12 @@
 extends: v7_base.yaml
 
-# V7-A: 239 physical DPC/MeteoHub stations only; no virtual sea points.
+experiment: V7-B
+
+# V7-B combines physical DPC stations with model-derived Open-Meteo marine support.
 data:
-  station_profile: physical_only
-  station_count: 239
+  station_profile: dpc_plus_sea
+  station_count: 390
+  static_fields: data/static/adriatic_390_fields.npz
   input_variables: [u10, v10, i10fg, t2m, tp]
   target_variables: [msl, u10, v10, t2m, tp]
   train_years: [2010, 2011, 2012, 2013, 2014, 2015]
@@ -20,4 +23,4 @@ missingness:
 training:
   max_epochs: 80
   early_stopping_patience: 12
-  output_dir: artifacts/v7_a_2010_2017
+  output_dir: artifacts/v7_b_2010_2017

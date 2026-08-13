@@ -103,6 +103,7 @@ def make_dataset(
         window_stride_hours=int(data.get("window_stride_hours", 1)), seed=int(config["seed"]),
         empirical_mask_path=empirical_path,
         empirical_mask_manifest_path=empirical_manifest,
+        station_profile=str(data.get("station_profile", "physical_only")),
     )
 
 
@@ -166,8 +167,11 @@ def main() -> int:
         raise RuntimeError("CUDA requested but unavailable")
     train = make_dataset(config, config["data"]["train_years"], augment=True)
     validation = make_dataset(config, config["data"]["validation_years"], augment=False)
-    if train.station_ids != validation.station_ids or len(train.station_ids) != 239:
-        raise ValueError("V7-A requires the same 239 physical stations in every split")
+    expected_stations = int(config["data"].get("station_count", 239))
+    if train.station_ids != validation.station_ids or len(train.station_ids) != expected_stations:
+        raise ValueError(
+            f"{config.get('experiment', 'V7')} requires the same {expected_stations} stations in every split"
+        )
     options = dict(batch_size=int(config["training"]["batch_size"]), num_workers=int(config["training"].get("num_workers", 0)), pin_memory=device.type == "cuda")
     train_loader = DataLoader(train, shuffle=True, **options)
     validation_loader = DataLoader(validation, shuffle=False, **options)

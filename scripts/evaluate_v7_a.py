@@ -78,8 +78,9 @@ def main() -> int:
         test.strategy = MissingnessStrategy({})
     else:
         test.strategy = strategy(config)
-    if len(test.station_ids) != 239:
-        raise ValueError("V7-A evaluation requires exactly 239 physical stations")
+    expected_stations = int(config["data"].get("station_count", 239))
+    if len(test.station_ids) != expected_stations:
+        raise ValueError(f"Evaluation requires exactly {expected_stations} configured stations")
     device = torch.device("cuda" if args.device == "auto" and torch.cuda.is_available() else ("cpu" if args.device == "auto" else args.device))
     loader = DataLoader(test, batch_size=int(config["training"]["batch_size"]), shuffle=False, num_workers=0)
     model = make_model(config).to(device)
@@ -119,7 +120,8 @@ def main() -> int:
             metrics["sparse_idw_persistence"].update(sparse, target, land)
             processed += target.shape[0]
             if (index + 1) % 100 == 0: print(f"{index + 1}/{len(loader)} batches", flush=True)
-    result = {"schema_version": 1, "model": "V7-A", "scenario": args.scenario, "seed": args.seed, "years": list(config["data"]["test_years"]), "samples": processed, "elapsed_seconds": time.time() - started, "baseline_notes": {"dense_persistence": "last full ERA5 grid; uses more information than V7-A", "sparse_idw_persistence": "latest available sparse inputs; msl uses the 2010-2015 train-only climatological mean because pressure is absent from V7-A inputs"}, "metrics": {name: value.compute() for name, value in metrics.items()}}
+    model_name = str(config.get("experiment", "V7-A"))
+    result = {"schema_version": 1, "model": model_name, "scenario": args.scenario, "seed": args.seed, "years": list(config["data"]["test_years"]), "samples": processed, "elapsed_seconds": time.time() - started, "baseline_notes": {"dense_persistence": f"last full ERA5 grid; uses more information than {model_name}", "sparse_idw_persistence": "latest available sparse inputs; msl uses the 2010-2015 train-only climatological mean because pressure is absent from model inputs"}, "metrics": {name: value.compute() for name, value in metrics.items()}}
     output = resolve(args.output_dir or f"artifacts/v7_a_2010_2017/evaluation_2017_{args.scenario}_seed{args.seed}")
     output.mkdir(parents=True, exist_ok=True)
     (output / "metrics.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")

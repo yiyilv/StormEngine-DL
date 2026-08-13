@@ -221,7 +221,7 @@ class EmpiricalDPCMaskLibrary:
 
 
 class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
-    """View the V6 memmaps as physical-only, mask-aware V7 samples."""
+    """View the V6 memmaps through a configurable mask-aware station profile."""
 
     def __init__(
         self,
@@ -239,6 +239,7 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
         seed: int = 42,
         empirical_mask_path: str | Path | None = None,
         empirical_mask_manifest_path: str | Path | None = None,
+        station_profile: str = "physical_only",
     ) -> None:
         if history_hours < 1 or forecast_hours < 1 or window_stride_hours < 1:
             raise ValueError("history, forecast, and stride must be positive")
@@ -263,7 +264,14 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
         self.forecast_hours = forecast_hours
         self.seed = int(seed)
         self.epoch = 0
-        self.station_indices = np.asarray(identity["physical_station_indices"], dtype=np.int64)
+        if station_profile == "physical_only":
+            selected_indices = identity["physical_station_indices"]
+        elif station_profile == "dpc_plus_sea":
+            selected_indices = list(range(len(identity["station_ids"])))
+        else:
+            raise ValueError(f"Unknown V7 station profile: {station_profile}")
+        self.station_profile = station_profile
+        self.station_indices = np.asarray(selected_indices, dtype=np.int64)
         self.station_ids = tuple(
             identity["station_ids"][index] for index in self.station_indices  # type: ignore[index]
         )
@@ -438,7 +446,10 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
             "observation_age": torch.from_numpy(age),
             "point_mask": torch.from_numpy(mask.any(axis=-1).astype(np.float32)),
             "station_present": torch.from_numpy(mask.any(axis=-1)),
-            "source_type": torch.zeros(self.station_indices.size, dtype=torch.long),
+            "source_type": torch.tensor(
+                [0 if self.station_ids[index].startswith("LAND::") else 1 for index in range(len(self.station_ids))],
+                dtype=torch.long,
+            ),
             "point_coords": self._coords,
             "point_static": self._static,
             "target": torch.from_numpy(target),
