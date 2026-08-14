@@ -7,9 +7,12 @@
   "device": "cuda",
   "metrics": {
     "path": "artifacts/v7_operational_era5t_20260801_20260808/metrics.json",
+    "windows_crlf_bytes": 57872,
+    "windows_crlf_sha256": "e3606f759690a0698739e1bb868d2d827560e61ff6cb263b860f1f5c6f42203a",
     "published_copy": "results/v7_operational_era5t_20260801_20260808/metrics.json",
-    "bytes": 57872,
-    "sha256": "e3606f759690a0698739e1bb868d2d827560e61ff6cb263b860f1f5c6f42203a"
+    "published_lf_bytes": 55899,
+    "published_lf_sha256": "69feb70f1264c3f73739f6d8efcc558c45aed0b92c7b0c090220a5deb7148558",
+    "normalization_note": "Git normalized the Windows CRLF line endings to LF; parsed JSON content is unchanged."
   },
   "era5t": {
     "instant": {
