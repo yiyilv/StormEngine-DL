@@ -1,0 +1,1076 @@
+{
+  "schema_version": 1,
+  "model": "V7-B",
+  "purpose": "combined DPC plus model-derived Open-Meteo runtime replay",
+  "windows": 152,
+  "station_count": 390,
+  "physical_stations": 239,
+  "marine_stations": 151,
+  "all_finite": true,
+  "records": [
+    {
+      "window": 0,
+      "analysis_time": "2026-08-01T11:00",
+      "physical_valid_fraction": 0.3115062713623047,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 1,
+      "analysis_time": "2026-08-01T12:00",
+      "physical_valid_fraction": 0.31799161434173584,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 2,
+      "analysis_time": "2026-08-01T13:00",
+      "physical_valid_fraction": 0.317573219537735,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 3,
+      "analysis_time": "2026-08-01T14:00",
+      "physical_valid_fraction": 0.3175034821033478,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 4,
+      "analysis_time": "2026-08-01T15:00",
+      "physical_valid_fraction": 0.3175034821033478,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 5,
+      "analysis_time": "2026-08-01T16:00",
+      "physical_valid_fraction": 0.317712664604187,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 6,
+      "analysis_time": "2026-08-01T17:00",
+      "physical_valid_fraction": 0.3178521394729614,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 7,
+      "analysis_time": "2026-08-01T18:00",
+      "physical_valid_fraction": 0.31743374466896057,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 8,
+      "analysis_time": "2026-08-01T19:00",
+      "physical_valid_fraction": 0.31743374466896057,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 9,
+      "analysis_time": "2026-08-01T20:00",
+      "physical_valid_fraction": 0.31743374466896057,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 10,
+      "analysis_time": "2026-08-01T21:00",
+      "physical_valid_fraction": 0.31729426980018616,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 11,
+      "analysis_time": "2026-08-01T22:00",
+      "physical_valid_fraction": 0.317712664604187,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 12,
+      "analysis_time": "2026-08-01T23:00",
+      "physical_valid_fraction": 0.31708505749702454,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 13,
+      "analysis_time": "2026-08-02T00:00",
+      "physical_valid_fraction": 0.31792187690734863,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 14,
+      "analysis_time": "2026-08-02T01:00",
+      "physical_valid_fraction": 0.31820082664489746,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 15,
+      "analysis_time": "2026-08-02T02:00",
+      "physical_valid_fraction": 0.3184100389480591,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 16,
+      "analysis_time": "2026-08-02T03:00",
+      "physical_valid_fraction": 0.3183403015136719,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 17,
+      "analysis_time": "2026-08-02T04:00",
+      "physical_valid_fraction": 0.31792187690734863,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 18,
+      "analysis_time": "2026-08-02T05:00",
+      "physical_valid_fraction": 0.31827056407928467,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 19,
+      "analysis_time": "2026-08-02T06:00",
+      "physical_valid_fraction": 0.3184100389480591,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 20,
+      "analysis_time": "2026-08-02T07:00",
+      "physical_valid_fraction": 0.3185495138168335,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 21,
+      "analysis_time": "2026-08-02T08:00",
+      "physical_valid_fraction": 0.3186192214488983,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 22,
+      "analysis_time": "2026-08-02T09:00",
+      "physical_valid_fraction": 0.3186192214488983,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 23,
+      "analysis_time": "2026-08-02T10:00",
+      "physical_valid_fraction": 0.3185495138168335,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 24,
+      "analysis_time": "2026-08-02T11:00",
+      "physical_valid_fraction": 0.31896790862083435,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 25,
+      "analysis_time": "2026-08-02T12:00",
+      "physical_valid_fraction": 0.3175034821033478,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 26,
+      "analysis_time": "2026-08-02T13:00",
+      "physical_valid_fraction": 0.31708505749702454,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 27,
+      "analysis_time": "2026-08-02T14:00",
+      "physical_valid_fraction": 0.3168758451938629,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 28,
+      "analysis_time": "2026-08-02T15:00",
+      "physical_valid_fraction": 0.3167364001274109,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 29,
+      "analysis_time": "2026-08-02T16:00",
+      "physical_valid_fraction": 0.31645745038986206,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 30,
+      "analysis_time": "2026-08-02T17:00",
+      "physical_valid_fraction": 0.31617850065231323,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 31,
+      "analysis_time": "2026-08-02T18:00",
+      "physical_valid_fraction": 0.3160390257835388,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 32,
+      "analysis_time": "2026-08-02T19:00",
+      "physical_valid_fraction": 0.3157601058483124,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 33,
+      "analysis_time": "2026-08-02T20:00",
+      "physical_valid_fraction": 0.31555089354515076,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 34,
+      "analysis_time": "2026-08-02T21:00",
+      "physical_valid_fraction": 0.31562063097953796,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 35,
+      "analysis_time": "2026-08-02T22:00",
+      "physical_valid_fraction": 0.31541141867637634,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 36,
+      "analysis_time": "2026-08-02T23:00",
+      "physical_valid_fraction": 0.3149930238723755,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 37,
+      "analysis_time": "2026-08-03T00:00",
+      "physical_valid_fraction": 0.31652718782424927,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 38,
+      "analysis_time": "2026-08-03T01:00",
+      "physical_valid_fraction": 0.31708505749702454,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 39,
+      "analysis_time": "2026-08-03T02:00",
+      "physical_valid_fraction": 0.3168061375617981,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 40,
+      "analysis_time": "2026-08-03T03:00",
+      "physical_valid_fraction": 0.3168758451938629,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 41,
+      "analysis_time": "2026-08-03T04:00",
+      "physical_valid_fraction": 0.31715479493141174,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 42,
+      "analysis_time": "2026-08-03T05:00",
+      "physical_valid_fraction": 0.31715479493141174,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 43,
+      "analysis_time": "2026-08-03T06:00",
+      "physical_valid_fraction": 0.31743374466896057,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 44,
+      "analysis_time": "2026-08-03T07:00",
+      "physical_valid_fraction": 0.31729426980018616,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 45,
+      "analysis_time": "2026-08-03T08:00",
+      "physical_valid_fraction": 0.31715479493141174,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 46,
+      "analysis_time": "2026-08-03T09:00",
+      "physical_valid_fraction": 0.31701532006263733,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 47,
+      "analysis_time": "2026-08-03T10:00",
+      "physical_valid_fraction": 0.31701532006263733,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 48,
+      "analysis_time": "2026-08-03T11:00",
+      "physical_valid_fraction": 0.31715479493141174,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 49,
+      "analysis_time": "2026-08-03T12:00",
+      "physical_valid_fraction": 0.3157601058483124,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 50,
+      "analysis_time": "2026-08-03T13:00",
+      "physical_valid_fraction": 0.3151324987411499,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 51,
+      "analysis_time": "2026-08-03T14:00",
+      "physical_valid_fraction": 0.31555089354515076,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 52,
+      "analysis_time": "2026-08-03T15:00",
+      "physical_valid_fraction": 0.31555089354515076,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 53,
+      "analysis_time": "2026-08-03T16:00",
+      "physical_valid_fraction": 0.31548115611076355,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 54,
+      "analysis_time": "2026-08-03T17:00",
+      "physical_valid_fraction": 0.3152022063732147,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 55,
+      "analysis_time": "2026-08-03T18:00",
+      "physical_valid_fraction": 0.3152022063732147,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 56,
+      "analysis_time": "2026-08-03T19:00",
+      "physical_valid_fraction": 0.3151324987411499,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 57,
+      "analysis_time": "2026-08-03T20:00",
+      "physical_valid_fraction": 0.3149930238723755,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 58,
+      "analysis_time": "2026-08-03T21:00",
+      "physical_valid_fraction": 0.3148535490036011,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 59,
+      "analysis_time": "2026-08-03T22:00",
+      "physical_valid_fraction": 0.3149232864379883,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 60,
+      "analysis_time": "2026-08-03T23:00",
+      "physical_valid_fraction": 0.3148535490036011,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 61,
+      "analysis_time": "2026-08-04T00:00",
+      "physical_valid_fraction": 0.315969318151474,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 62,
+      "analysis_time": "2026-08-04T01:00",
+      "physical_valid_fraction": 0.31624823808670044,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 63,
+      "analysis_time": "2026-08-04T02:00",
+      "physical_valid_fraction": 0.31631797552108765,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 64,
+      "analysis_time": "2026-08-04T03:00",
+      "physical_valid_fraction": 0.315969318151474,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 65,
+      "analysis_time": "2026-08-04T04:00",
+      "physical_valid_fraction": 0.3160390257835388,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 66,
+      "analysis_time": "2026-08-04T05:00",
+      "physical_valid_fraction": 0.31624823808670044,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 67,
+      "analysis_time": "2026-08-04T06:00",
+      "physical_valid_fraction": 0.31638771295547485,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 68,
+      "analysis_time": "2026-08-04T07:00",
+      "physical_valid_fraction": 0.3165969252586365,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 69,
+      "analysis_time": "2026-08-04T08:00",
+      "physical_valid_fraction": 0.3166666626930237,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 70,
+      "analysis_time": "2026-08-04T09:00",
+      "physical_valid_fraction": 0.31380751729011536,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 71,
+      "analysis_time": "2026-08-04T10:00",
+      "physical_valid_fraction": 0.3082287311553955,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 72,
+      "analysis_time": "2026-08-04T11:00",
+      "physical_valid_fraction": 0.30578798055648804,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 73,
+      "analysis_time": "2026-08-04T12:00",
+      "physical_valid_fraction": 0.30502089858055115,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 74,
+      "analysis_time": "2026-08-04T13:00",
+      "physical_valid_fraction": 0.3046722412109375,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 75,
+      "analysis_time": "2026-08-04T14:00",
+      "physical_valid_fraction": 0.30425381660461426,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 76,
+      "analysis_time": "2026-08-04T15:00",
+      "physical_valid_fraction": 0.30425381660461426,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 77,
+      "analysis_time": "2026-08-04T16:00",
+      "physical_valid_fraction": 0.3038354218006134,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 78,
+      "analysis_time": "2026-08-04T17:00",
+      "physical_valid_fraction": 0.30348673462867737,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 79,
+      "analysis_time": "2026-08-04T18:00",
+      "physical_valid_fraction": 0.3029288649559021,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 80,
+      "analysis_time": "2026-08-04T19:00",
+      "physical_valid_fraction": 0.3029288649559021,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 81,
+      "analysis_time": "2026-08-04T20:00",
+      "physical_valid_fraction": 0.3029288649559021,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 82,
+      "analysis_time": "2026-08-04T21:00",
+      "physical_valid_fraction": 0.3057182729244232,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 83,
+      "analysis_time": "2026-08-04T22:00",
+      "physical_valid_fraction": 0.3108786344528198,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 84,
+      "analysis_time": "2026-08-04T23:00",
+      "physical_valid_fraction": 0.31304043531417847,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 85,
+      "analysis_time": "2026-08-05T00:00",
+      "physical_valid_fraction": 0.3141562044620514,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 86,
+      "analysis_time": "2026-08-05T01:00",
+      "physical_valid_fraction": 0.31471407413482666,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 87,
+      "analysis_time": "2026-08-05T02:00",
+      "physical_valid_fraction": 0.3152022063732147,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 88,
+      "analysis_time": "2026-08-05T03:00",
+      "physical_valid_fraction": 0.3157601058483124,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 89,
+      "analysis_time": "2026-08-05T04:00",
+      "physical_valid_fraction": 0.31652718782424927,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 90,
+      "analysis_time": "2026-08-05T05:00",
+      "physical_valid_fraction": 0.3169455826282501,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 91,
+      "analysis_time": "2026-08-05T06:00",
+      "physical_valid_fraction": 0.31715479493141174,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 92,
+      "analysis_time": "2026-08-05T07:00",
+      "physical_valid_fraction": 0.31715479493141174,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 93,
+      "analysis_time": "2026-08-05T08:00",
+      "physical_valid_fraction": 0.3169455826282501,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 94,
+      "analysis_time": "2026-08-05T09:00",
+      "physical_valid_fraction": 0.3169455826282501,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 95,
+      "analysis_time": "2026-08-05T10:00",
+      "physical_valid_fraction": 0.31701532006263733,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 96,
+      "analysis_time": "2026-08-05T11:00",
+      "physical_valid_fraction": 0.31708505749702454,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 97,
+      "analysis_time": "2026-08-05T12:00",
+      "physical_valid_fraction": 0.31569036841392517,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 98,
+      "analysis_time": "2026-08-05T13:00",
+      "physical_valid_fraction": 0.314016729593277,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 99,
+      "analysis_time": "2026-08-05T14:00",
+      "physical_valid_fraction": 0.31366804242134094,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 100,
+      "analysis_time": "2026-08-05T15:00",
+      "physical_valid_fraction": 0.3134588301181793,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 101,
+      "analysis_time": "2026-08-05T16:00",
+      "physical_valid_fraction": 0.31283122301101685,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 102,
+      "analysis_time": "2026-08-05T17:00",
+      "physical_valid_fraction": 0.3125523030757904,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 103,
+      "analysis_time": "2026-08-05T18:00",
+      "physical_valid_fraction": 0.312412828207016,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 104,
+      "analysis_time": "2026-08-05T19:00",
+      "physical_valid_fraction": 0.31206414103507996,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 105,
+      "analysis_time": "2026-08-05T20:00",
+      "physical_valid_fraction": 0.3124825656414032,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 106,
+      "analysis_time": "2026-08-05T21:00",
+      "physical_valid_fraction": 0.31269174814224243,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 107,
+      "analysis_time": "2026-08-05T22:00",
+      "physical_valid_fraction": 0.31290096044540405,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 108,
+      "analysis_time": "2026-08-05T23:00",
+      "physical_valid_fraction": 0.31276148557662964,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 109,
+      "analysis_time": "2026-08-06T00:00",
+      "physical_valid_fraction": 0.3140864670276642,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 110,
+      "analysis_time": "2026-08-06T01:00",
+      "physical_valid_fraction": 0.31527194380760193,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 111,
+      "analysis_time": "2026-08-06T02:00",
+      "physical_valid_fraction": 0.31534168124198914,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 112,
+      "analysis_time": "2026-08-06T03:00",
+      "physical_valid_fraction": 0.3150627613067627,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 113,
+      "analysis_time": "2026-08-06T04:00",
+      "physical_valid_fraction": 0.31527194380760193,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 114,
+      "analysis_time": "2026-08-06T05:00",
+      "physical_valid_fraction": 0.31534168124198914,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 115,
+      "analysis_time": "2026-08-06T06:00",
+      "physical_valid_fraction": 0.3157601058483124,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 116,
+      "analysis_time": "2026-08-06T07:00",
+      "physical_valid_fraction": 0.31638771295547485,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 117,
+      "analysis_time": "2026-08-06T08:00",
+      "physical_valid_fraction": 0.31645745038986206,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 118,
+      "analysis_time": "2026-08-06T09:00",
+      "physical_valid_fraction": 0.31638771295547485,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 119,
+      "analysis_time": "2026-08-06T10:00",
+      "physical_valid_fraction": 0.31652718782424927,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 120,
+      "analysis_time": "2026-08-06T11:00",
+      "physical_valid_fraction": 0.31715479493141174,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 121,
+      "analysis_time": "2026-08-06T12:00",
+      "physical_valid_fraction": 0.3160390257835388,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 122,
+      "analysis_time": "2026-08-06T13:00",
+      "physical_valid_fraction": 0.3166666626930237,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 123,
+      "analysis_time": "2026-08-06T14:00",
+      "physical_valid_fraction": 0.31645745038986206,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 124,
+      "analysis_time": "2026-08-06T15:00",
+      "physical_valid_fraction": 0.3166666626930237,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 125,
+      "analysis_time": "2026-08-06T16:00",
+      "physical_valid_fraction": 0.3165969252586365,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 126,
+      "analysis_time": "2026-08-06T17:00",
+      "physical_valid_fraction": 0.31652718782424927,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 127,
+      "analysis_time": "2026-08-06T18:00",
+      "physical_valid_fraction": 0.31624823808670044,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 128,
+      "analysis_time": "2026-08-06T19:00",
+      "physical_valid_fraction": 0.3158995807170868,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 129,
+      "analysis_time": "2026-08-06T20:00",
+      "physical_valid_fraction": 0.3158995807170868,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 130,
+      "analysis_time": "2026-08-06T21:00",
+      "physical_valid_fraction": 0.3158298432826996,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 131,
+      "analysis_time": "2026-08-06T22:00",
+      "physical_valid_fraction": 0.31569036841392517,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 132,
+      "analysis_time": "2026-08-06T23:00",
+      "physical_valid_fraction": 0.31534168124198914,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 133,
+      "analysis_time": "2026-08-07T00:00",
+      "physical_valid_fraction": 0.31652718782424927,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 134,
+      "analysis_time": "2026-08-07T01:00",
+      "physical_valid_fraction": 0.31617850065231323,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 135,
+      "analysis_time": "2026-08-07T02:00",
+      "physical_valid_fraction": 0.31652718782424927,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 136,
+      "analysis_time": "2026-08-07T03:00",
+      "physical_valid_fraction": 0.3166666626930237,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 137,
+      "analysis_time": "2026-08-07T04:00",
+      "physical_valid_fraction": 0.31708505749702454,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 138,
+      "analysis_time": "2026-08-07T05:00",
+      "physical_valid_fraction": 0.31736400723457336,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 139,
+      "analysis_time": "2026-08-07T06:00",
+      "physical_valid_fraction": 0.31736400723457336,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 140,
+      "analysis_time": "2026-08-07T07:00",
+      "physical_valid_fraction": 0.31715479493141174,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 141,
+      "analysis_time": "2026-08-07T08:00",
+      "physical_valid_fraction": 0.31743374466896057,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 142,
+      "analysis_time": "2026-08-07T09:00",
+      "physical_valid_fraction": 0.31715479493141174,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 143,
+      "analysis_time": "2026-08-07T10:00",
+      "physical_valid_fraction": 0.31708505749702454,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 144,
+      "analysis_time": "2026-08-07T11:00",
+      "physical_valid_fraction": 0.31736400723457336,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 145,
+      "analysis_time": "2026-08-07T12:00",
+      "physical_valid_fraction": 0.316108763217926,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 146,
+      "analysis_time": "2026-08-07T13:00",
+      "physical_valid_fraction": 0.316108763217926,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 147,
+      "analysis_time": "2026-08-07T14:00",
+      "physical_valid_fraction": 0.3158995807170868,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 148,
+      "analysis_time": "2026-08-07T15:00",
+      "physical_valid_fraction": 0.31541141867637634,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 149,
+      "analysis_time": "2026-08-07T16:00",
+      "physical_valid_fraction": 0.3149232864379883,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 150,
+      "analysis_time": "2026-08-07T17:00",
+      "physical_valid_fraction": 0.3148535490036011,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    },
+    {
+      "window": 151,
+      "analysis_time": "2026-08-07T18:00",
+      "physical_valid_fraction": 0.3149930238723755,
+      "marine_valid_fraction": 1.0,
+      "finite": true
+    }
+  ]
+}

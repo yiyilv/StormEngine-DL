@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "model": "V7-B",
+  "status": "frozen",
+  "definition": "239 physical stations plus 151 model-derived marine points; 12h history; u10,v10,i10fg,t2m,tp; +1..+6h grid forecast",
+  "git_commit": "1edc03720d8a17691df0af8aeaf396e48943d553",
+  "checkpoint": {
+    "path": "artifacts/v7_b_2010_2017/best.pt",
+    "sha256": "2149960f7c71ebb88324aee033ed11fe903f2c34b4064eafdaa5ee95c677f991",
+    "bytes": 6314452
+  },
+  "last_checkpoint": {
+    "path": "artifacts/v7_b_2010_2017/last.pt",
+    "sha256": "bafef67530d16fceb8796678e6cb0141b33eb0a887f1865c05c6b2c895bd109d",
+    "bytes": 6314964
+  },
+  "config": {
+    "path": "configs/v7_b.yaml",
+    "sha256": "6f60b837750e0c9c70b296569eb2370338b86354e8b91809a2326b40552c7352"
+  },
+  "executed_notebook": {
+    "path": "notebooks/StormEngine_V7B_Workflow.ipynb",
+    "sha256": "6621b339bf8946ddc1d7d131170325ce1368fe5f7df059ccba08518ca11b61"
+  },
+  "evaluation_files": [
+    {
+      "path": "artifacts/v7_b_2010_2017/evaluation_2017_clean_seed42/metrics.json",
+      "sha256": "2fc2188cfff56a8ed899b2fca2ee8dcf610e7b4674f9a0af78c47d753a668f16"
+    },
+    {
+      "path": "artifacts/v7_b_2010_2017/evaluation_2017_missing_seed42/metrics.json",
+      "sha256": "41ab5f45e8270a01bf6da85834fc18c0ba43a3f2a081db658f0bd0ea7031add3"
+    },
+    {
+      "path": "artifacts/v7_b_2010_2017/evaluation_2017_missing_seed123/metrics.json",
+      "sha256": "02c86485100c2ab2b84660960312847db3cb858ed6c8b61d83726ec5bf26affa"
+    },
+    {
+      "path": "artifacts/v7_b_2010_2017/evaluation_2017_missing_seed2026/metrics.json",
+      "sha256": "172a39406fed394d92b3a3d13873176a7871203003424c5704f8b261226e57ce"
+    }
+  ],
+  "combined_replay": {
+    "path": "artifacts/v7_b_2010_2017/combined_replay_20260801_20260808/replay_summary.json",
+    "sha256": "17b087db00ac139da96f7861a4bb07af15f24bc4acc641297e75107cbfac4da9"
+  },
+  "note": "Checkpoints, caches, NetCDF files, and raw external inputs remain local and are not committed to ordinary Git."
+}

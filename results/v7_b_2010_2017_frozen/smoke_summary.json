@@ -1,0 +1,42 @@
+{
+  "mode": "smoke",
+  "device": "cuda",
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "contract": {
+    "version": "stormengine-v7-mask-aware-v1",
+    "input_variables": [
+      "u10",
+      "v10",
+      "i10fg",
+      "t2m",
+      "tp"
+    ],
+    "include_age": true,
+    "observation_age_units": "hours_capped_at_1",
+    "station_count": 390,
+    "cache_identity": "v7_cache_identity_2010_2017.json",
+    "static_fields": "adriatic_390_fields.npz",
+    "model": {
+      "include_age": true,
+      "point_hidden": 64,
+      "latent_channels": 64,
+      "processor_layers": 2,
+      "kernel_size": 3,
+      "gaussian_sigma": 0.1,
+      "static_channels": 2,
+      "point_static_channels": 2
+    }
+  },
+  "validation_missingness": "clean",
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.2586573660373688,
+      "validation_loss": 1.907775616645813
+    }
+  ],
+  "timed_batches": 10,
+  "mean_batch_seconds": 0.18813403000058315,
+  "estimated_epoch_seconds": 618.2084225819162,
+  "peak_cuda_bytes": 1591642624
+}
