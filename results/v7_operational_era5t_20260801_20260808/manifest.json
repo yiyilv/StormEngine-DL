@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "evaluation": "V7 operational ERA5T 2026-08-01 to 2026-08-08",
+  "status": "complete",
+  "git_commit": "6f1e7d702099124118e7aca450454463dfef64e1",
+  "windows": 152,
+  "device": "cuda",
+  "metrics": {
+    "path": "artifacts/v7_operational_era5t_20260801_20260808/metrics.json",
+    "published_copy": "results/v7_operational_era5t_20260801_20260808/metrics.json",
+    "bytes": 57872,
+    "sha256": "e3606f759690a0698739e1bb868d2d827560e61ff6cb263b860f1f5c6f42203a"
+  },
+  "era5t": {
+    "instant": {
+      "filename": "era5t_adriatic_20260801_20260808_instant.nc",
+      "bytes": 2108633,
+      "sha256": "6d5fe4462caad7b1edc740275aa3868269223e3c4b5db52b30f3ae97495ed725"
+    },
+    "accum": {
+      "filename": "era5t_adriatic_20260801_20260808_accum.nc",
+      "bytes": 304221,
+      "sha256": "470ae118154e5bb0835320542c2e7b17e1c55533a5a3a44513bf19ed6753c917"
+    }
+  },
+  "checkpoints": {
+    "v7_a": {
+      "path": "artifacts/v7_a_2010_2017/best.pt",
+      "bytes": 6313492,
+      "sha256": "07a7bd4c78fa271a83b4315b2640ee833c375dc2a57d093e4fa87a8a68551e95"
+    },
+    "v7_b": {
+      "path": "artifacts/v7_b_2010_2017/best.pt",
+      "bytes": 6314452,
+      "sha256": "2149960f7c71ebb88324aee033ed11fe903f2c34b4064eafdaa5ee95c677f991"
+    }
+  },
+  "note": "ERA5T NetCDF files and model checkpoints remain local and are intentionally excluded from ordinary Git."
+}
