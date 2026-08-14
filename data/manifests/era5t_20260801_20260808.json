@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "source": "Copernicus Climate Data Store ERA5 single levels (ERA5T near-real-time availability)",
+  "downloaded_utc_date": "2026-08-14",
+  "time_start": "2026-08-01T00:00:00Z",
+  "time_end": "2026-08-08T23:00:00Z",
+  "hours": 192,
+  "domain": {
+    "latitude_min": 39.0,
+    "latitude_max": 46.5,
+    "longitude_min": 12.0,
+    "longitude_max": 20.0,
+    "height": 31,
+    "width": 33,
+    "resolution_degrees": 0.25
+  },
+  "validation": {
+    "continuous_hourly": true,
+    "finite_values": true,
+    "coordinates_equal_training_grid": true,
+    "canonical_model_orientation": "loader sorts latitude south-to-north and longitude west-to-east"
+  },
+  "files": [
+    {
+      "logical_name": "instant",
+      "path": "../DownloadDate/era5t_20260801_20260808/era5t_adriatic_20260801_20260808_instant.nc",
+      "variables": ["msl", "u10", "v10", "i10fg", "t2m"],
+      "bytes": 2108633,
+      "sha256": "6d5fe4462caad7b1edc740275aa3868269223e3c4b5db52b30f3ae97495ed725"
+    },
+    {
+      "logical_name": "accum",
+      "path": "../DownloadDate/era5t_20260801_20260808/era5t_adriatic_20260801_20260808_accum.nc",
+      "variables": ["ssrd", "tp"],
+      "bytes": 304221,
+      "sha256": "470ae118154e5bb0835320542c2e7b17e1c55533a5a3a44513bf19ed6753c917"
+    }
+  ],
+  "evaluation_overlap": {
+    "operational_input_start": "2026-08-01T00:00:00Z",
+    "operational_input_end": "2026-08-08T00:00:00Z",
+    "history_hours": 12,
+    "forecast_hours": 6,
+    "windows": 152,
+    "analysis_time_start": "2026-08-01T11:00:00Z",
+    "analysis_time_end": "2026-08-07T18:00:00Z"
+  },
+  "git_policy": "NetCDF files remain external; only this manifest and evaluation code are versioned."
+}
