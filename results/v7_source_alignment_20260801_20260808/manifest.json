@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "audit": "V7 source alignment 2026-08-01 to 2026-08-08",
+  "status": "complete",
+  "git_commit": "5d01077",
+  "hours": 169,
+  "station_counts": {
+    "dpc_physical": 239,
+    "open_meteo_marine": 151
+  },
+  "source_alignment": {
+    "artifact_path": "artifacts/v7_source_alignment_20260801_20260808/source_alignment.json",
+    "published_copy": "results/v7_source_alignment_20260801_20260808/source_alignment.json",
+    "windows_crlf_bytes": 14139,
+    "windows_crlf_sha256": "3d73683cbb846c162641d5ae4b6f1b09f0b60316fff5fae104939e1b8c032d48",
+    "published_lf_bytes": 13754,
+    "published_lf_sha256": "672858232bb853696bbda2a7f575681753aaad36eb1a075455a1ec1db8420acf",
+    "normalization_note": "Git normalizes Windows CRLF line endings to LF; parsed JSON content is unchanged."
+  },
+  "note": "Raw ERA5T, DPC, and Open-Meteo files remain local and are intentionally excluded from ordinary Git."
+}
