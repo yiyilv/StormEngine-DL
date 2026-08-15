@@ -99,10 +99,14 @@ def validate_cache_identity(
 ) -> dict[str, object]:
     expected = json.loads(Path(identity_path).read_text(encoding="utf-8"))
     actual = build_cache_identity(cache_dir, registry_path)
-    if actual != expected:
-        differing = sorted(
-            key for key in set(actual) | set(expected) if actual.get(key) != expected.get(key)
-        )
+    differing: list[str] = []
+    for key, value in actual.items():
+        if expected.get(key) == value:
+            continue
+        alternates = expected.get(f"{key}_alternates", [])
+        if not isinstance(alternates, list) or value not in alternates:
+            differing.append(key)
+    if differing:
         raise ValueError(f"V7 cache identity mismatch: {differing}")
     return actual
 

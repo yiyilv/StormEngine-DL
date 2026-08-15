@@ -8,6 +8,7 @@ __all__ = [
     "Era5MonthFiles",
     "CachedEra5SequenceDataset",
     "CachedReconstructionDataset",
+    "V7CachedReconstructionDataset",
     "Era5SequenceDataset",
     "Era5TargetGrid",
     "StationRecord",
@@ -46,6 +47,10 @@ __all__ = [
 _EXPORTS = {
     "CachedEra5SequenceDataset": (".cached_dataset", "CachedEra5SequenceDataset"),
     "CachedReconstructionDataset": (".reconstruction_dataset", "CachedReconstructionDataset"),
+    "V7CachedReconstructionDataset": (
+        ".reconstruction_dataset",
+        "V7CachedReconstructionDataset",
+    ),
     "Era5MonthFiles": (".manifest", "Era5MonthFiles"),
     "Era5SequenceDataset": (".era5_dataset", "Era5SequenceDataset"),
     "Era5TargetGrid": (".era5_target_grid", "Era5TargetGrid"),

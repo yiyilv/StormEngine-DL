@@ -8,12 +8,17 @@ __all__ = [
     "StormEngineForecastModel",
     "StormEngineReconstructionModel",
     "StormEngineV7ForecastModel",
+    "MaskAwareReconstructionModel",
 ]
 
 _EXPORTS = {
     "StormEngineForecastModel": (".models.system", "StormEngineForecastModel"),
     "StormEngineReconstructionModel": (".models.reconstruction", "StormEngineReconstructionModel"),
     "StormEngineV7ForecastModel": (".models.mask_aware", "StormEngineV7ForecastModel"),
+    "MaskAwareReconstructionModel": (
+        ".models.mask_aware_reconstruction",
+        "MaskAwareReconstructionModel",
+    ),
 }
 
 

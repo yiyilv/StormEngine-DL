@@ -1,0 +1,19 @@
+extends: v7_b.yaml
+
+experiment: V8-Spatial-Pretraining
+
+# Stage 1 of V8: reconstruct the current grid from the final sparse input hour.
+# All five forecast targets are retained so Encoder/Decoder weights transfer
+# strictly into the later forecast model. MSL remains a separately interpreted
+# weak target because no same-semantics pressure input is currently available.
+reconstruction:
+  target_variables: [msl, u10, v10, t2m, tp]
+  output_dir: artifacts/v8_spatial_pretraining
+  max_epochs: 60
+  early_stopping_patience: 10
+  smoke_train_batches: 2
+  smoke_validation_batches: 1
+  pilot_epochs: 5
+  pilot_train_batches: 300
+  pilot_validation_batches: 75
+
