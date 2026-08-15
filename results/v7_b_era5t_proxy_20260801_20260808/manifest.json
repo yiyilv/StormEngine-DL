@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "evaluation": "V7-B ERA5T proxy-input counterfactual 2026-08-01 to 2026-08-08",
+  "status": "complete",
+  "git_commit": "c62765b60437cf5e1644d64f2fb45b4a88e95a29",
+  "windows": 152,
+  "station_count": 390,
+  "device": "cuda",
+  "counterfactual_metrics": {
+    "artifact_path": "artifacts/v7_b_era5t_proxy_20260801_20260808/metrics.json",
+    "published_copy": "results/v7_b_era5t_proxy_20260801_20260808/metrics.json",
+    "windows_crlf_bytes": 74169,
+    "windows_crlf_sha256": "18d43ef8991e22fef7c70caaea053c7542b747e4fc0b0b5356a6f226efc1ec0a",
+    "published_lf_bytes": 72176,
+    "published_lf_sha256": "dcfbd9b133b486f533fbe2f9f1df1457c265cb6c849598e588188714334c034d",
+    "normalization_note": "Git normalizes Windows CRLF line endings to LF; parsed JSON content is unchanged."
+  },
+  "operational_metrics": {
+    "published_path": "results/v7_operational_era5t_20260801_20260808/metrics.json",
+    "published_lf_sha256": "69feb70f1264c3f73739f6d8efcc558c45aed0b92c7b0c090220a5deb7148558"
+  },
+  "checkpoint": {
+    "path": "artifacts/v7_b_2010_2017/best.pt",
+    "bytes": 6314452,
+    "sha256": "2149960f7c71ebb88324aee033ed11fe903f2c34b4064eafdaa5ee95c677f991"
+  },
+  "note": "Checkpoint and raw operational/ERA5T inputs remain local and are intentionally excluded from ordinary Git."
+}
