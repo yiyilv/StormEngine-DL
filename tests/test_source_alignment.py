@@ -2,7 +2,11 @@ import unittest
 
 import numpy as np
 
-from stormengine_dl.source_alignment import bilinear_sample_grid, paired_source_statistics
+from stormengine_dl.source_alignment import (
+    bilinear_sample_grid,
+    counterfactual_mse_penalty,
+    paired_source_statistics,
+)
 
 
 class SourceAlignmentTests(unittest.TestCase):
@@ -33,6 +37,19 @@ class SourceAlignmentTests(unittest.TestCase):
                 np.zeros((1, 1, 2, 2)), np.asarray([0.0, 1.0]), np.asarray([0.0, 1.0]),
                 np.asarray([[2.0, 0.5]]),
             )
+
+    def test_counterfactual_penalty_uses_mse_not_rmse_subtraction(self) -> None:
+        def metrics(rmse: float) -> dict[str, object]:
+            regions = {
+                region: {"x": {"mae": rmse / 2, "rmse": rmse}}
+                for region in ("full", "land", "sea")
+            }
+            return {"aggregate": regions, "by_lead_hour": {"1": regions}}
+        result = counterfactual_mse_penalty(metrics(2.0), metrics(1.0))
+        cell = result["aggregate"]["full"]["x"]
+        self.assertAlmostEqual(cell["excess_mse"], 3.0)
+        self.assertAlmostEqual(cell["excess_fraction_of_operational_mse"], 0.75)
+        self.assertAlmostEqual(cell["operational_to_proxy_rmse_ratio"], 2.0)
 
 
 if __name__ == "__main__": unittest.main()

@@ -91,3 +91,36 @@ def paired_source_statistics(
             "era5t_p95": float(reference_quantiles[2]),
         }
     return output
+
+
+def counterfactual_mse_penalty(
+    operational: dict[str, object],
+    proxy: dict[str, object],
+) -> dict[str, object]:
+    """Compare matching forecast metrics using squared RMSE differences."""
+    output: dict[str, object] = {"aggregate": {}, "by_lead_hour": {}}
+    sections = [("aggregate", operational["aggregate"], proxy["aggregate"])]
+    for lead, values in operational["by_lead_hour"].items():
+        sections.append((str(lead), values, proxy["by_lead_hour"][lead]))
+    for section, real_values, proxy_values in sections:
+        result: dict[str, object] = {}
+        for region in ("full", "land", "sea"):
+            result[region] = {}
+            for variable, metrics in real_values[region].items():
+                real_rmse = float(metrics["rmse"])
+                proxy_rmse = float(proxy_values[region][variable]["rmse"])
+                real_mse, proxy_mse = real_rmse**2, proxy_rmse**2
+                result[region][variable] = {
+                    "operational_rmse": real_rmse,
+                    "era5t_proxy_rmse": proxy_rmse,
+                    "operational_mse": real_mse,
+                    "era5t_proxy_mse": proxy_mse,
+                    "excess_mse": real_mse - proxy_mse,
+                    "excess_fraction_of_operational_mse": (
+                        None if real_mse == 0 else (real_mse - proxy_mse) / real_mse
+                    ),
+                    "operational_to_proxy_rmse_ratio": None if proxy_rmse == 0 else real_rmse / proxy_rmse,
+                }
+        if section == "aggregate": output["aggregate"] = result
+        else: output["by_lead_hour"][section] = result
+    return output
