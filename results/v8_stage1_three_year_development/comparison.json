@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "scientific_status": "three_year_architecture_selection_only",
+  "train_years": [
+    2013,
+    2014,
+    2015
+  ],
+  "validation_years": [
+    2016
+  ],
+  "ranking_metric": "normalized sea-weighted 2016 validation loss",
+  "ranking": [
+    {
+      "summary": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v8_spatial_dev3y_converged_sigma015\\develop_summary.json",
+      "gaussian_sigma": 0.15,
+      "best_epoch": 83,
+      "best_validation_loss": 0.33817766665270294,
+      "full_rmse": {
+        "msl": 5.28250051793593,
+        "u10": 1.589090283670014,
+        "v10": 1.3714208827004373,
+        "t2m": 2.036801296431354,
+        "tp": 0.3209711783068635
+      },
+      "land_rmse": {
+        "msl": 5.407839077186056,
+        "u10": 1.181004416062894,
+        "v10": 1.116440143371247,
+        "t2m": 2.4436840053801427,
+        "tp": 0.3562066740033606
+      },
+      "sea_rmse": {
+        "msl": 5.111695280076203,
+        "u10": 2.0057508047336086,
+        "v10": 1.6496417158007657,
+        "t2m": 1.3164505783017888,
+        "tp": 0.2672210197197874
+      }
+    },
+    {
+      "summary": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v8_spatial_dev3y_converged_sigma010\\develop_summary.json",
+      "gaussian_sigma": 0.1,
+      "best_epoch": 86,
+      "best_validation_loss": 0.338179004596152,
+      "full_rmse": {
+        "msl": 5.460693017913161,
+        "u10": 1.608212148090748,
+        "v10": 1.3426992303479883,
+        "t2m": 2.023131741587679,
+        "tp": 0.31007920632216573
+      },
+      "land_rmse": {
+        "msl": 5.619952436374717,
+        "u10": 1.1709070902687162,
+        "v10": 1.1124115817387916,
+        "t2m": 2.3962503436421745,
+        "tp": 0.3465156090383223
+      },
+      "sea_rmse": {
+        "msl": 5.242227056367132,
+        "u10": 2.0485724675343877,
+        "v10": 1.597489270813568,
+        "t2m": 1.381375559693534,
+        "tp": 0.2538698019016421
+      }
+    }
+  ],
+  "sigma015_relative_improvement_percent": {
+    "full_rmse": {
+      "msl": 3.263184716531233,
+      "u10": 1.1890138029012725,
+      "v10": -2.1390979977701434,
+      "t2m": -0.6756631099538677,
+      "tp": -3.5126418549269762
+    },
+    "land_rmse": {
+      "msl": 3.774291003172443,
+      "u10": -0.862350726039297,
+      "v10": -0.36214668191051874,
+      "t2m": -1.979495250311434,
+      "tp": -2.7967181599506334
+    },
+    "sea_rmse": {
+      "msl": 2.4900061536324882,
+      "u10": 2.0903172076855188,
+      "v10": -3.264650720354296,
+      "t2m": 4.700023895467584,
+      "tp": -5.259080724897726
+    }
+  },
+  "development_winner_sigma": 0.15,
+  "next_gate": "Retrain only the selected sigma once on ERA5 2010-2015, then run the identical Processor-transfer gate."
+}
