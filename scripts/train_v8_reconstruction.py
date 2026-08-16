@@ -212,7 +212,9 @@ def save_checkpoint(
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("mode", choices=("preflight", "smoke", "pilot", "screen", "train"))
+    parser.add_argument(
+        "mode", choices=("preflight", "smoke", "pilot", "screen", "develop", "train")
+    )
     parser.add_argument("--config", default="configs/v8_reconstruction.yaml")
     parser.add_argument("--device", choices=("auto", "cuda", "cpu"), default="auto")
     parser.add_argument("--epochs", type=int)
@@ -319,6 +321,12 @@ def main() -> int:
         epochs = int(args.epochs or reconstruction["screen_epochs"])
         train_batches = int(args.batches or reconstruction["screen_train_batches"])
         validation_batches = int(reconstruction["screen_validation_batches"])
+    elif args.mode == "develop":
+        if args.resume:
+            raise ValueError("Development candidates must start from the same random initialization")
+        epochs = int(args.epochs or reconstruction["development_epochs"])
+        train_batches = len(train_loader)
+        validation_batches = len(validation_loader)
     else:
         epochs = int(args.epochs or reconstruction["max_epochs"])
         train_batches = len(train_loader)
@@ -386,6 +394,7 @@ def main() -> int:
         "mode": args.mode,
         "scientific_status": (
             "validation_result" if args.mode == "train" else
+            "development_candidate_only" if args.mode == "develop" else
             "candidate_screening_only" if args.mode == "screen" else
             "pilot_only"
         ),

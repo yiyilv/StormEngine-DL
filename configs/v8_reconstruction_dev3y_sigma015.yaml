@@ -1,0 +1,10 @@
+extends: v8_reconstruction_dev3y.yaml
+
+experiment: V8-Spatial-Three-Year-Sigma-015
+
+model:
+  gaussian_sigma: 0.15
+
+reconstruction:
+  output_dir: artifacts/v8_spatial_dev3y_sigma015
+

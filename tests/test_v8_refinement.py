@@ -25,6 +25,9 @@ def load_script(name: str, relative: str):
 
 
 comparison = load_script("compare_v8_spatial_screens_test", "scripts/compare_v8_spatial_screens.py")
+development_comparison = load_script(
+    "compare_v8_spatial_development_test", "scripts/compare_v8_spatial_development.py"
+)
 
 
 class V8RefinementTests(unittest.TestCase):
@@ -130,6 +133,46 @@ class V8RefinementTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "beyond gaussian_sigma"):
                 comparison.compare(paths)
 
+    def make_development_summary(self, sigma: float, loss: float) -> dict:
+        summary = self.make_screen_summary(sigma, loss)
+        summary.update({
+            "mode": "develop",
+            "scientific_status": "development_candidate_only",
+            "train_years": [2013, 2014, 2015],
+            "target_max_epoch": 25,
+            "train_batches_per_epoch": 1643,
+            "validation_batches_per_epoch": 548,
+        })
+        return summary
+
+    def test_three_year_comparison_ranks_equal_candidates(self) -> None:
+        with TemporaryDirectory() as value:
+            root = Path(value)
+            paths = []
+            for index, summary in enumerate((
+                self.make_development_summary(0.10, 0.35),
+                self.make_development_summary(0.15, 0.33),
+            )):
+                path = root / f"development{index}.json"
+                path.write_text(json.dumps(summary), encoding="utf-8")
+                paths.append(str(path))
+            result = development_comparison.compare(paths)
+            self.assertEqual(result["development_winner_sigma"], 0.15)
+            self.assertEqual(result["train_years"], [2013, 2014, 2015])
+
+    def test_three_year_comparison_rejects_different_years(self) -> None:
+        with TemporaryDirectory() as value:
+            root = Path(value)
+            first = self.make_development_summary(0.10, 0.35)
+            second = self.make_development_summary(0.15, 0.33)
+            second["train_years"] = [2010, 2011, 2012]
+            paths = []
+            for index, summary in enumerate((first, second)):
+                path = root / f"development{index}.json"
+                path.write_text(json.dumps(summary), encoding="utf-8")
+                paths.append(str(path))
+            with self.assertRaisesRegex(ValueError, "budget differs"):
+                development_comparison.compare(paths)
 
 if __name__ == "__main__":
     unittest.main()
