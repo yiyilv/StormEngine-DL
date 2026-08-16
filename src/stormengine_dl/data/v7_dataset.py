@@ -76,7 +76,7 @@ def build_cache_identity(
     physical_indices = [
         index for index, row in enumerate(rows) if row["station_type"] == "physical_land"
     ]
-    return {
+    identity = {
         "format_version": 1,
         "cache_format_version": metadata["format_version"],
         "station_profile": metadata["station_profile"],
@@ -90,6 +90,10 @@ def build_cache_identity(
         "point_coords_sha256": sha256_file(cache / "point_coords.npy"),
         "point_static_sha256": sha256_file(cache / "point_static.npy"),
     }
+    derivation = cache / "derivation.json"
+    if derivation.is_file():
+        identity["derivation_sha256"] = sha256_file(derivation)
+    return identity
 
 
 def validate_cache_identity(

@@ -140,6 +140,10 @@ class V8RefinementTests(unittest.TestCase):
             "scientific_status": "development_candidate_only",
             "train_years": [2013, 2014, 2015],
             "target_max_epoch": 25,
+            "completed_epochs": 21,
+            "early_stopping_patience": 10,
+            "stopped_early": True,
+            "epochs_without_improvement": 10,
             "train_batches_per_epoch": 1643,
             "validation_batches_per_epoch": 548,
         })
@@ -172,6 +176,20 @@ class V8RefinementTests(unittest.TestCase):
                 path.write_text(json.dumps(summary), encoding="utf-8")
                 paths.append(str(path))
             with self.assertRaisesRegex(ValueError, "budget differs"):
+                development_comparison.compare(paths)
+
+    def test_three_year_comparison_rejects_unconverged_candidate(self) -> None:
+        with TemporaryDirectory() as value:
+            root = Path(value)
+            first = self.make_development_summary(0.10, 0.35)
+            second = self.make_development_summary(0.15, 0.33)
+            second["stopped_early"] = False
+            paths = []
+            for index, summary in enumerate((first, second)):
+                path = root / f"development{index}.json"
+                path.write_text(json.dumps(summary), encoding="utf-8")
+                paths.append(str(path))
+            with self.assertRaisesRegex(ValueError, "has not demonstrated validation convergence"):
                 development_comparison.compare(paths)
 
 if __name__ == "__main__":

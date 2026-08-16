@@ -72,6 +72,10 @@ def compare(paths: list[str]) -> dict[str, Any]:
     )
     rows: list[dict[str, Any]] = []
     for path, summary in loaded:
+        if not summary.get("stopped_early", False):
+            raise ValueError(
+                f"Candidate has not demonstrated validation convergence; extend its epoch ceiling: {path}"
+            )
         if comparison_contract(summary) != expected_contract:
             raise ValueError(f"Candidate contract differs beyond gaussian_sigma: {path}")
         budget = (
