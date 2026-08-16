@@ -1,0 +1,10 @@
+extends: v8_reconstruction.yaml
+
+experiment: V8-Spatial-Sigma-007
+
+model:
+  gaussian_sigma: 0.07
+
+reconstruction:
+  output_dir: artifacts/v8_spatial_screen_sigma007
+

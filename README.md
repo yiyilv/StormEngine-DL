@@ -279,6 +279,14 @@ python -u scripts/train_v8_reconstruction.py pilot --device cuda \
   --output-dir artifacts/v8_spatial_pilot
 ```
 
+After publishing the first full spatial baseline, use
+[`docs/V8_STAGE1_REFINEMENT.md`](docs/V8_STAGE1_REFINEMENT.md) and
+`notebooks/StormEngine_V8_Stage1_Refinement.ipynb` to continue the selected
+run to genuine early stopping and screen `gaussian_sigma=0.07/0.10/0.15`
+under one fixed budget. Screening results are not final model selection: the
+strongest spatial checkpoints must still be compared through identical short
+Processor-transfer pilots on 2016 future-forecast metrics.
+
 The full Stage-1 run and later Processor/joint-fine-tuning sequence are
 documented in [`docs/V8_WORKFLOW.md`](docs/V8_WORKFLOW.md). V7 checkpoints and
 published results remain immutable baselines.

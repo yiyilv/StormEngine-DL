@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+import shutil
+from pathlib import Path
+from typing import Any
+
 import torch
 from torch import nn
 
@@ -91,3 +95,62 @@ def load_spatial_pretraining(
     forecast_model.encoder.load_state_dict(encoder, strict=True)
     forecast_model.decoder.load_state_dict(decoder, strict=True)
     return contract
+
+
+def restore_spatial_training_checkpoint(
+    resume_path: Path,
+    output: Path,
+    model: nn.Module,
+    optimizer: torch.optim.Optimizer,
+    scheduler: Any,
+    scaler: Any,
+    contract: dict[str, object],
+    device: torch.device,
+) -> tuple[int, float, int, list[dict[str, float | int]]]:
+    """Restore full training state and preserve the earlier selected model.
+
+    A continuation may write to a new directory to keep a published run
+    immutable. In that case the source run's selected ``best.pt`` is copied
+    alongside the new continuation before optimization resumes.
+    """
+
+    resume_path = resume_path.resolve()
+    if not resume_path.is_file():
+        raise FileNotFoundError(resume_path)
+    saved = torch.load(resume_path, map_location=device, weights_only=False)
+    if saved.get("model_contract") != contract:
+        raise ValueError("Resume checkpoint contract is incompatible")
+
+    source_best = resume_path.parent / "best.pt"
+    if not source_best.is_file():
+        raise FileNotFoundError(
+            f"Resume requires the selected checkpoint beside last.pt: {source_best}"
+        )
+    selected = torch.load(source_best, map_location="cpu", weights_only=False)
+    if selected.get("model_contract") != contract:
+        raise ValueError("Selected checkpoint beside resume file is incompatible")
+    if float(selected["best_validation_loss"]) != float(saved["best_validation_loss"]):
+        raise ValueError("best.pt and resume checkpoint disagree on best validation loss")
+
+    destination_best = output.resolve() / "best.pt"
+    if source_best.resolve() != destination_best:
+        if destination_best.exists():
+            raise FileExistsError(
+                f"Refusing to mix continuation with an existing checkpoint: {destination_best}"
+            )
+        shutil.copy2(source_best, destination_best)
+
+    model.load_state_dict(saved["model_state_dict"])
+    optimizer.load_state_dict(saved["optimizer_state_dict"])
+    scheduler.load_state_dict(saved["scheduler_state_dict"])
+    scaler.load_state_dict(saved["scaler_state_dict"])
+    history = list(saved["history"])
+    epoch = int(saved["epoch"])
+    if len(history) != epoch:
+        raise ValueError("Resume history length does not match its completed epoch")
+    return (
+        epoch,
+        float(saved["best_validation_loss"]),
+        int(saved["epochs_without_improvement"]),
+        history,
+    )

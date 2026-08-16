@@ -29,6 +29,9 @@ from stormengine_dl.data import (  # noqa: E402
 )
 from stormengine_dl.runtime import denormalize_channels  # noqa: E402
 from stormengine_dl.training import RegionMetricAccumulator, sea_weight_map, weighted_mse  # noqa: E402
+from stormengine_dl.models.mask_aware_reconstruction import (  # noqa: E402
+    restore_spatial_training_checkpoint,
+)
 
 
 def set_seed(seed: int) -> None:
@@ -209,7 +212,7 @@ def save_checkpoint(
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("mode", choices=("preflight", "smoke", "pilot", "train"))
+    parser.add_argument("mode", choices=("preflight", "smoke", "pilot", "screen", "train"))
     parser.add_argument("--config", default="configs/v8_reconstruction.yaml")
     parser.add_argument("--device", choices=("auto", "cuda", "cpu"), default="auto")
     parser.add_argument("--epochs", type=int)
@@ -281,20 +284,26 @@ def main() -> int:
     )
     output = resolve(args.output_dir or reconstruction["output_dir"])
     output.mkdir(parents=True, exist_ok=True)
+    if not args.resume:
+        existing = [
+            path for path in (
+                output / "best.pt", output / "last.pt", output / "history.json",
+                output / f"{args.mode}_summary.json",
+            ) if path.exists()
+        ]
+        if existing:
+            raise FileExistsError(
+                "Refusing to mix a new run with existing artifacts: "
+                + ", ".join(str(path) for path in existing)
+            )
     start_epoch, best_validation, no_improve = 0, math.inf, 0
     history: list[dict[str, float | int]] = []
+    resume_path: Path | None = None
     if args.resume:
-        saved = torch.load(resolve(args.resume), map_location=device, weights_only=False)
-        if saved.get("model_contract") != contract:
-            raise ValueError("Resume checkpoint contract is incompatible")
-        model.load_state_dict(saved["model_state_dict"])
-        optimizer.load_state_dict(saved["optimizer_state_dict"])
-        scheduler.load_state_dict(saved["scheduler_state_dict"])
-        scaler.load_state_dict(saved["scaler_state_dict"])
-        start_epoch = int(saved["epoch"])
-        best_validation = float(saved["best_validation_loss"])
-        no_improve = int(saved["epochs_without_improvement"])
-        history = list(saved["history"])
+        resume_path = resolve(args.resume)
+        start_epoch, best_validation, no_improve, history = restore_spatial_training_checkpoint(
+            resume_path, output, model, optimizer, scheduler, scaler, contract, device
+        )
 
     if args.mode == "smoke":
         epochs = int(args.epochs or 1)
@@ -304,10 +313,22 @@ def main() -> int:
         epochs = int(args.epochs or reconstruction["pilot_epochs"])
         train_batches = int(args.batches or reconstruction["pilot_train_batches"])
         validation_batches = int(reconstruction["pilot_validation_batches"])
+    elif args.mode == "screen":
+        if args.resume:
+            raise ValueError("Screening candidates must start from the same random initialization")
+        epochs = int(args.epochs or reconstruction["screen_epochs"])
+        train_batches = int(args.batches or reconstruction["screen_train_batches"])
+        validation_batches = int(reconstruction["screen_validation_batches"])
     else:
         epochs = int(args.epochs or reconstruction["max_epochs"])
         train_batches = len(train_loader)
         validation_batches = len(validation_loader)
+
+    if epochs <= start_epoch:
+        raise ValueError(
+            f"Target epoch count {epochs} must be greater than completed epoch {start_epoch}; "
+            "--epochs is the total target, not the number of additional epochs"
+        )
 
     progress_every = int(config["training"].get("progress_every_batches", 100))
     patience = int(reconstruction["early_stopping_patience"])
@@ -363,8 +384,18 @@ def main() -> int:
     result = {
         "schema_version": 1,
         "mode": args.mode,
-        "scientific_status": "pilot_only" if args.mode != "train" else "validation_result",
+        "scientific_status": (
+            "validation_result" if args.mode == "train" else
+            "candidate_screening_only" if args.mode == "screen" else
+            "pilot_only"
+        ),
         "processor_used": False,
+        "seed": int(config["seed"]),
+        "initial_epoch": start_epoch,
+        "target_max_epoch": epochs,
+        "train_batches_per_epoch": train_batches,
+        "validation_batches_per_epoch": validation_batches,
+        "resumed_from": str(resume_path) if resume_path is not None else None,
         "train_years": list(config["data"]["train_years"]),
         "validation_years": list(config["data"]["validation_years"]),
         "test_years_read": [],

@@ -16,4 +16,9 @@ reconstruction:
   pilot_epochs: 5
   pilot_train_batches: 300
   pilot_validation_batches: 75
-
+  # Candidate screening is deliberately larger than a smoke/pilot run but
+  # much cheaper than a full 60-epoch experiment.  Every spatial candidate
+  # must use this identical budget and seed.
+  screen_epochs: 15
+  screen_train_batches: 1000
+  screen_validation_batches: 200

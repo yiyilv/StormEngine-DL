@@ -1,0 +1,11 @@
+extends: v8_reconstruction.yaml
+
+experiment: V8-Spatial-Pretraining-Continuation
+
+# Continue the published sigma=0.10 baseline from epoch 60.  max_epochs is the
+# total target epoch, not 90 additional epochs.  Early stopping state is restored
+# from last.pt and the earlier selected best.pt is preserved in the new output.
+reconstruction:
+  output_dir: artifacts/v8_spatial_sigma010_extended
+  max_epochs: 90
+
