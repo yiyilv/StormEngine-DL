@@ -322,8 +322,6 @@ def main() -> int:
         train_batches = int(args.batches or reconstruction["screen_train_batches"])
         validation_batches = int(reconstruction["screen_validation_batches"])
     elif args.mode == "develop":
-        if args.resume:
-            raise ValueError("Development candidates must start from the same random initialization")
         epochs = int(args.epochs or reconstruction["development_epochs"])
         train_batches = len(train_loader)
         validation_batches = len(validation_loader)
@@ -401,6 +399,7 @@ def main() -> int:
         "processor_used": False,
         "seed": int(config["seed"]),
         "initial_epoch": start_epoch,
+        "invocation_start_epoch": start_epoch,
         "target_max_epoch": epochs,
         "completed_epochs": len(history),
         "early_stopping_patience": patience,

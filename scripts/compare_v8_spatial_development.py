@@ -66,7 +66,7 @@ def compare(paths: list[str]) -> dict[str, Any]:
     expected_contract = comparison_contract(reference)
     expected_budget = (
         reference["seed"], tuple(reference["train_years"]),
-        tuple(reference["validation_years"]), reference["initial_epoch"],
+        tuple(reference["validation_years"]),
         reference["target_max_epoch"], reference["train_batches_per_epoch"],
         reference["validation_batches_per_epoch"],
     )
@@ -80,7 +80,7 @@ def compare(paths: list[str]) -> dict[str, Any]:
             raise ValueError(f"Candidate contract differs beyond gaussian_sigma: {path}")
         budget = (
             summary["seed"], tuple(summary["train_years"]), tuple(summary["validation_years"]),
-            summary["initial_epoch"], summary["target_max_epoch"],
+            summary["target_max_epoch"],
             summary["train_batches_per_epoch"], summary["validation_batches_per_epoch"],
         )
         if budget != expected_budget:

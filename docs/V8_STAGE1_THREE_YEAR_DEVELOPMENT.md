@@ -16,6 +16,10 @@ reduced development task:
 
 Both candidates start from scratch. The existing six-year sigma=0.10 model is
 not compared directly with these three-year candidates.
+If a run is interrupted, resume its own `last.pt`; optimizer, scheduler, AMP
+scaler, early-stopping state, and history are restored exactly. The notebook
+does this automatically and skips candidates that already have a final
+`develop_summary.json`.
 
 The development workflow uses one compact, immutable cache containing
 2013--2016. Build it once from the already validated 2010--2017 cache. It is a
