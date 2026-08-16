@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "mode": "screen",
+  "scientific_status": "candidate_screening_only",
+  "processor_used": false,
+  "seed": 42,
+  "initial_epoch": 0,
+  "target_max_epoch": 15,
+  "train_batches_per_epoch": 1000,
+  "validation_batches_per_epoch": 200,
+  "resumed_from": null,
+  "train_years": [
+    2010,
+    2011,
+    2012,
+    2013,
+    2014,
+    2015
+  ],
+  "validation_years": [
+    2016
+  ],
+  "test_years_read": [],
+  "best_epoch": 14,
+  "best_validation_loss": 0.47129186008125545,
+  "validation_metrics": {
+    "full": {
+      "msl": {
+        "mae": 5.47662790154898,
+        "rmse": 6.963349594883501
+      },
+      "u10": {
+        "mae": 1.338910962096429,
+        "rmse": 2.0253554954698916
+      },
+      "v10": {
+        "mae": 1.1485769349381778,
+        "rmse": 1.580678628794308
+      },
+      "t2m": {
+        "mae": 1.6866171424060274,
+        "rmse": 2.3359497528825903
+      },
+      "tp": {
+        "mae": 0.1393913376560803,
+        "rmse": 0.284102105328087
+      }
+    },
+    "land": {
+      "msl": {
+        "mae": 5.552737552224056,
+        "rmse": 7.044977182936081
+      },
+      "u10": {
+        "mae": 1.0333519277657246,
+        "rmse": 1.3759218524500136
+      },
+      "v10": {
+        "mae": 1.0281321348684422,
+        "rmse": 1.3635255716683783
+      },
+      "t2m": {
+        "mae": 2.068227763671051,
+        "rmse": 2.781254109882462
+      },
+      "tp": {
+        "mae": 0.15530853334652167,
+        "rmse": 0.31323331611974314
+      }
+    },
+    "sea": {
+      "msl": {
+        "mae": 5.375782614404505,
+        "rmse": 6.853695734900451
+      },
+      "u10": {
+        "mae": 1.7437766825846126,
+        "rmse": 2.6512002191798723
+      },
+      "v10": {
+        "mae": 1.3081662950305777,
+        "rmse": 1.8291184562280027
+      },
+      "t2m": {
+        "mae": 1.180983069229871,
+        "rmse": 1.5612066775827513
+      },
+      "tp": {
+        "mae": 0.11830105336624547,
+        "rmse": 0.2401198520568176
+      }
+    }
+  },
+  "contract": {
+    "version": "stormengine-v8-mask-aware-reconstruction-v1",
+    "task": "simultaneous_sparse_to_grid_reconstruction",
+    "input_variables": [
+      "u10",
+      "v10",
+      "i10fg",
+      "t2m",
+      "tp"
+    ],
+    "target_variables": [
+      "msl",
+      "u10",
+      "v10",
+      "t2m",
+      "tp"
+    ],
+    "include_age": true,
+    "station_profile": "dpc_plus_sea",
+    "station_count": 390,
+    "cache_identity": "v7_cache_identity_2010_2017.json",
+    "static_fields": "adriatic_390_fields.npz",
+    "grid_shape": [
+      31,
+      33
+    ],
+    "spatial_model": {
+      "include_age": true,
+      "point_hidden": 64,
+      "latent_channels": 64,
+      "gaussian_sigma": 0.07,
+      "static_channels": 2,
+      "point_static_channels": 2
+    }
+  }
+}
