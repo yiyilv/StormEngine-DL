@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "mode": "train",
+  "scientific_status": "validation_result",
+  "processor_used": false,
+  "train_years": [
+    2010,
+    2011,
+    2012,
+    2013,
+    2014,
+    2015
+  ],
+  "validation_years": [
+    2016
+  ],
+  "test_years_read": [],
+  "best_epoch": 58,
+  "best_validation_loss": 0.3241049153050476,
+  "validation_metrics": {
+    "full": {
+      "msl": {
+        "mae": 4.07259186813768,
+        "rmse": 5.425077731969453
+      },
+      "u10": {
+        "mae": 1.034802513625682,
+        "rmse": 1.5483306208351437
+      },
+      "v10": {
+        "mae": 0.9196201972668724,
+        "rmse": 1.2946155548645983
+      },
+      "t2m": {
+        "mae": 1.4522304188746589,
+        "rmse": 1.9786783234352576
+      },
+      "tp": {
+        "mae": 0.11102216837622977,
+        "rmse": 0.30582832285179884
+      }
+    },
+    "land": {
+      "msl": {
+        "mae": 4.212218216228344,
+        "rmse": 5.593496349659002
+      },
+      "u10": {
+        "mae": 0.838404720013065,
+        "rmse": 1.1371493558152141
+      },
+      "v10": {
+        "mae": 0.8043455346156232,
+        "rmse": 1.0813682230304529
+      },
+      "t2m": {
+        "mae": 1.7700304805804739,
+        "rmse": 2.337511881415365
+      },
+      "tp": {
+        "mae": 0.1298684122438746,
+        "rmse": 0.3428097279466046
+      }
+    },
+    "sea": {
+      "msl": {
+        "mae": 3.8875869569175503,
+        "rmse": 5.193517319895859
+      },
+      "u10": {
+        "mae": 1.2950295901623996,
+        "rmse": 1.9647946350561896
+      },
+      "v10": {
+        "mae": 1.0723591252797775,
+        "rmse": 1.532112953204768
+      },
+      "t2m": {
+        "mae": 1.031145337114454,
+        "rmse": 1.36492344322543
+      },
+      "tp": {
+        "mae": 0.08605089525160037,
+        "rmse": 0.24849036988182566
+      }
+    }
+  },
+  "contract": {
+    "version": "stormengine-v8-mask-aware-reconstruction-v1",
+    "task": "simultaneous_sparse_to_grid_reconstruction",
+    "input_variables": [
+      "u10",
+      "v10",
+      "i10fg",
+      "t2m",
+      "tp"
+    ],
+    "target_variables": [
+      "msl",
+      "u10",
+      "v10",
+      "t2m",
+      "tp"
+    ],
+    "include_age": true,
+    "station_profile": "dpc_plus_sea",
+    "station_count": 390,
+    "cache_identity": "v7_cache_identity_2010_2017.json",
+    "static_fields": "adriatic_390_fields.npz",
+    "grid_shape": [
+      31,
+      33
+    ],
+    "spatial_model": {
+      "include_age": true,
+      "point_hidden": 64,
+      "latent_channels": 64,
+      "gaussian_sigma": 0.1,
+      "static_channels": 2,
+      "point_static_channels": 2
+    }
+  }
+}
