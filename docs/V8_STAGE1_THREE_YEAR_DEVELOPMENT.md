@@ -47,8 +47,8 @@ Compare them:
 
 ```text
 python -u scripts/compare_v8_spatial_development.py \
-  artifacts/v8_spatial_dev3y_sigma010 \
-  artifacts/v8_spatial_dev3y_sigma015 \
+  artifacts/v8_spatial_dev3y_converged_sigma010 \
+  artifacts/v8_spatial_dev3y_converged_sigma015 \
   --output artifacts/v8_spatial_dev3y_comparison.json
 ```
 
