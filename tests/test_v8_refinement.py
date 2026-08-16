@@ -28,6 +28,9 @@ comparison = load_script("compare_v8_spatial_screens_test", "scripts/compare_v8_
 development_comparison = load_script(
     "compare_v8_spatial_development_test", "scripts/compare_v8_spatial_development.py"
 )
+capacity_comparison = load_script(
+    "compare_v8_spatial_capacity_test", "scripts/compare_v8_spatial_capacity.py"
+)
 
 
 class V8RefinementTests(unittest.TestCase):
@@ -102,6 +105,7 @@ class V8RefinementTests(unittest.TestCase):
                 "version": V8_RECONSTRUCTION_CONTRACT,
                 "spatial_model": {
                     "gaussian_sigma": sigma,
+                    "point_hidden": 64,
                     "latent_channels": 64,
                 },
             },
@@ -191,6 +195,43 @@ class V8RefinementTests(unittest.TestCase):
                 paths.append(str(path))
             with self.assertRaisesRegex(ValueError, "has not demonstrated validation convergence"):
                 development_comparison.compare(paths)
+
+    def test_capacity_comparison_ranks_complete_factorial(self) -> None:
+        with TemporaryDirectory() as value:
+            root = Path(value)
+            paths = []
+            for index, (point_hidden, latent, loss) in enumerate((
+                (64, 64, 0.34), (96, 64, 0.33), (64, 96, 0.32), (96, 96, 0.35)
+            )):
+                summary = self.make_development_summary(0.10, loss)
+                summary["contract"]["spatial_model"].update({
+                    "point_hidden": point_hidden, "latent_channels": latent
+                })
+                path = root / f"capacity{index}.json"
+                path.write_text(json.dumps(summary), encoding="utf-8")
+                paths.append(str(path))
+            result = capacity_comparison.compare(paths)
+            self.assertEqual(result["top_two_capacity_configs"], [
+                {"point_hidden": 64, "latent_channels": 96},
+                {"point_hidden": 96, "latent_channels": 64},
+            ])
+
+    def test_capacity_comparison_rejects_unconverged_candidate(self) -> None:
+        with TemporaryDirectory() as value:
+            root = Path(value)
+            paths = []
+            for index, (point_hidden, latent) in enumerate(((64, 64), (96, 64), (64, 96), (96, 96))):
+                summary = self.make_development_summary(0.10, 0.34 + index / 100)
+                summary["contract"]["spatial_model"].update({
+                    "point_hidden": point_hidden, "latent_channels": latent
+                })
+                if index == 2:
+                    summary["stopped_early"] = False
+                path = root / f"capacity{index}.json"
+                path.write_text(json.dumps(summary), encoding="utf-8")
+                paths.append(str(path))
+            with self.assertRaisesRegex(ValueError, "has not converged"):
+                capacity_comparison.compare(paths)
 
 if __name__ == "__main__":
     unittest.main()
