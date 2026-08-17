@@ -82,6 +82,22 @@ development values must not be compared numerically with the old 2017 V6/V7
 scores; direct comparison is deferred until the retained V8 system is trained
 on the full development split and evaluated once on the same 2017 test.
 
+## Stage 2b: ConvGRU local tuning
+
+The two-seed family screen retained ConvGRU. Keep `latent_channels=96` fixed so
+the Processor remains compatible with the selected spatial latent interface.
+Run `notebooks/StormEngine_V8_ConvGRU_Local_Tuning.ipynb` to reuse the converged
+2-layer/3x3 seed-42 result and add three local candidates: 1-layer/3x3,
+3-layer/3x3, and 2-layer/5x5. All other data, optimization, split, seed, loss,
+and early-stopping settings remain identical.
+
+This adaptive design first estimates depth effects at kernel 3 and the local
+kernel effect at depth 2. If both a non-default depth and kernel 5 improve the
+baseline, run their interaction combination before replication. Otherwise,
+repeat only a meaningfully better winner with seed 43; if no effect is
+meaningful, retain the already replicated 2-layer/3x3 baseline. Do not use 2017
+or start end-to-end fine-tuning during this local parameter decision.
+
 ## Later stages
 
 1. tune a small, preregistered parameter set for the retained Processor family;
