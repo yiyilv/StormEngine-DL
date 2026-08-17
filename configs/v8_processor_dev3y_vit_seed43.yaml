@@ -1,0 +1,7 @@
+extends: v8_processor_dev3y_vit.yaml
+
+experiment: V8-Processor-Three-Year-Factorized-ViT-Seed43
+seed: 43
+
+processor_development:
+  output_dir: artifacts/v8_processor_dev3y_vit_seed43

@@ -1,0 +1,7 @@
+extends: v8_processor_dev3y_convgru.yaml
+
+experiment: V8-Processor-Three-Year-ConvGRU-Seed43
+seed: 43
+
+processor_development:
+  output_dir: artifacts/v8_processor_dev3y_convgru_seed43

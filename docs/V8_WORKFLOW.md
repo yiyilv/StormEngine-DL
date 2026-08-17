@@ -73,6 +73,15 @@ Repeat both families with a second seed before choosing a family. If the
 ranking is unstable or effectively tied, prefer the smaller model and carry
 both into the later end-to-end compatibility gate. The 2017 test remains unread.
 
+After seed 42 finishes, run
+`notebooks/StormEngine_V8_Processor_Replication.ipynb`. It computes persistence
+on the identical stride-3 2016 windows (persistence has no training phase),
+runs both families with seed 43, and reports mean validation loss, between-seed
+variation, skill relative to persistence, and ranking consistency. These
+development values must not be compared numerically with the old 2017 V6/V7
+scores; direct comparison is deferred until the retained V8 system is trained
+on the full development split and evaluated once on the same 2017 test.
+
 ## Later stages
 
 1. tune a small, preregistered parameter set for the retained Processor family;
