@@ -1,0 +1,22 @@
+extends: v8_reconstruction_dev3y_ph096_lat096.yaml
+
+experiment: V8-Processor-Three-Year-Factorized-ViT
+
+# ViT/TimeSformer-style factorized temporal and spatial attention. The 31x33
+# grid is padded internally to 32x36 and divided into 4x4 patches.
+processor_development:
+  family: factorized_vit
+  latent_channels: 96
+  layers: 4
+  patch_size: 4
+  transformer_dimension: 128
+  transformer_heads: 4
+  transformer_mlp_ratio: 4.0
+  dropout: 0.0
+  window_stride_hours: 3
+  batch_size: 8
+  max_epochs: 120
+  early_stopping_patience: 10
+  smoke_train_batches: 2
+  smoke_validation_batches: 1
+  output_dir: artifacts/v8_processor_dev3y_vit_seed42

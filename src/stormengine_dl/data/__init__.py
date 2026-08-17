@@ -7,6 +7,7 @@ from importlib import import_module
 __all__ = [
     "Era5MonthFiles",
     "CachedEra5SequenceDataset",
+    "DenseGridForecastDataset",
     "CachedReconstructionDataset",
     "V7CachedReconstructionDataset",
     "Era5SequenceDataset",
@@ -46,6 +47,7 @@ __all__ = [
 
 _EXPORTS = {
     "CachedEra5SequenceDataset": (".cached_dataset", "CachedEra5SequenceDataset"),
+    "DenseGridForecastDataset": (".dense_forecast_dataset", "DenseGridForecastDataset"),
     "CachedReconstructionDataset": (".reconstruction_dataset", "CachedReconstructionDataset"),
     "V7CachedReconstructionDataset": (
         ".reconstruction_dataset",

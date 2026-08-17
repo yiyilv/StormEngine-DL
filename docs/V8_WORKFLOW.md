@@ -48,10 +48,37 @@ Raw DPC station pressure must not be added without sea-level correction.
 
 ## Later stages
 
-1. initialize the V8 forecast Encoder and Decoder from Stage 1;
-2. train the temporal Processor on 2010--2015 and select with 2016 only;
-3. jointly fine-tune Encoder, Processor, and Decoder;
-4. compare against frozen V7-B on 2016 before unlocking the 2017 test;
-5. run 2017 once after the architecture and hyperparameters are frozen;
-6. finally repeat the fixed August 2026 operational evaluation.
+## Stage 2: Processor-only family development
 
+Before connecting the sparse interface, isolate temporal forecasting skill with
+the dense ERA5 contract `12 x [msl,u10,v10,t2m,tp] -> 6 x the same fields`.
+This stage deliberately reads no DPC, Open-Meteo, sparse point values, Encoder,
+or Decoder checkpoints.
+
+The reduced-cost family screen uses 2013--2015 training, 2016 validation, and a
+three-hour window stride from the validated development cache. Both candidates
+use the same normalized sea-weighted loss and validation early stopping:
+
+- a two-layer, 96-channel, 3x3 ConvGRU;
+- a factorized temporal/spatial ViT with 4x4 patches.
+
+Run `notebooks/StormEngine_V8_Processor_Family_Development.ipynb`. It profiles
+both candidates before optionally launching them in separate Windows console
+processes. Parallel training is allowed only when the conservative combined
+CUDA-memory check passes. Sharing one GPU may still make two simultaneous jobs
+slower, so this is a scheduling convenience rather than a speed guarantee.
+
+The first comparison is a seed-42 family screen, not final model selection.
+Repeat both families with a second seed before choosing a family. If the
+ranking is unstable or effectively tied, prefer the smaller model and carry
+both into the later end-to-end compatibility gate. The 2017 test remains unread.
+
+## Later stages
+
+1. tune a small, preregistered parameter set for the retained Processor family;
+2. initialize the V8 forecast Encoder and Decoder from Stage 1 and insert the retained Processor;
+3. test Processor ranking under generic missingness and the deployment-compatible sparse interface;
+4. jointly fine-tune Encoder, Processor, and Decoder;
+5. compare against frozen V7-B on 2016 before unlocking the 2017 test;
+6. run 2017 once after the architecture and hyperparameters are frozen;
+7. finally repeat the fixed August 2026 operational evaluation.
