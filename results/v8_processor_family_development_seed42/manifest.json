@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "scientific_status": "single_seed_processor_family_screen",
+  "branch": "v8-model-development",
+  "code_commit": "a82127135cd92ad60de517c4c0d1cb5ce573a0d2",
+  "train_years": [2013, 2014, 2015],
+  "validation_years": [2016],
+  "test_years_read": [],
+  "seed": 42,
+  "history_hours": 12,
+  "forecast_hours": 6,
+  "window_stride_hours": 3,
+  "models": {
+    "convgru": {
+      "trainable_parameters": 996965,
+      "completed_epochs": 56,
+      "best_epoch": 46,
+      "best_validation_loss": 0.1350536781459884,
+      "stopped_early": true,
+      "best_checkpoint": {
+        "local_path": "artifacts/v8_processor_dev3y_convgru_seed42/best.pt",
+        "bytes": 11984234,
+        "sha256": "118664d0eafc64ab1190c931cc4c990d5bada74fc77dacaf63c0b0fe82b65783",
+        "uploaded_to_git": false
+      },
+      "last_checkpoint": {
+        "local_path": "artifacts/v8_processor_dev3y_convgru_seed42/last.pt",
+        "bytes": 11984938,
+        "sha256": "8f9597b6378bb13c87cf7428632ace1943c4d07add1e0839a3aee3e848024f9f",
+        "uploaded_to_git": false
+      }
+    },
+    "factorized_vit": {
+      "trainable_parameters": 1995173,
+      "completed_epochs": 45,
+      "best_epoch": 35,
+      "best_validation_loss": 0.13762686965997264,
+      "stopped_early": true,
+      "best_checkpoint": {
+        "local_path": "artifacts/v8_processor_dev3y_vit_seed42/best.pt",
+        "bytes": 24073266,
+        "sha256": "02386d891e3462b84b89a3708e9598fd8b6458fb4b0baade28777c752fcda83a",
+        "uploaded_to_git": false
+      },
+      "last_checkpoint": {
+        "local_path": "artifacts/v8_processor_dev3y_vit_seed42/last.pt",
+        "bytes": 24073970,
+        "sha256": "e3381b039520bc2dd04065d03e1c199bf4e3ce0ae1d5c8ef3107ca3dacd8de58",
+        "uploaded_to_git": false
+      }
+    }
+  },
+  "comparison": {
+    "primary_metric": "normalized sea-weighted 2016 validation loss",
+    "best_family_this_seed": "convgru",
+    "best_over_runner_up_percent": 1.8696868717145811,
+    "next_gate": "repeat_both_families_with_second_seed"
+  }
+}
