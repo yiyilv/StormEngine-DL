@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "scientific_status": "three_year_capacity_selection_only",
+  "train_years": [
+    2013,
+    2014,
+    2015
+  ],
+  "validation_years": [
+    2016
+  ],
+  "gaussian_sigma": 0.1,
+  "ranking_metric": "normalized sea-weighted 2016 validation loss",
+  "ranking": [
+    {
+      "summary": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v8_spatial_dev3y_ph096_lat096\\develop_summary.json",
+      "point_hidden": 96,
+      "latent_channels": 96,
+      "best_epoch": 78,
+      "completed_epochs": 88,
+      "best_validation_loss": 0.3271428113667308,
+      "full_rmse": {
+        "msl": 5.430673296345712,
+        "u10": 1.5654942730935777,
+        "v10": 1.2990174513746056,
+        "t2m": 1.9202441253368248,
+        "tp": 0.30672082541993545
+      },
+      "land_rmse": {
+        "msl": 5.5765091260600474,
+        "u10": 1.1381771964286627,
+        "v10": 1.0821214170664968,
+        "t2m": 2.272455588189742,
+        "tp": 0.34301584798894785
+      },
+      "sea_rmse": {
+        "msl": 5.23118221402223,
+        "u10": 1.995389167307571,
+        "v10": 1.5400504145743488,
+        "t2m": 1.315556007618077,
+        "tp": 0.25066160490345596
+      }
+    },
+    {
+      "summary": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v8_spatial_dev3y_ph064_lat096\\develop_summary.json",
+      "point_hidden": 64,
+      "latent_channels": 96,
+      "best_epoch": 71,
+      "completed_epochs": 81,
+      "best_validation_loss": 0.3284111303977505,
+      "full_rmse": {
+        "msl": 5.435234270530619,
+        "u10": 1.5706346270153206,
+        "v10": 1.3118340844436718,
+        "t2m": 1.9414220450749644,
+        "tp": 0.30619791810756297
+      },
+      "land_rmse": {
+        "msl": 5.590887773992008,
+        "u10": 1.1439234632491804,
+        "v10": 1.0912113653167288,
+        "t2m": 2.2989133873375485,
+        "tp": 0.3420737898353587
+      },
+      "sea_rmse": {
+        "msl": 5.221851618806805,
+        "u10": 2.000420793726801,
+        "v10": 1.5567206471767046,
+        "t2m": 1.326866349704772,
+        "tp": 0.2508808996453058
+      }
+    },
+    {
+      "summary": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v8_spatial_dev3y_ph096_lat064\\develop_summary.json",
+      "point_hidden": 96,
+      "latent_channels": 64,
+      "best_epoch": 99,
+      "completed_epochs": 109,
+      "best_validation_loss": 0.3374235863409882,
+      "full_rmse": {
+        "msl": 5.490917932994586,
+        "u10": 1.598264561076993,
+        "v10": 1.3434708114833995,
+        "t2m": 1.9999442859773628,
+        "tp": 0.3091205260181094
+      },
+      "land_rmse": {
+        "msl": 5.651768035765997,
+        "u10": 1.1679991990691196,
+        "v10": 1.1177463894451032,
+        "t2m": 2.3674158465748474,
+        "tp": 0.34576076725026295
+      },
+      "sea_rmse": {
+        "msl": 5.270235227587924,
+        "u10": 2.032609410528235,
+        "v10": 1.5940597922631403,
+        "t2m": 1.368689261389611,
+        "tp": 0.2525116101463595
+      }
+    },
+    {
+      "summary": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v8_spatial_dev3y_converged_sigma010\\develop_summary.json",
+      "point_hidden": 64,
+      "latent_channels": 64,
+      "best_epoch": 86,
+      "completed_epochs": 96,
+      "best_validation_loss": 0.338179004596152,
+      "full_rmse": {
+        "msl": 5.460693017913161,
+        "u10": 1.608212148090748,
+        "v10": 1.3426992303479883,
+        "t2m": 2.023131741587679,
+        "tp": 0.31007920632216573
+      },
+      "land_rmse": {
+        "msl": 5.619952436374717,
+        "u10": 1.1709070902687162,
+        "v10": 1.1124115817387916,
+        "t2m": 2.3962503436421745,
+        "tp": 0.3465156090383223
+      },
+      "sea_rmse": {
+        "msl": 5.242227056367132,
+        "u10": 2.0485724675343877,
+        "v10": 1.597489270813568,
+        "t2m": 1.381375559693534,
+        "tp": 0.2538698019016421
+      }
+    }
+  ],
+  "improvement_over_64x64_percent": {
+    "ph96_lat64": {
+      "validation_loss_percent": 0.22337822422357373,
+      "full_rmse_percent": {
+        "msl": -0.5534996195954626,
+        "u10": 0.6185494261789252,
+        "v10": -0.057464927213165394,
+        "t2m": 1.1461169400723035,
+        "tp": 0.30917271603832625
+      },
+      "land_rmse_percent": {
+        "msl": -0.5661186593921256,
+        "u10": 0.24834516963504027,
+        "v10": -0.47957139190989134,
+        "t2m": 1.203317388929413,
+        "tp": 0.2178377447856514
+      },
+      "sea_rmse_percent": {
+        "msl": -0.5342800096148775,
+        "u10": 0.7792283289526784,
+        "v10": 0.21467928536891343,
+        "t2m": 0.9183815519899324,
+        "tp": 0.5349953972898411
+      }
+    },
+    "ph64_lat96": {
+      "validation_loss_percent": 2.8883739279042966,
+      "full_rmse_percent": {
+        "msl": 0.46621824920440746,
+        "u10": 2.3366022399494413,
+        "v10": 2.2987386308635336,
+        "t2m": 4.038772900107429,
+        "tp": 1.2517086394274972
+      },
+      "land_rmse_percent": {
+        "msl": 0.5171691880271213,
+        "u10": 2.304506245097828,
+        "v10": 1.905788897749979,
+        "t2m": 4.062052888709406,
+        "tp": 1.281852559338061
+      },
+      "sea_rmse_percent": {
+        "msl": 0.3886790354793848,
+        "u10": 2.350498924040558,
+        "v10": 2.5520436588660647,
+        "t2m": 3.946009440101521,
+        "tp": 1.177336663891322
+      }
+    },
+    "ph96_lat96": {
+      "validation_loss_percent": 3.263417621859902,
+      "full_rmse_percent": {
+        "msl": 0.5497419735731808,
+        "u10": 2.6562338213826195,
+        "v10": 3.253281001886158,
+        "t2m": 5.0855618611426605,
+        "tp": 1.083071948636568
+      },
+      "land_rmse_percent": {
+        "msl": 0.773019181327698,
+        "u10": 2.7952596847408464,
+        "v10": 2.7229278415951765,
+        "t2m": 5.1661862367965625,
+        "tp": 1.009986551280404
+      },
+      "sea_rmse_percent": {
+        "msl": 0.2106898885939598,
+        "u10": 2.596115151875826,
+        "v10": 3.595570705145755,
+        "t2m": 4.764783307014598,
+        "tp": 1.2637174544411183
+      }
+    }
+  },
+  "top_two_capacity_configs": [
+    {
+      "point_hidden": 96,
+      "latent_channels": 96
+    },
+    {
+      "point_hidden": 64,
+      "latent_channels": 96
+    }
+  ],
+  "next_gate": "Inspect effect size and variable trade-offs, then repeat only the strongest configurations with a second seed before Processor transfer."
+}
