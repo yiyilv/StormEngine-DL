@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "scientific_status": "two_seed_processor_family_development",
+  "primary_metric": "normalized sea-weighted 2016 validation loss",
+  "persistence": {
+    "path": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v8_processor_dev3y_persistence_2016.json",
+    "validation_loss": 0.30216525403446837
+  },
+  "families": {
+    "convgru": {
+      "runs": [
+        {
+          "summary": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v8_processor_dev3y_convgru_seed42\\develop_summary.json",
+          "family": "convgru",
+          "seed": 42,
+          "trainable_parameters": 996965,
+          "best_epoch": 46,
+          "completed_epochs": 56,
+          "best_validation_loss": 0.1350536781459884
+        },
+        {
+          "summary": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v8_processor_dev3y_convgru_seed43\\develop_summary.json",
+          "family": "convgru",
+          "seed": 43,
+          "trainable_parameters": 996965,
+          "best_epoch": 52,
+          "completed_epochs": 62,
+          "best_validation_loss": 0.13434550805841802
+        }
+      ],
+      "mean_validation_loss": 0.1346995931022032,
+      "validation_loss_std": 0.0005007518711544837,
+      "mean_skill_vs_persistence": 0.5542187882170004,
+      "skill_vs_persistence_by_seed": {
+        "42": 0.5530469624062644,
+        "43": 0.5553906140277365
+      }
+    },
+    "factorized_vit": {
+      "runs": [
+        {
+          "summary": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v8_processor_dev3y_vit_seed42\\develop_summary.json",
+          "family": "factorized_vit",
+          "seed": 42,
+          "trainable_parameters": 1995173,
+          "best_epoch": 35,
+          "completed_epochs": 45,
+          "best_validation_loss": 0.13762686965997264
+        },
+        {
+          "summary": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v8_processor_dev3y_vit_seed43\\develop_summary.json",
+          "family": "factorized_vit",
+          "seed": 43,
+          "trainable_parameters": 1995173,
+          "best_epoch": 43,
+          "completed_epochs": 53,
+          "best_validation_loss": 0.13715949531420657
+        }
+      ],
+      "mean_validation_loss": 0.1373931824870896,
+      "validation_loss_std": 0.00033048356924381784,
+      "mean_skill_vs_persistence": 0.5453044959583043,
+      "skill_vs_persistence_by_seed": {
+        "42": 0.5445311205626793,
+        "43": 0.5460778713539294
+      }
+    }
+  },
+  "mean_loss_ranking": [
+    "convgru",
+    "factorized_vit"
+  ],
+  "winner_by_seed": {
+    "42": "convgru",
+    "43": "convgru"
+  },
+  "ranking_consistent_across_seeds": true,
+  "selection_rule": "Select a family only if the ranking is consistent and variable/lead-hour metrics show no material deployment-relevant regression. If mean losses differ by less than one percent, prefer the smaller model or carry both into the end-to-end gate.",
+  "test_years_read": []
+}

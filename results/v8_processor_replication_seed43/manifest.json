@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "scientific_status": "two_seed_processor_family_development",
+  "branch": "v8-model-development",
+  "code_commit": "31145251e0fd5421cb37d1a02689ba20d316d7b2",
+  "train_years": [2013, 2014, 2015],
+  "validation_years": [2016],
+  "test_years_read": [],
+  "replication_seed": 43,
+  "history_hours": 12,
+  "forecast_hours": 6,
+  "persistence_validation_loss": 0.30216525403446837,
+  "models_seed43": {
+    "convgru": {
+      "trainable_parameters": 996965,
+      "completed_epochs": 62,
+      "best_epoch": 52,
+      "best_validation_loss": 0.13434550805841802,
+      "stopped_early": true,
+      "best_checkpoint": {
+        "local_path": "artifacts/v8_processor_dev3y_convgru_seed43/best.pt",
+        "bytes": 11984618,
+        "sha256": "ce4aac1f37c27228680f028a58a06d2d6dea5e2fe8357b4a5dc279c9024658c9",
+        "uploaded_to_git": false
+      },
+      "last_checkpoint": {
+        "local_path": "artifacts/v8_processor_dev3y_convgru_seed43/last.pt",
+        "bytes": 11985322,
+        "sha256": "3f4407b38e929062bb6e41d828758e02282921c8d7e23aca6883d6ddc913a8d2",
+        "uploaded_to_git": false
+      }
+    },
+    "factorized_vit": {
+      "trainable_parameters": 1995173,
+      "completed_epochs": 53,
+      "best_epoch": 43,
+      "best_validation_loss": 0.13715949531420657,
+      "stopped_early": true,
+      "best_checkpoint": {
+        "local_path": "artifacts/v8_processor_dev3y_vit_seed43/best.pt",
+        "bytes": 24073842,
+        "sha256": "ffb60f98124e698b6ebe4f8c0bd78b78c5813d505d08b6593aaa0cee9ca54de6",
+        "uploaded_to_git": false
+      },
+      "last_checkpoint": {
+        "local_path": "artifacts/v8_processor_dev3y_vit_seed43/last.pt",
+        "bytes": 24074546,
+        "sha256": "f5333f46e6ec6eeef0b2b655b6fe48e94667ca195ac1c274f2c5b7ae63f925b9",
+        "uploaded_to_git": false
+      }
+    }
+  },
+  "two_seed_comparison": {
+    "winner_by_seed": {"42": "convgru", "43": "convgru"},
+    "ranking_consistent_across_seeds": true,
+    "convgru_mean_validation_loss": 0.1346995931022032,
+    "convgru_validation_loss_std": 0.0005007518711544837,
+    "convgru_mean_skill_vs_persistence": 0.5542187882170004,
+    "factorized_vit_mean_validation_loss": 0.1373931824870896,
+    "factorized_vit_validation_loss_std": 0.00033048356924381784,
+    "factorized_vit_mean_skill_vs_persistence": 0.5453044959583043,
+    "convgru_mean_loss_advantage_percent": 1.9604971193818186,
+    "preferred_family": "convgru"
+  }
+}
