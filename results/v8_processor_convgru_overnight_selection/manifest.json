@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "test_years_read": [],
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 949,
+      "sha256": "0b1f6b3d8a8342f1d4bba8b9901c4c539c1f281e0814db175fc18751b1ce0f9b"
+    },
+    {
+      "path": "runs\\l1k3_seed42\\develop_summary.json",
+      "bytes": 13713,
+      "sha256": "26dc1f3558204f4538c5409e3444e217576acfe772823143adc2fad18b86f147"
+    },
+    {
+      "path": "runs\\l1k3_seed42\\history.json",
+      "bytes": 11435,
+      "sha256": "920b404ed435996751e9a940f3caa933a5c2bcaf5c1ca8ad3f06fdb3d6d381b6"
+    },
+    {
+      "path": "runs\\l2k3_seed42\\develop_summary.json",
+      "bytes": 13699,
+      "sha256": "ad22c0df9ed0d434c94bf3113dcd10301016c4530f11bb94a06f4e052e794c3b"
+    },
+    {
+      "path": "runs\\l2k3_seed42\\history.json",
+      "bytes": 9933,
+      "sha256": "4817adc4f9dbadfca14072be5ac80316959ff6e1988d6384204a3c5c0b57237b"
+    },
+    {
+      "path": "runs\\l2k5_seed42\\develop_summary.json",
+      "bytes": 13714,
+      "sha256": "7200917e63af87cd18ea6fad0ce1cdab141e2efc02e06e1ee491813ce9c28f3b"
+    },
+    {
+      "path": "runs\\l2k5_seed42\\history.json",
+      "bytes": 8019,
+      "sha256": "9a15c0e112fb471850c9428816c4a66d49a8e399eeb0cb5db1d8fe65c8a19f7d"
+    },
+    {
+      "path": "runs\\l3k3_seed42\\develop_summary.json",
+      "bytes": 13722,
+      "sha256": "cbbecdbd90b30c7d9f4f7f63bd738a7f802cae303da2124510cff95934d69823"
+    },
+    {
+      "path": "runs\\l3k3_seed42\\history.json",
+      "bytes": 9595,
+      "sha256": "0267f4ad1a575a24527fe97cea63176af746f3bb08f8e866830a25058b95694f"
+    },
+    {
+      "path": "runs\\l3k3_seed43\\develop_summary.json",
+      "bytes": 13711,
+      "sha256": "a5f5ed779a83b76ff1f9acf4ba2d099b2fc2f0d54b9124a94acb79883a5ba54a"
+    },
+    {
+      "path": "runs\\l3k3_seed43\\history.json",
+      "bytes": 10347,
+      "sha256": "3e18caf9f0ba6fca52616cc739daf0e2e9af21791722b8ab8c2f91ea0292a3b6"
+    },
+    {
+      "path": "runs\\l3k5_seed42\\develop_summary.json",
+      "bytes": 13701,
+      "sha256": "e658a5c717bd17353a7bb535d7c9b90b1a8078bb71a9e5690daf218f30bac91d"
+    },
+    {
+      "path": "runs\\l3k5_seed42\\history.json",
+      "bytes": 7668,
+      "sha256": "d366253c1567c5c9fe4f65ab07b0739c6719a7dfc4c1a36a642d3a3eae65ae6e"
+    },
+    {
+      "path": "runs\\l3k5_seed43\\develop_summary.json",
+      "bytes": 13719,
+      "sha256": "14604270219ff885b09816ab1e81f1392911436a74a3c16220111a0cdd8c3676"
+    },
+    {
+      "path": "runs\\l3k5_seed43\\history.json",
+      "bytes": 6760,
+      "sha256": "fd5d984490178157811f06316fae32d5771d1b8b7089e9280a42b3606ac11c39"
+    },
+    {
+      "path": "seed42_five_candidate_ranking.json",
+      "bytes": 75116,
+      "sha256": "5620343d92d4199eda483990b274798b1aa254692f8847f043d5b8e67edeafee"
+    },
+    {
+      "path": "two_seed_comparison.json",
+      "bytes": 1435,
+      "sha256": "671799b84b96d482b2d1e32a690e68c3e2eef19d02c73ea4407ad9c0965d583f"
+    }
+  ]
+}
