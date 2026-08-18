@@ -97,6 +97,36 @@ def load_spatial_pretraining(
     return contract
 
 
+def freeze_spatial_modules(forecast_model: StormEngineV7ForecastModel) -> tuple[str, ...]:
+    """Freeze pretrained spatial modules and expose only Processor parameters.
+
+    Stage 2 deliberately optimizes the temporal Processor while preserving the
+    exact Stage-1 Encoder/Decoder solution.  Returning the trainable parameter
+    names makes that contract easy to assert before an expensive run.
+    """
+
+    forecast_model.encoder.requires_grad_(False)
+    forecast_model.decoder.requires_grad_(False)
+    forecast_model.processor.requires_grad_(True)
+    forecast_model.encoder.eval()
+    forecast_model.decoder.eval()
+    return tuple(
+        name for name, parameter in forecast_model.named_parameters()
+        if parameter.requires_grad
+    )
+
+
+def set_processor_only_training_mode(
+    forecast_model: StormEngineV7ForecastModel, training: bool
+) -> None:
+    """Set Stage-2 mode without re-enabling training mode on frozen modules."""
+
+    forecast_model.train(training)
+    if training:
+        forecast_model.encoder.eval()
+        forecast_model.decoder.eval()
+
+
 def restore_spatial_training_checkpoint(
     resume_path: Path,
     output: Path,

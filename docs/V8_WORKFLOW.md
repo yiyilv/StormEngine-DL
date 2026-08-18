@@ -98,12 +98,58 @@ repeat only a meaningfully better winner with seed 43; if no effect is
 meaningful, retain the already replicated 2-layer/3x3 baseline. Do not use 2017
 or start end-to-end fine-tuning during this local parameter decision.
 
+## Stage 2c: sparse Processor-only transfer gate
+
+The dense development gate retained ConvGRU L3K3. Formal Stage 2 now tests
+that temporal choice inside the deployment-compatible sparse interface. It
+compares the two converged Stage-1 spatial candidates (`point_hidden / latent`
+of `64/96` and `96/96`) with seeds 42 and 43. For every run:
+
+- the matching Stage-1 `best.pt` is loaded with an exact reconstruction
+  contract check;
+- Encoder and Decoder parameters are frozen and tensor-hashed;
+- the L3K3 Processor is initialized from the Stage-2 seed, independently of
+  Encoder-construction RNG consumption;
+- only `processor.*` parameters enter the optimizer;
+- training uses 2013--2015, validation uses 2016, and 2017 is never
+  instantiated;
+- generic V7/V8 missingness augmentation is active only in training;
+- checkpoints contain the complete model so the selected `best.pt` can become
+  the starting point for Stage 3.
+
+The shared development contract uses stride 3 and batch size 8 to keep the
+four-run transfer gate tractable while matching the preceding dense Processor
+screen. Validation remains clean and chronological.
+
+On Windows CUDA, retain these local Stage-1 checkpoints at their original
+artifact paths:
+
+```text
+artifacts/v8_spatial_dev3y_ph064_lat096/best.pt
+artifacts/v8_spatial_dev3y_ph096_lat096/best.pt
+```
+
+Then open `notebooks/StormEngine_V8_Stage2_Processor_Only.ipynb` and run its
+single code cell, or invoke:
+
+```text
+python -u scripts/run_v8_stage2.py --phase all --device cuda
+```
+
+The runner performs preflight, smoke and capped pilot checks before launching
+the four formal runs sequentially. Completed runs are validated and skipped;
+interrupted formal runs resume from `last.pt`. Selection uses the two-seed
+mean normalized sea-weighted 2016 validation loss. If the mean gap is below
+1%, the smaller spatial MLP is preferred. Per-variable and per-lead-hour
+metrics must still be reviewed before Stage 3.
+
 ## Later stages
 
-1. tune a small, preregistered parameter set for the retained Processor family;
-2. initialize the V8 forecast Encoder and Decoder from Stage 1 and insert the retained Processor;
-3. test Processor ranking under generic missingness and the deployment-compatible sparse interface;
-4. jointly fine-tune Encoder, Processor, and Decoder;
-5. compare against frozen V7-B on 2016 before unlocking the 2017 test;
-6. run 2017 once after the architecture and hyperparameters are frozen;
-7. finally repeat the fixed August 2026 operational evaluation.
+1. review Stage-2 two-seed variable/region/lead-hour metrics and retain one
+   spatial candidate;
+2. jointly fine-tune Encoder, Processor, and Decoder from each retained
+   Stage-2 `best.pt`, using smaller spatial-module learning rates;
+3. compare Stage 2 and Stage 3 against frozen V7-B on 2016;
+4. run 2017 once after the complete V8 architecture and hyperparameters are
+   frozen;
+5. finally repeat the fixed August 2026 operational evaluation.

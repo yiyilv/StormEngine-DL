@@ -1,0 +1,24 @@
+extends: v8_reconstruction_dev3y.yaml
+
+experiment: V8-Stage2-Three-Year-Processor-Only
+
+# Stage 2 keeps the selected spatial modules frozen and trains a randomly
+# initialized L3K3 ConvGRU on sparse 12-hour histories -> dense 6-hour futures.
+data:
+  window_stride_hours: 3
+
+model:
+  processor_layers: 3
+  kernel_size: 3
+
+stage2:
+  batch_size: 8
+  max_epochs: 120
+  early_stopping_patience: 10
+  lr_scheduler_patience: 5
+  lr_scheduler_factor: 0.5
+  smoke_train_batches: 2
+  smoke_validation_batches: 1
+  pilot_epochs: 3
+  pilot_train_batches: 200
+  pilot_validation_batches: 50
