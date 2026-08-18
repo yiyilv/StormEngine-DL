@@ -1,0 +1,7 @@
+extends: v8_processor_dev3y_convgru_l2k5.yaml
+
+experiment: V8-Processor-ConvGRU-Local-Tuning-L2-K5-Seed43
+seed: 43
+
+processor_development:
+  output_dir: artifacts/v8_processor_dev3y_convgru_l2k5_seed43
