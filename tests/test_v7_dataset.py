@@ -81,6 +81,43 @@ class V7DatasetTests(unittest.TestCase):
                     strategy=MissingnessStrategy({}), history_hours=2, forecast_hours=1,
                 )
 
+    def test_derived_cache_provenance_is_part_of_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            cache, registry, identity = self._fixture(Path(directory))
+            (cache / "derivation.json").write_text(
+                json.dumps({"selected_years": [2013, 2014, 2015, 2016]}),
+                encoding="utf-8",
+            )
+            identity.write_text(
+                json.dumps(build_cache_identity(cache, registry)), encoding="utf-8"
+            )
+            (cache / "derivation.json").write_text(
+                json.dumps({"selected_years": [2014, 2015, 2016]}), encoding="utf-8"
+            )
+            with self.assertRaisesRegex(ValueError, "derivation_sha256"):
+                V7CachedSequenceDataset(
+                    cache, registry, identity,
+                    years=[2010], input_variables=["u10"], target_variables=["u10"],
+                    strategy=MissingnessStrategy({}), history_hours=2, forecast_hours=1,
+                )
+
+    def test_explicit_cross_platform_text_hash_alternate_is_accepted(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            cache, registry, identity = self._fixture(Path(directory))
+            expected = json.loads(identity.read_text(encoding="utf-8"))
+            registry.write_bytes(registry.read_bytes().replace(b"\n", b"\r\n"))
+            expected["registry_sha256_alternates"] = [
+                build_cache_identity(cache, registry)["registry_sha256"]
+            ]
+            identity.write_text(json.dumps(expected), encoding="utf-8")
+            dataset = V7CachedSequenceDataset(
+                cache, registry, identity,
+                years=[2010], input_variables=["u10"], target_variables=["u10"],
+                strategy=MissingnessStrategy({}), history_hours=2, forecast_hours=1,
+            )
+            self.assertEqual(len(dataset), 8)
+            dataset.close()
+
     def test_target_only_tp_is_bilinearly_sampled_as_an_input(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             cache, registry, identity = self._fixture(Path(directory))

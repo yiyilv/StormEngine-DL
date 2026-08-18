@@ -1,0 +1,18 @@
+extends: v8_reconstruction_dev3y_ph096_lat096.yaml
+
+experiment: V8-Processor-Three-Year-ConvGRU
+
+# Processor-only development. Inputs and targets are dense normalized ERA5
+# grids; no sparse stations, DPC, Open-Meteo, Encoder, or Decoder are read.
+processor_development:
+  family: convgru
+  latent_channels: 96
+  layers: 2
+  kernel_size: 3
+  window_stride_hours: 3
+  batch_size: 8
+  max_epochs: 120
+  early_stopping_patience: 10
+  smoke_train_batches: 2
+  smoke_validation_batches: 1
+  output_dir: artifacts/v8_processor_dev3y_convgru_seed42

@@ -263,3 +263,30 @@ Using the existing StormEngine virtual environment:
 ```bash
 PYTHONPATH=src ../StormEngine/stormengine-env/bin/python -m unittest discover -s tests -v
 ```
+
+## V8 staged model development
+
+V8 keeps the frozen V7-B operational input contract and begins with a
+mask-aware simultaneous reconstruction stage. This pretrains only the spatial
+Encoder and Decoder on 2010--2015 and selects checkpoints with 2016; it never
+reads the locked 2017 test year. Start with:
+
+```bash
+python -u scripts/train_v8_reconstruction.py preflight --device cuda
+python -u scripts/train_v8_reconstruction.py smoke --device cuda \
+  --output-dir artifacts/v8_spatial_smoke
+python -u scripts/train_v8_reconstruction.py pilot --device cuda \
+  --output-dir artifacts/v8_spatial_pilot
+```
+
+After publishing the first full spatial baseline, use
+[`docs/V8_STAGE1_REFINEMENT.md`](docs/V8_STAGE1_REFINEMENT.md) and
+`notebooks/StormEngine_V8_Stage1_Refinement.ipynb` to continue the selected
+run to genuine early stopping and screen `gaussian_sigma=0.07/0.10/0.15`
+under one fixed budget. Screening results are not final model selection: the
+strongest spatial checkpoints must still be compared through identical short
+Processor-transfer pilots on 2016 future-forecast metrics.
+
+The full Stage-1 run and later Processor/joint-fine-tuning sequence are
+documented in [`docs/V8_WORKFLOW.md`](docs/V8_WORKFLOW.md). V7 checkpoints and
+published results remain immutable baselines.

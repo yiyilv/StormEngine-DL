@@ -1,0 +1,8 @@
+extends: v8_processor_dev3y_convgru.yaml
+
+experiment: V8-Processor-ConvGRU-Local-Tuning-L2-K5-Seed42
+
+processor_development:
+  layers: 2
+  kernel_size: 5
+  output_dir: artifacts/v8_processor_dev3y_convgru_l2k5_seed42

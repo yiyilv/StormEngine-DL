@@ -1,0 +1,10 @@
+extends: v8_reconstruction_dev3y_sigma010.yaml
+
+experiment: V8-Spatial-Three-Year-PH096-LAT064
+
+model:
+  point_hidden: 96
+  latent_channels: 64
+
+reconstruction:
+  output_dir: artifacts/v8_spatial_dev3y_ph096_lat064

@@ -76,7 +76,7 @@ def build_cache_identity(
     physical_indices = [
         index for index, row in enumerate(rows) if row["station_type"] == "physical_land"
     ]
-    return {
+    identity = {
         "format_version": 1,
         "cache_format_version": metadata["format_version"],
         "station_profile": metadata["station_profile"],
@@ -90,6 +90,10 @@ def build_cache_identity(
         "point_coords_sha256": sha256_file(cache / "point_coords.npy"),
         "point_static_sha256": sha256_file(cache / "point_static.npy"),
     }
+    derivation = cache / "derivation.json"
+    if derivation.is_file():
+        identity["derivation_sha256"] = sha256_file(derivation)
+    return identity
 
 
 def validate_cache_identity(
@@ -99,10 +103,14 @@ def validate_cache_identity(
 ) -> dict[str, object]:
     expected = json.loads(Path(identity_path).read_text(encoding="utf-8"))
     actual = build_cache_identity(cache_dir, registry_path)
-    if actual != expected:
-        differing = sorted(
-            key for key in set(actual) | set(expected) if actual.get(key) != expected.get(key)
-        )
+    differing: list[str] = []
+    for key, value in actual.items():
+        if expected.get(key) == value:
+            continue
+        alternates = expected.get(f"{key}_alternates", [])
+        if not isinstance(alternates, list) or value not in alternates:
+            differing.append(key)
+    if differing:
         raise ValueError(f"V7 cache identity mismatch: {differing}")
     return actual
 

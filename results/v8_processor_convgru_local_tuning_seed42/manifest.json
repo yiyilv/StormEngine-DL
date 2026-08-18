@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "experiment": "v8_convgru_local_tuning_seed42",
+  "source_commit": "c63b1f5",
+  "branch": "v8-model-development",
+  "test_years_read": [],
+  "checkpoint_policy": "local_only_sha256_recorded",
+  "checkpoints": {
+    "l1_k3": {
+      "best_pt_sha256": "98cb928d0ee09959d36c0cea9ae7468de47e6f43e640534a57d30b7a78a636ad",
+      "last_pt_sha256": "7e530c448ee1a69b22861393bfacb853f547d3292f121f0ff216f93642041890"
+    },
+    "l3_k3": {
+      "best_pt_sha256": "b22f89a6b1dfda0af61d417e594e777bb00d2c756e14d53f387a165fa75eb49d",
+      "last_pt_sha256": "d64f4d6c99446cf50ff548734bd7ae76d9996c763282c42eaaa74fd0a499337c"
+    },
+    "l2_k5": {
+      "best_pt_sha256": "d8a5b80194ed112e7cdc39415247e4c36923d92e76483665b57606860904e939",
+      "last_pt_sha256": "edfa3712581734271053fe46de6eeB30523d17227465040c56a3d911c5ebcb5d"
+    }
+  }
+}

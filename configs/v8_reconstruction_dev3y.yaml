@@ -1,0 +1,22 @@
+extends: v8_reconstruction.yaml
+
+experiment: V8-Spatial-Three-Year-Development
+
+# Reduced-cost architecture selection only. All candidates must use this exact
+# 2013--2015 subset and 2016 validation. The winner is later retrained once on
+# the complete 2010--2015 development training period.
+data:
+  # Compact derivative of the validated 2010--2017 cache. It contains only
+  # 2013--2016 and is shared unchanged by every development candidate.
+  training_cache: cache/stormengine_dev_2013_2016
+  cache_identity: data/manifests/v8_dev_cache_identity_2013_2016.json
+  train_years: [2013, 2014, 2015]
+  validation_years: [2016]
+  test_years: [2017]
+
+reconstruction:
+  # 120 is a safety ceiling, not a fixed run length. Validation early stopping
+  # decides convergence; reaching the ceiling while still improving means the
+  # ceiling must be extended before comparing candidates.
+  development_epochs: 120
+  early_stopping_patience: 10

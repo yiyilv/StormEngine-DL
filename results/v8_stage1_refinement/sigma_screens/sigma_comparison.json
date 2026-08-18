@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "scientific_status": "screening_ranking_not_final_model_selection",
+  "ranking_metric": "normalized sea-weighted 2016 validation loss",
+  "candidate_count": 3,
+  "screen_budget": {
+    "seed": 42,
+    "initial_epoch": 0,
+    "target_max_epoch": 15,
+    "train_batches_per_epoch": 1000,
+    "validation_batches_per_epoch": 200
+  },
+  "ranking": [
+    {
+      "summary": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v8_spatial_screen_sigma015\\screen_summary.json",
+      "gaussian_sigma": 0.15,
+      "best_epoch": 14,
+      "best_validation_loss": 0.45815034009516237,
+      "sea_rmse": {
+        "msl": 6.505275463167397,
+        "u10": 2.4987130128357635,
+        "v10": 1.9996823944841922,
+        "t2m": 1.615951725265483,
+        "tp": 0.2675788572583112
+      },
+      "full_rmse": {
+        "msl": 6.558137775459559,
+        "u10": 1.950172969901811,
+        "v10": 1.6729720546694797,
+        "t2m": 2.2958718794245336,
+        "tp": 0.3081951081057219
+      }
+    },
+    {
+      "summary": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v8_spatial_screen_sigma010\\screen_summary.json",
+      "gaussian_sigma": 0.1,
+      "best_epoch": 14,
+      "best_validation_loss": 0.46436164192855356,
+      "sea_rmse": {
+        "msl": 6.706680396163174,
+        "u10": 2.6212487065738097,
+        "v10": 1.8931391538753815,
+        "t2m": 1.567056399746135,
+        "tp": 0.25165318015430144
+      },
+      "full_rmse": {
+        "msl": 6.796696036984409,
+        "u10": 2.013360912098215,
+        "v10": 1.6101376909369751,
+        "t2m": 2.2707801153550866,
+        "tp": 0.2927552106190178
+      }
+    },
+    {
+      "summary": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v8_spatial_screen_sigma007\\screen_summary.json",
+      "gaussian_sigma": 0.07,
+      "best_epoch": 14,
+      "best_validation_loss": 0.47129186008125545,
+      "sea_rmse": {
+        "msl": 6.853695734900451,
+        "u10": 2.6512002191798723,
+        "v10": 1.8291184562280027,
+        "t2m": 1.5612066775827513,
+        "tp": 0.2401198520568176
+      },
+      "full_rmse": {
+        "msl": 6.963349594883501,
+        "u10": 2.0253554954698916,
+        "v10": 1.580678628794308,
+        "t2m": 2.3359497528825903,
+        "tp": 0.284102105328087
+      }
+    }
+  ],
+  "screening_winner_sigma": 0.15,
+  "next_gate": "Run the strongest non-baseline candidate to full convergence, then compare full reconstruction and identical Processor transfer pilots."
+}

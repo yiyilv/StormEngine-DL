@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "experiment": "v8_processor_convgru_overnight_selection",
+  "source_commit": "76e46ea",
+  "checkpoint_policy": "local_only_sha256_recorded",
+  "checkpoints": {
+    "l3k5_seed42": {
+      "best_pt_sha256": "d83e506adf856f3ea08bb39d21931a7beb62f1a6814e7e615935ef47bf0e5536",
+      "last_pt_sha256": "f3a8ef2ff7443018ad613c9ee15350ee2c77130488d26e8723b3f685111224ae"
+    },
+    "l3k5_seed43": {
+      "best_pt_sha256": "1e58bf00ad6414ba891447749293cf908ef3bfa91570bd7649203fe3cc698b8e",
+      "last_pt_sha256": "de0adfe0298b34b6d05782fbd6c7851a4a8600fa1d2bbde82355ec95d982a319"
+    },
+    "l3k3_seed43": {
+      "best_pt_sha256": "54389957c6ef0c364a1af9ea6bd3c3ec3d076cad9f80bc1268fbdf3bef599e78",
+      "last_pt_sha256": "b753822e2f89892a0d4cf3a0fa14422b2d55cb6b2492ea583c2bea3b27dc23d5"
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "scientific_status": "three_year_architecture_selection_only",
+  "branch": "v8-model-development",
+  "code_commit": "e646869bc4b2d573fec6908fab84563725a630ae",
+  "train_years": [2013, 2014, 2015],
+  "validation_years": [2016],
+  "test_years_read": [],
+  "seed": 42,
+  "development_cache": {
+    "local_path": "DownloadDate/cache/stormengine_dev_2013_2016",
+    "bytes": 991198159,
+    "uploaded_to_git": false,
+    "metadata_sha256": "00ffd33864ca9889a075fb85e6b77d14d062895ca1ef2d90f60cfa8cdfaf7b38",
+    "derivation_sha256": "d1a2dfdb0bd172b3dcbb8cf2f9a3f1fbc3fbb526350931fad88e83a98b054cbd"
+  },
+  "candidates": {
+    "sigma010": {
+      "completed_epochs": 96,
+      "best_epoch": 86,
+      "best_validation_loss": 0.338179004596152,
+      "stopped_early": true,
+      "best_checkpoint": {
+        "local_path": "artifacts/v8_spatial_dev3y_converged_sigma010/best.pt",
+        "bytes": 998996,
+        "sha256": "5d841795c0947fc6e2bbc240bdebf680cffaf96f26e08d1517c5d9da63ba5944",
+        "uploaded_to_git": false
+      },
+      "last_checkpoint": {
+        "local_path": "artifacts/v8_spatial_dev3y_converged_sigma010/last.pt",
+        "bytes": 999700,
+        "sha256": "7a05d751e82364361c8dcb29409fd18dcf6b3218f32468e23b151e2063d98317",
+        "uploaded_to_git": false
+      }
+    },
+    "sigma015": {
+      "completed_epochs": 93,
+      "best_epoch": 83,
+      "best_validation_loss": 0.33817766665270294,
+      "stopped_early": true,
+      "best_checkpoint": {
+        "local_path": "artifacts/v8_spatial_dev3y_converged_sigma015/best.pt",
+        "bytes": 998804,
+        "sha256": "d04e67be2bfda5b5f4b944ec9b168fc5f09e9463ede60cb138d9812d43fcd500",
+        "uploaded_to_git": false
+      },
+      "last_checkpoint": {
+        "local_path": "artifacts/v8_spatial_dev3y_converged_sigma015/last.pt",
+        "bytes": 999508,
+        "sha256": "3b1da2f803a0ab597d24478d30e47385cd0419d3b31a9bb58a8fc0fe90c42613",
+        "uploaded_to_git": false
+      }
+    }
+  },
+  "comparison": {
+    "ranking_metric": "normalized sea-weighted 2016 validation loss",
+    "automatic_winner_sigma": 0.15,
+    "relative_validation_loss_advantage_percent": 0.000395631730800239,
+    "interpretation": "marginal_and_mixed",
+    "documented_policy_default_sigma": 0.1
+  }
+}

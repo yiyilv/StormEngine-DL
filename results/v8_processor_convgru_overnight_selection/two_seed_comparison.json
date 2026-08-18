@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "scientific_status": "convgru_two_seed_validation_replication",
+  "primary_metric": "normalized sea-weighted 2016 validation loss",
+  "ranking_by_two_seed_mean": [
+    {
+      "candidate": "L3K5",
+      "layers": 3,
+      "kernel_size": 5,
+      "trainable_parameters": 4149125,
+      "validation_loss_by_seed": {
+        "42": 0.13115686234188537,
+        "43": 0.13100252331290496
+      },
+      "mean_validation_loss": 0.13107969282739518,
+      "sample_std_validation_loss": 0.00010913417399379127,
+      "best_epoch_by_seed": {
+        "42": 33,
+        "43": 28
+      }
+    },
+    {
+      "candidate": "L3K3",
+      "layers": 3,
+      "kernel_size": 3,
+      "trainable_parameters": 1494917,
+      "validation_loss_by_seed": {
+        "42": 0.1317562489805977,
+        "43": 0.1318714298368966
+      },
+      "mean_validation_loss": 0.13181383940874714,
+      "sample_std_validation_loss": 8.144516455181514e-05,
+      "best_epoch_by_seed": {
+        "42": 44,
+        "43": 48
+      }
+    }
+  ],
+  "relative_mean_gap_percent": 0.5569571333670141,
+  "provisional_recommendation": "L3K3",
+  "recommendation_rule": "mean losses differ by <1%; prefer the lower-complexity candidate",
+  "interpretation": "Provisional Processor choice only. Review per-variable land/sea validation metrics before freezing it for joint-model training.",
+  "test_years_read": []
+}

@@ -1042,7 +1042,14 @@
     "tp"
   ],
   "registry_sha256": "bfc3612a529ac8d55ba57ee315741b302e782161bc3a73393a333aad12989c02",
+  "registry_sha256_alternates": [
+    "b4459bbf8ecfad8eb2f55bfc74cbea746b9cd3dbceeff6c1764c7e324f896748"
+  ],
   "cache_metadata_sha256": "65699fab34a49fca0b802e520718e338ee658db85429aa45ac70b8dbb0d3dd9b",
+  "cache_metadata_sha256_alternates": [
+    "93ee338deea3f00aa42e6c62582144a5b01632746f7db0bd5140c03b03728f29"
+  ],
+  "text_hash_note": "Primary hashes are the Windows CRLF copies used for frozen V7; alternates are the semantically identical macOS LF copies. Array and station-order hashes remain exact.",
   "point_coords_sha256": "099012884aa021e54c14d5f39afa991f9ac814bb5d81473b2eba78f86ac2ab08",
   "point_static_sha256": "f3e3bbf482b2fdde6151ab8c7a70e84d58c4e52ffd3f1141a3aa29d964d9fb7c"
 }

@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "model": "V8 Stage-1 spatial pretraining",
+  "status": "complete",
+  "implementation_commit": "2aeedd8d526bf6557ce6bae92b5c58f6796480ec",
+  "definition": "390 mask-aware points; simultaneous sparse-to-grid reconstruction; Encoder and Decoder only",
+  "split": {
+    "train_years": [2010, 2011, 2012, 2013, 2014, 2015],
+    "validation_years": [2016],
+    "test_years_read": []
+  },
+  "selection": {
+    "epochs_completed": 60,
+    "best_epoch": 58,
+    "best_validation_loss": 0.3241049153050476
+  },
+  "checkpoint": {
+    "path": "artifacts/v8_spatial_pretraining/best.pt",
+    "bytes": 996884,
+    "sha256": "23cda69cb9481b21a8dbfc236ffc6915e81e06367081db982d91d69e86ab407e"
+  },
+  "last_checkpoint": {
+    "path": "artifacts/v8_spatial_pretraining/last.pt",
+    "bytes": 997012,
+    "sha256": "63e5c6e6d398cdf6f4a8014479e0ac03a79f0475c8ad65d3bdc4f44d8f74c987"
+  },
+  "implementation": {
+    "config_sha256": "2dc6e46fa1ab5aa3f95a7da9539fc8d101d90df57c1837f2e0ba79fc4e206e6f",
+    "script_sha256": "13f5b680775a1dbc53eb1c869ba35babbbc9bb960ee0d201b8f0957005ccadf9"
+  },
+  "executed_notebook": {
+    "windows_crlf_sha256": "6ef9e797a3aeb7b31ecbd1fb3341b5ec1093e6ab8ddeeecd6b3d01af31a33824",
+    "published_lf_sha256": "ae43b8197a05c197ba7a2629189ce953c39cc6b10f2a52356c3d5a598457c9d4"
+  },
+  "published_json_lf_sha256": {
+    "train_summary.json": "cce03b9b06b8d799e8b37e1cdfc9a2cc6399b6eda0e7edb92ad86415c37d4342",
+    "history.json": "2ce759f0a8be2a7fda657c4af5fcc2b6437f5d111125ec551cbc4f10b0bd7dc6",
+    "pilot_summary.json": "4fb2a9255deda2b9ba050d2567a9af1399d489d977c100ac6e514744a77d3d23",
+    "pilot_history.json": "0330862a7f6c99e6054ca6f91d0bd581219c212fb6a61a37574d6876be896794",
+    "smoke_summary.json": "453116059837685ad301b0ec689df93717129dbe09cb725cc56ef168b03e1245"
+  },
+  "note": "Checkpoints, ERA5 cache, NetCDF files, and raw operational inputs remain local and are intentionally excluded from ordinary Git."
+}

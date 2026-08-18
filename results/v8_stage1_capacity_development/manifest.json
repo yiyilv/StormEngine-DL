@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "scientific_status": "three_year_capacity_selection_only",
+  "branch": "v8-model-development",
+  "code_commit": "7e3dfb7cf3a339b08f1937f062b802a2d65ee46e",
+  "train_years": [2013, 2014, 2015],
+  "validation_years": [2016],
+  "test_years_read": [],
+  "seed": 42,
+  "gaussian_sigma": 0.1,
+  "development_cache": {
+    "local_path": "DownloadDate/cache/stormengine_dev_2013_2016",
+    "bytes": 991198159,
+    "uploaded_to_git": false,
+    "metadata_sha256": "00ffd33864ca9889a075fb85e6b77d14d062895ca1ef2d90f60cfa8cdfaf7b38",
+    "derivation_sha256": "d1a2dfdb0bd172b3dcbb8cf2f9a3f1fbc3fbb526350931fad88e83a98b054cbd"
+  },
+  "candidates": {
+    "ph096_lat064": {
+      "completed_epochs": 109,
+      "best_epoch": 99,
+      "best_validation_loss": 0.3374235863409882,
+      "stopped_early": true,
+      "best_checkpoint": {
+        "local_path": "artifacts/v8_spatial_dev3y_ph096_lat064/best.pt",
+        "bytes": 1032148,
+        "sha256": "62f21b3f1c0d7f1b80e732a7db18a2e48082943969cc1fbf92e5b10ee098ad97",
+        "uploaded_to_git": false
+      },
+      "last_checkpoint": {
+        "local_path": "artifacts/v8_spatial_dev3y_ph096_lat064/last.pt",
+        "bytes": 1032852,
+        "sha256": "71e6dd938ec5a4fc72889f594a7733f91cd9880a69fac85bfda72fc7c0ba3f7b",
+        "uploaded_to_git": false
+      }
+    },
+    "ph064_lat096": {
+      "completed_epochs": 81,
+      "best_epoch": 71,
+      "best_validation_loss": 0.3284111303977505,
+      "stopped_early": true,
+      "best_checkpoint": {
+        "local_path": "artifacts/v8_spatial_dev3y_ph064_lat096/best.pt",
+        "bytes": 2138388,
+        "sha256": "330d1e699ac768a0c5909d9913137c9e71d9dba4be8c5a20d92b2acce16cc30d",
+        "uploaded_to_git": false
+      },
+      "last_checkpoint": {
+        "local_path": "artifacts/v8_spatial_dev3y_ph064_lat096/last.pt",
+        "bytes": 2139156,
+        "sha256": "ad3d3a23db4ea5a102fb44765ce56c20d17c5cd94527e032ac947d7e5f105023",
+        "uploaded_to_git": false
+      }
+    },
+    "ph096_lat096": {
+      "completed_epochs": 88,
+      "best_epoch": 78,
+      "best_validation_loss": 0.3271428113667308,
+      "stopped_early": true,
+      "best_checkpoint": {
+        "local_path": "artifacts/v8_spatial_dev3y_ph096_lat096/best.pt",
+        "bytes": 2183444,
+        "sha256": "523a33d79f3fbb0c9cfa51e0817be949766893733f372dc19c5f70d1048439d8",
+        "uploaded_to_git": false
+      },
+      "last_checkpoint": {
+        "local_path": "artifacts/v8_spatial_dev3y_ph096_lat096/last.pt",
+        "bytes": 2184148,
+        "sha256": "4f0e4b322b07ef2567ad078e345e3e45a9d60b6c16444f04ade1784aa835fc55",
+        "uploaded_to_git": false
+      }
+    }
+  },
+  "comparison": {
+    "ranking_metric": "normalized sea-weighted 2016 validation loss",
+    "winner": {"point_hidden": 96, "latent_channels": 96},
+    "runner_up": {"point_hidden": 64, "latent_channels": 96},
+    "winner_improvement_over_64x64_percent": 3.263417621859902,
+    "runner_up_improvement_over_64x64_percent": 2.8883739279042966,
+    "next_gate": "repeat_top_two_with_second_seed_before_processor_transfer"
+  }
+}
