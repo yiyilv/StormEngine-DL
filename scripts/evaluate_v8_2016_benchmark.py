@@ -133,12 +133,15 @@ def checkpoint_path_and_hash(spec: dict[str, Any]) -> tuple[Path, str]:
 
 
 def load_models(
-    benchmark: dict[str, Any], device: torch.device, station_count: int
+    benchmark: dict[str, Any],
+    device: torch.device,
+    station_count: int,
+    model_names: tuple[str, ...] = MODEL_NAMES,
 ) -> tuple[dict[str, torch.nn.Module], dict[str, dict[str, Any]]]:
     stage3_base = load_config(resolve(benchmark["data_config"]))
     models: dict[str, torch.nn.Module] = {}
     metadata: dict[str, dict[str, Any]] = {}
-    for name in MODEL_NAMES:
+    for name in model_names:
         spec = dict(benchmark["checkpoints"][name])
         path, digest = checkpoint_path_and_hash(spec)
         saved = torch.load(path, map_location=device, weights_only=False)
