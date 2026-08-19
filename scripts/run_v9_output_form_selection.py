@@ -156,6 +156,8 @@ def main() -> int:
         "replicated_variants": [variant["name"] for _, variant, _ in selected],
         "replicated_ranking": replicated_ranking,
         "candidate_for_one_time_2024_confirmation": replicated_ranking[0]["variant"],
+        "confirmation_gate_not_read": config["confirmation"],
+        "final_test_not_read": config["final_test"],
         "seeds": [primary_seed, replication_seed],
     }
     output = resolve(config["training"]["output_dir"])

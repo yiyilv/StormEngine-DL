@@ -23,6 +23,8 @@ training:
   early_stopping_patience: 12
   lr_scheduler_patience: 4
   lr_scheduler_factor: 0.5
+  reconstruction_loss_weight: 0.10
+  progress_every_batches: 0
   output_dir: artifacts/v9_output_form
 
 development:
@@ -35,5 +37,18 @@ development:
   replication_seed: 43
   top_k_for_replication: 2
   selection_metric: validation_sea_weighted_mse
-  v7b_checkpoint_sha256: 2149960f411385072beb22bda8ea42ff2934f272034289c55549c67cbac6a9ed
+  v7b_checkpoint_sha256: 2149960f7c71ebb88324aee033ed11fe903f2c34b4064eafdaa5ee95c677f991
+
+confirmation:
+  year: 2024
+  candidate_reference: frozen_v7_b
+  minimum_mean_sea_rmse_skill: 0.0
+  minimum_positive_sea_wind_component_leads: 7
+  maximum_reconstruction_degradation_percent: 3.0
+  failure_action: stop_without_reading_2025
+
+final_test:
+  year: 2025
+  run_once: true
+  no_post_test_tuning: true
 

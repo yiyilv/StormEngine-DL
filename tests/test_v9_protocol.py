@@ -27,6 +27,22 @@ def test_v9_protocol_locks_confirmation_and_test_years() -> None:
     assert config["data"]["validation_years"] == [2023]
     assert config["data"]["confirmation_years"] == [2024]
     assert config["data"]["test_years"] == [2025]
+    assert config["development"]["v7b_checkpoint_sha256"] == (
+        "2149960f7c71ebb88324aee033ed11fe903f2c34b4064eafdaa5ee95c677f991"
+    )
+    assert config["confirmation"] == {
+        "year": 2024,
+        "candidate_reference": "frozen_v7_b",
+        "minimum_mean_sea_rmse_skill": 0.0,
+        "minimum_positive_sea_wind_component_leads": 7,
+        "maximum_reconstruction_degradation_percent": 3.0,
+        "failure_action": "stop_without_reading_2025",
+    }
+    assert config["final_test"] == {
+        "year": 2025,
+        "run_once": True,
+        "no_post_test_tuning": True,
+    }
 
 
 def test_v9_protocol_rejects_confirmation_leakage() -> None:

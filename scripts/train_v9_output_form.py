@@ -76,7 +76,16 @@ def forward(
     batch: dict[str, torch.Tensor],
     static: torch.Tensor,
 ) -> torch.Tensor:
-    return model(
+    prediction, _ = forward_components(model, batch, static)
+    return prediction
+
+
+def forward_components(
+    model: StormEngineV9ForecastModel,
+    batch: dict[str, torch.Tensor],
+    static: torch.Tensor,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    prediction, current = model.forward_with_reconstruction(
         batch["point_values"],
         batch["point_coords"],
         batch["value_mask"],
@@ -85,6 +94,9 @@ def forward(
         static_fields=static.expand(batch["target"].shape[0], -1, -1, -1),
         point_static=batch["point_static"],
     )
+    if current is None:
+        raise RuntimeError("V9 requires a current-field reconstruction for every candidate")
+    return prediction, current
 
 
 def model_contract(
@@ -107,6 +119,9 @@ def model_contract(
         "validation_years": list(config["data"]["validation_years"]),
         "confirmation_years": list(config["data"]["confirmation_years"]),
         "locked_test_years": list(config["data"]["test_years"]),
+        "reconstruction_loss_weight": float(
+            config["training"]["reconstruction_loss_weight"]
+        ),
         "warm_start": warm_start,
     }
 
@@ -170,7 +185,10 @@ def main() -> int:
     if args.mode == "preflight":
         batch = move(next(iter(train_loader)), device)
         with torch.no_grad():
-            prediction = forward(model, batch, static)
+            prediction, current = forward_components(model, batch, static)
+            reconstruction_loss = weighted_mse(
+                current, batch["current_target"], weights
+            )
         result = {
             "mode": "preflight",
             "variant": args.variant_name,
@@ -180,12 +198,18 @@ def main() -> int:
             "validation_samples": len(validation),
             "prediction_shape": list(prediction.shape),
             "prediction_finite": bool(torch.isfinite(prediction).all()),
+            "current_reconstruction_shape": list(current.shape),
+            "current_reconstruction_finite": bool(torch.isfinite(current).all()),
+            "current_reconstruction_loss": float(reconstruction_loss),
             "contract": contract,
         }
         print(json.dumps(result, indent=2))
         train.close(); validation.close(); return 0
 
     training = config["training"]
+    reconstruction_weight = float(training["reconstruction_loss_weight"])
+    if reconstruction_weight < 0:
+        raise ValueError("reconstruction_loss_weight must be non-negative")
     output = resolve(training["output_dir"]) / args.variant_name / f"seed_{args.seed}"
     output.mkdir(parents=True, exist_ok=True)
     optimizer = torch.optim.AdamW(
@@ -231,39 +255,63 @@ def main() -> int:
     for epoch in range(start_epoch, epochs):
         epoch_started = time.perf_counter()
         train.set_epoch(epoch)
-        model.train(); train_total = 0.0; train_count = 0
+        model.train()
+        train_total = 0.0
+        train_forecast_total = 0.0
+        train_reconstruction_total = 0.0
+        train_count = 0
         for raw in train_loader:
             if train_count >= max_train:
                 break
             batch = move(raw, device)
             optimizer.zero_grad(set_to_none=True)
             with torch.autocast(device_type=device.type, enabled=scaler.is_enabled()):
-                loss = weighted_mse(forward(model, batch, static), batch["target"], weights)
+                prediction, current = forward_components(model, batch, static)
+                forecast_loss = weighted_mse(prediction, batch["target"], weights)
+                reconstruction_loss = weighted_mse(
+                    current, batch["current_target"], weights
+                )
+                loss = forecast_loss + reconstruction_weight * reconstruction_loss
             scaler.scale(loss).backward()
             scaler.unscale_(optimizer)
             torch.nn.utils.clip_grad_norm_(
                 model.parameters(), float(training["gradient_clip"])
             )
             scaler.step(optimizer); scaler.update()
-            train_total += float(loss.detach()); train_count += 1
+            train_total += float(loss.detach())
+            train_forecast_total += float(forecast_loss.detach())
+            train_reconstruction_total += float(reconstruction_loss.detach())
+            train_count += 1
             if progress_every and (train_count % progress_every == 0 or train_count == max_train):
                 print(
                     f"epoch {epoch + 1} train {train_count}/{min(max_train, len(train_loader))} "
                     f"loss={train_total / train_count:.6f}",
                     flush=True,
                 )
-        model.eval(); validation_total = 0.0; validation_count = 0
+        model.eval()
+        validation_total = 0.0
+        validation_reconstruction_total = 0.0
+        validation_count = 0
         with torch.no_grad():
             for raw in validation_loader:
                 if validation_count >= max_val:
                     break
                 batch = move(raw, device)
+                prediction, current = forward_components(model, batch, static)
                 validation_total += float(
-                    weighted_mse(forward(model, batch, static), batch["target"], weights)
+                    weighted_mse(prediction, batch["target"], weights)
+                )
+                validation_reconstruction_total += float(
+                    weighted_mse(current, batch["current_target"], weights)
                 )
                 validation_count += 1
         train_loss = train_total / max(1, train_count)
+        train_forecast_loss = train_forecast_total / max(1, train_count)
+        train_reconstruction_loss = train_reconstruction_total / max(1, train_count)
         validation_loss = validation_total / max(1, validation_count)
+        validation_reconstruction_loss = (
+            validation_reconstruction_total / max(1, validation_count)
+        )
         scheduler.step(validation_loss)
         improved = validation_loss < best
         if improved:
@@ -273,7 +321,10 @@ def main() -> int:
         row = {
             "epoch": epoch + 1,
             "train_loss": train_loss,
+            "train_forecast_loss": train_forecast_loss,
+            "train_reconstruction_loss": train_reconstruction_loss,
             "validation_loss": validation_loss,
+            "validation_reconstruction_loss": validation_reconstruction_loss,
             "learning_rate": float(optimizer.param_groups[0]["lr"]),
         }
         history.append(row)
@@ -296,7 +347,9 @@ def main() -> int:
         elapsed = time.perf_counter() - epoch_started
         print(
             f"Epoch {epoch + 1}/{epochs}: train={train_loss:.6f} "
-            f"validation={validation_loss:.6f} best={best:.6f} "
+            f"forecast={train_forecast_loss:.6f} recon={train_reconstruction_loss:.6f} "
+            f"validation={validation_loss:.6f} val_recon={validation_reconstruction_loss:.6f} "
+            f"best={best:.6f} "
             f"lr={optimizer.param_groups[0]['lr']:.2e} time={elapsed / 60:.1f}m",
             flush=True,
         )
@@ -311,6 +364,7 @@ def main() -> int:
         "seed": args.seed,
         "mode": args.mode,
         "selection_metric": "validation_sea_weighted_mse",
+        "reconstruction_loss_weight": reconstruction_weight,
         "best_validation_loss": best,
         "best_epoch": min(history, key=lambda row: row["validation_loss"])["epoch"],
         "epochs_completed": len(history),

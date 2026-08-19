@@ -50,10 +50,8 @@ def test_all_four_v9_forms_have_identical_output_contract() -> None:
             )
             assert prediction.shape == (2, 6, 5, 5, 7)
             assert torch.isfinite(prediction).all()
-            if output_mode == "residual":
-                assert current is not None and current.shape == (2, 5, 5, 7)
-            else:
-                assert current is None
+            assert current is not None and current.shape == (2, 5, 5, 7)
+            assert torch.isfinite(current).all()
 
 
 def test_residual_prediction_is_current_plus_forecast_increment() -> None:
@@ -110,3 +108,9 @@ def test_v7b_warm_start_copies_compatible_and_residual_decoder_tensors(tmp_path)
         target.reconstruction_decoder.network[0].weight,
         source.decoder.network[0].weight,
     )
+    assert torch.count_nonzero(target.decoder.network[-1].weight) == 0
+    assert torch.count_nonzero(target.decoder.network[-1].bias) == 0
+    assert transfer["zero_initialized_tensors"] == [
+        "decoder.network.4.weight",
+        "decoder.network.4.bias",
+    ]

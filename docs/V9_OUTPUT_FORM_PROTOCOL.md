@@ -24,6 +24,19 @@ These hypotheses form a controlled two-by-two experiment:
 All four candidates use the same 390 coordinates, input variables, missingness simulator,
 normalisation, sea-weighted loss, optimiser, training duration, and chronological split.
 
+## Shared spatial-preservation constraint
+
+Every candidate also reconstructs the dense current ERA5 grid from the final sparse input
+hour. The same reconstruction decoder is initialised from frozen V7-B, and every candidate
+uses the same auxiliary weight of `0.10`. Candidate ranking still uses future-forecast
+validation loss only; reconstruction loss is a guardrail and reported diagnostic.
+
+For residual candidates, the forecast decoder represents only an increment. Its transferred
+feature layers are retained, but its final projection is zero-initialised so the initial
+forecast equals the reconstructed current field instead of double-counting an absolute
+V7-B forecast. The current reconstruction is supervised explicitly and cannot drift into an
+unidentifiable second future-field decoder.
+
 ## Chronological data contract
 
 - 2010–2025: cached ERA5 archive, using the frozen 2010–2015 normalisation statistics;
@@ -46,6 +59,18 @@ All four candidates first train with seed 42 until early stopping. The best two 
 2023 sea-weighted validation MSE are repeated with seed 43. Their two-seed mean and range
 select exactly one candidate for the one-time 2024 confirmation. This screening result is
 not yet the final scientific test result.
+
+Before 2024 is read, the confirmation gate is frozen as follows:
+
+- mean sea RMSE skill must be positive relative to frozen V7-B;
+- at least 7 of the 12 sea `u10`/`v10` component-by-lead comparisons must be positive;
+- current-field reconstruction degradation must remain at or below 3%;
+- failure stops V9 without reading 2025.
+
+If and only if the 2024 gate passes, 2025 is read once as the locked final test. No result
+from 2024 or 2025 may trigger hyperparameter changes. The development runner implemented in
+this stage constructs only 2020--2023 datasets; confirmation and final-test evaluators remain
+separate commands so an overnight selection run cannot unlock either year accidentally.
 
 ## Windows execution
 

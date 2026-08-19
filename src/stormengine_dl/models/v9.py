@@ -73,10 +73,11 @@ class StormEngineV9ForecastModel(nn.Module):
                 kernel_size,
             )
         self.decoder = FieldDecoder(latent_channels, output_channels, static_channels)
-        self.reconstruction_decoder = (
-            FieldDecoder(latent_channels, output_channels, static_channels)
-            if output_mode == "residual"
-            else None
+        # Every candidate receives the same simultaneous-reconstruction
+        # auxiliary task. This keeps the spatial representation anchored while
+        # isolating only temporal_mode and output_mode in the 2x2 experiment.
+        self.reconstruction_decoder = FieldDecoder(
+            latent_channels, output_channels, static_channels
         )
 
     def forward_with_reconstruction(
@@ -99,10 +100,9 @@ class StormEngineV9ForecastModel(nn.Module):
         )
         future = self.processor(encoded, forecast_steps)
         forecast_component = self.decoder(future, static_fields)
-        if self.output_mode == "field":
-            return forecast_component, None
-        assert self.reconstruction_decoder is not None
         current = self.reconstruction_decoder(encoded[:, -1:], static_fields)
+        if self.output_mode == "field":
+            return forecast_component, current[:, 0]
         return current + forecast_component, current[:, 0]
 
     def forward(self, *args: Any, **kwargs: Any) -> torch.Tensor:
@@ -142,19 +142,31 @@ def warm_start_from_v7b(
             loaded.append(key)
         else:
             skipped.append(key)
-    if model.reconstruction_decoder is not None:
-        for key, value in source.items():
-            if not key.startswith("decoder."):
-                continue
-            target_key = "reconstruction_decoder." + key.removeprefix("decoder.")
-            if target_key in target and target[target_key].shape == value.shape:
-                target[target_key] = value
-                loaded.append(f"{key}->{target_key}")
+    for key, value in source.items():
+        if not key.startswith("decoder."):
+            continue
+        target_key = "reconstruction_decoder." + key.removeprefix("decoder.")
+        if target_key in target and target[target_key].shape == value.shape:
+            target[target_key] = value
+            loaded.append(f"{key}->{target_key}")
     model.load_state_dict(target)
+    reset_tensors: list[str] = []
+    if model.output_mode == "residual":
+        # A residual head copied wholesale from an absolute-field decoder would
+        # initially double-count the field. Preserve its transferred feature
+        # layers but start the final increment projection exactly at zero.
+        final = model.decoder.network[-1]
+        if not isinstance(final, nn.Conv2d):
+            raise TypeError("V9 residual decoder must end with Conv2d")
+        nn.init.zeros_(final.weight)
+        if final.bias is not None:
+            nn.init.zeros_(final.bias)
+        reset_tensors = ["decoder.network.4.weight", "decoder.network.4.bias"]
     return {
         "checkpoint": str(checkpoint_path),
         "sha256": actual_sha256,
         "loaded_tensor_count": len(loaded),
         "loaded_tensors": loaded,
         "skipped_source_tensors": skipped,
+        "zero_initialized_tensors": reset_tensors,
     }
