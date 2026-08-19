@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "test_years_read": [],
+  "files": [
+    {
+      "path": "comparison.json",
+      "bytes": 1528,
+      "sha256": "ac9d09f63a1ddefe0075d511606f0013763e6427bacb2b40039a447aa6e8f328"
+    },
+    {
+      "path": "README.md",
+      "bytes": 493,
+      "sha256": "2fad0ab1a5acb9ccbe4616210dea3d36444ff20fd428fc50e074a67b22b296a2"
+    },
+    {
+      "path": "runs\\ph064_lat096_seed42\\history.json",
+      "bytes": 8500,
+      "sha256": "4328692222a8e835c3564ad1401ae22ccd9a117a9922453a7fed01f084c7b89c"
+    },
+    {
+      "path": "runs\\ph064_lat096_seed42\\train_summary.json",
+      "bytes": 15542,
+      "sha256": "a04bda9f77c61aa0dbdfa25b4a0b60aa4def0aac371f601e2e200f8945608d20"
+    },
+    {
+      "path": "runs\\ph064_lat096_seed43\\history.json",
+      "bytes": 8150,
+      "sha256": "ce2a661fd5e18e08f62f7a24f3d4bff1933b6ab5dff72a124f14b7c7191b2e27"
+    },
+    {
+      "path": "runs\\ph064_lat096_seed43\\train_summary.json",
+      "bytes": 15548,
+      "sha256": "2bcf73e9b6bf3b125ef961441f307f47dc4f6316814ea27f959d3e1411d81f3f"
+    },
+    {
+      "path": "runs\\ph096_lat096_seed42\\history.json",
+      "bytes": 8865,
+      "sha256": "bdffb917409ccf9d3928aaab9ba386b49295dc053932431325d928d83f951ae4"
+    },
+    {
+      "path": "runs\\ph096_lat096_seed42\\train_summary.json",
+      "bytes": 15544,
+      "sha256": "ca7a6f1a4d46f1a48de51125223b7556752b520e1910dd78b07cbb4be16859ce"
+    },
+    {
+      "path": "runs\\ph096_lat096_seed43\\history.json",
+      "bytes": 7810,
+      "sha256": "8be384b19bc41568582d8ddff60f80208492cc0cefb1dffe90d9768cc476c041"
+    },
+    {
+      "path": "runs\\ph096_lat096_seed43\\train_summary.json",
+      "bytes": 15557,
+      "sha256": "75fa48d7df145830c87a3e6da9ee625e080085d6e673b4d12ceb9732c7f800ae"
+    }
+  ]
+}
