@@ -1,0 +1,39 @@
+extends: v7_b.yaml
+
+experiment: V9-output-form-development
+seed: 42
+
+data:
+  era5_manifest: data/manifests/era5_manifest_2010_2025.csv
+  training_cache: cache/stormengine_2010_2025
+  cache_identity: data/manifests/v9_cache_identity_2010_2025.json
+  window_stride_hours: 3
+  # Fast development split. 2024 is confirmation-only and 2025 remains locked.
+  train_years: [2020, 2021, 2022]
+  validation_years: [2023]
+  confirmation_years: [2024]
+  test_years: [2025]
+
+model:
+  temporal_mode: autoregressive
+  output_mode: field
+
+training:
+  max_epochs: 80
+  early_stopping_patience: 12
+  lr_scheduler_patience: 4
+  lr_scheduler_factor: 0.5
+  output_dir: artifacts/v9_output_form
+
+development:
+  variants:
+    - {name: A_field_autoregressive, temporal_mode: autoregressive, output_mode: field}
+    - {name: B_residual_autoregressive, temporal_mode: autoregressive, output_mode: residual}
+    - {name: C_field_direct, temporal_mode: direct, output_mode: field}
+    - {name: D_residual_direct, temporal_mode: direct, output_mode: residual}
+  primary_seed: 42
+  replication_seed: 43
+  top_k_for_replication: 2
+  selection_metric: validation_sea_weighted_mse
+  v7b_checkpoint_sha256: 2149960f411385072beb22bda8ea42ff2934f272034289c55549c67cbac6a9ed
+
