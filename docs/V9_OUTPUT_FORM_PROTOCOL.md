@@ -82,6 +82,32 @@ on the primary seed but slightly worse. The candidate frozen before confirmation
 The full record is in `results/v9_a_refinement/`. The checkpoint remains local. This
 refinement used only 2020--2023; neither 2024 nor 2025 was instantiated.
 
+## Frozen 2024 confirmation evaluator
+
+`scripts/evaluate_v9_2024_confirmation.py` compares the frozen V9-A checkpoint with
+frozen V7-B, sparse-reconstruction persistence, and dense ERA5 persistence. Its ordinary
+preflight instantiates only 2023. Confirmation mode requires the explicit
+`--acknowledge-one-time-2024` flag, creates a non-repeatable start marker immediately
+before the first 2024 dataset read, and never constructs a 2025 dataset.
+
+The reconstruction gate is the mean across the five target variables of the relative sea
+RMSE degradation of V9-A current-field reconstruction against frozen V7-B current-field
+reconstruction. The mean must be at most 3%. This definition, all checkpoint hashes, and
+the other two confirmation gates are frozen in `configs/v9_2024_confirmation.yaml`.
+
+Before confirmation, run only:
+
+```powershell
+python scripts/evaluate_v9_2024_confirmation.py `
+  --config configs/v9_2024_confirmation.yaml `
+  --mode preflight `
+  --device cuda
+```
+
+This writes a 2023-only preflight and reports `confirmation_years_read=[]` and
+`test_years_read=[]`. The acknowledgement flag must not be used until the evaluator commit
+and protocol are intentionally frozen.
+
 Before 2024 is read, the confirmation gate is frozen as follows:
 
 - mean sea RMSE skill must be positive relative to frozen V7-B;
