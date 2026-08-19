@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "checkpoint_policy": "local_only_sha256_recorded",
+  "checkpoints": {
+    "seed42_stage3a": {
+      "best.pt": "9278d0f971c06ed7cf0b59061458ac0257237856d124a4818940c9f4692e7b8f",
+      "last.pt": "8611d40c34ff975a07e52082958a252049e5f2d5e7eeaf14167030813aedf980"
+    },
+    "seed42_stage3b": {
+      "best.pt": "11d6963d7d7f960dfe79f861680c9f21639f1aaee7b9657eaf372e52912f9673",
+      "last.pt": "8f76eaa7dfe032b406628abda2ab095a4efe0ad9c3f3387ae82c79b9b60ecb5e"
+    },
+    "seed43_stage3a": {
+      "best.pt": "114cbc807e0e09b0f83ebaa11731505a8beab889160ad87a0db683a7fa9c610f",
+      "last.pt": "7f4d679f76bde2531602840b46a39768651e20531d9189778089e3d2eb88611a"
+    },
+    "seed43_stage3b": {
+      "best.pt": "39de5118a82d4c7d5d0ea465286140e25ebf191d0ec942241fd425714abab080",
+      "last.pt": "0a349a071a7f44616f9d918d65d699c13f67079204c4914e635b320410d9217e"
+    }
+  }
+}

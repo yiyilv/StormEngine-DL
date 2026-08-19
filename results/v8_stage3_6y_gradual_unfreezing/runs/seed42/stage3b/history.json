@@ -1,0 +1,145 @@
+[
+  {
+    "epoch": 1,
+    "train_loss": 0.2798297961094999,
+    "validation_loss": 0.32905227148427013,
+    "learning_rates": {
+      "encoder": 5e-06,
+      "processor": 3e-05,
+      "decoder": 1e-05
+    },
+    "seconds": 380.22029889997793
+  },
+  {
+    "epoch": 2,
+    "train_loss": 0.27631632888809504,
+    "validation_loss": 0.32907579548127663,
+    "learning_rates": {
+      "encoder": 5e-06,
+      "processor": 3e-05,
+      "decoder": 1e-05
+    },
+    "seconds": 379.0382291999995
+  },
+  {
+    "epoch": 3,
+    "train_loss": 0.27436248352814896,
+    "validation_loss": 0.3236215793186687,
+    "learning_rates": {
+      "encoder": 5e-06,
+      "processor": 3e-05,
+      "decoder": 1e-05
+    },
+    "seconds": 378.9612532000174
+  },
+  {
+    "epoch": 4,
+    "train_loss": 0.27389080042724245,
+    "validation_loss": 0.33203493178786475,
+    "learning_rates": {
+      "encoder": 5e-06,
+      "processor": 3e-05,
+      "decoder": 1e-05
+    },
+    "seconds": 377.1979525000206
+  },
+  {
+    "epoch": 5,
+    "train_loss": 0.271553964885007,
+    "validation_loss": 0.32511221779296634,
+    "learning_rates": {
+      "encoder": 5e-06,
+      "processor": 3e-05,
+      "decoder": 1e-05
+    },
+    "seconds": 375.0943542000023
+  },
+  {
+    "epoch": 6,
+    "train_loss": 0.26991953562038884,
+    "validation_loss": 0.32852991211324767,
+    "learning_rates": {
+      "encoder": 5e-06,
+      "processor": 3e-05,
+      "decoder": 1e-05
+    },
+    "seconds": 374.87062579998747
+  },
+  {
+    "epoch": 7,
+    "train_loss": 0.26789548743511105,
+    "validation_loss": 0.3402280130225127,
+    "learning_rates": {
+      "encoder": 5e-06,
+      "processor": 3e-05,
+      "decoder": 1e-05
+    },
+    "seconds": 374.65759910002816
+  },
+  {
+    "epoch": 8,
+    "train_loss": 0.2664152121044685,
+    "validation_loss": 0.3307068171844782,
+    "learning_rates": {
+      "encoder": 5e-06,
+      "processor": 3e-05,
+      "decoder": 1e-05
+    },
+    "seconds": 374.7167450999841
+  },
+  {
+    "epoch": 9,
+    "train_loss": 0.26451812296194444,
+    "validation_loss": 0.32920736345192775,
+    "learning_rates": {
+      "encoder": 2.5e-06,
+      "processor": 1.5e-05,
+      "decoder": 5e-06
+    },
+    "seconds": 375.14189890003763
+  },
+  {
+    "epoch": 10,
+    "train_loss": 0.25764631753381884,
+    "validation_loss": 0.33023259814197575,
+    "learning_rates": {
+      "encoder": 2.5e-06,
+      "processor": 1.5e-05,
+      "decoder": 5e-06
+    },
+    "seconds": 374.60670020000543
+  },
+  {
+    "epoch": 11,
+    "train_loss": 0.25626505999084154,
+    "validation_loss": 0.32753413055560304,
+    "learning_rates": {
+      "encoder": 2.5e-06,
+      "processor": 1.5e-05,
+      "decoder": 5e-06
+    },
+    "seconds": 374.6044196000439
+  },
+  {
+    "epoch": 12,
+    "train_loss": 0.255305902053917,
+    "validation_loss": 0.3262464446142886,
+    "learning_rates": {
+      "encoder": 2.5e-06,
+      "processor": 1.5e-05,
+      "decoder": 5e-06
+    },
+    "seconds": 374.52472220000345
+  },
+  {
+    "epoch": 13,
+    "train_loss": 0.25420827893280973,
+    "validation_loss": 0.3318158325337158,
+    "learning_rates": {
+      "encoder": 2.5e-06,
+      "processor": 1.5e-05,
+      "decoder": 5e-06
+    },
+    "seconds": 374.85779819998425
+  }
+]

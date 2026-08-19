@@ -62,6 +62,7 @@ def command(
     value = [
         sys.executable, "-u", str(TRAIN), phase, mode,
         "--config", str(ROOT / run.config), "--device", device,
+        "--compact-output",
     ]
     if output is not None:
         value.extend(["--output-dir", str(output)])
@@ -306,7 +307,15 @@ def main() -> int:
             return 0
         comparison = compare(stage3a, stage3b)
         publish(stage3a, stage3b, comparison)
-        print("\nStage-3 comparison:", json.dumps(comparison, indent=2), flush=True)
+        print(
+            "\nStage-3 comparison complete: "
+            f"mean_validation={comparison['stage3b_mean_validation_loss']:.6f} "
+            f"std={comparison['stage3b_sample_std_validation_loss']:.6f} "
+            f"reconstruction_gates={comparison['all_stage3b_reconstruction_gates_passed']} "
+            f"provisional_seed={comparison['provisional_checkpoint_seed']}",
+            flush=True,
+        )
+        print(f"Results: {RESULT}", flush=True)
         print("2017 test data read: no", flush=True)
     return 0
 

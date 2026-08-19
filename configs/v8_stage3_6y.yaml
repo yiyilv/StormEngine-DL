@@ -18,6 +18,11 @@ model:
   processor_layers: 3
   kernel_size: 3
 
+# Keep notebook output compact during the long formal workflow. Epoch summaries,
+# checkpoints, early stopping, and errors are still printed by the trainer.
+training:
+  progress_every_batches: 0
+
 stage3:
   batch_size: 8
   max_reconstruction_degradation_percent: 3.0

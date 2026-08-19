@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "test_years_read": [],
+  "hash_scope": "Git-ready LF bytes produced by this runner",
+  "files": [
+    {
+      "path": "checkpoint_manifest.json",
+      "bytes": 902,
+      "sha256": "d49b6ed45823ab17fe84bc8a24751b4dfc2810162dc52959b32d6cf498e1ada9"
+    },
+    {
+      "path": "comparison.json",
+      "bytes": 2067,
+      "sha256": "16affa2f3ce3b2ab1038ac129a639201ddab9a2c1b375859e699d991807b7d12"
+    },
+    {
+      "path": "README.md",
+      "bytes": 396,
+      "sha256": "d41c5b98c3a4416f3e35997a1cf7bac8d3a37b581f9c8e075bb01a206ed602b1"
+    },
+    {
+      "path": "runs/seed42/stage3a/history.json",
+      "bytes": 1549,
+      "sha256": "2e67d68c215aee6df3f3bf7fe788165cfcb7f866c2fde0f25046c5ba2c21662a"
+    },
+    {
+      "path": "runs/seed42/stage3a/train_summary.json",
+      "bytes": 23630,
+      "sha256": "cd3bb5005c9bc7cb4ea7aed55db3acd37a27978e7dd56d7a1ae1fe769bb3359a"
+    },
+    {
+      "path": "runs/seed42/stage3b/history.json",
+      "bytes": 3208,
+      "sha256": "beb64fee680aadc7886c6fc53fee603affec0dea58d93a1e0120a7779e9e06ad"
+    },
+    {
+      "path": "runs/seed42/stage3b/train_summary.json",
+      "bytes": 25721,
+      "sha256": "e6ebba71ad8ea513b42ee18b2bbd196453c9fc4647d4e4ef7f6c4ac633fdf186"
+    },
+    {
+      "path": "runs/seed43/stage3a/history.json",
+      "bytes": 1769,
+      "sha256": "53ba67b6e8bded9e46f4d86504205675ec948c5196a40822d414d1086eedee05"
+    },
+    {
+      "path": "runs/seed43/stage3a/train_summary.json",
+      "bytes": 23641,
+      "sha256": "f0be2d953b2953e0004eacf440c02bf6fb70797bfeb5ca0037bdc7ecf24cc68c"
+    },
+    {
+      "path": "runs/seed43/stage3b/history.json",
+      "bytes": 6922,
+      "sha256": "a2bec8859d98252c183c8a5d1788ec9cebccadf8025d18a16151d45618c90874"
+    },
+    {
+      "path": "runs/seed43/stage3b/train_summary.json",
+      "bytes": 25729,
+      "sha256": "77c60e71dbe5acf99a658feca84e2f71a6a5940cb2c41a6861bae2d55749b407"
+    }
+  ]
+}

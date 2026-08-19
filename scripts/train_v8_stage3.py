@@ -383,6 +383,10 @@ def main() -> int:
     parser.add_argument("--resume")
     parser.add_argument("--epochs", type=int)
     parser.add_argument("--batches", type=int)
+    parser.add_argument(
+        "--compact-output", action="store_true",
+        help="Print concise preflight and completion summaries instead of full JSON.",
+    )
     args = parser.parse_args()
 
     config = load_config(resolve(args.config))
@@ -490,7 +494,17 @@ def main() -> int:
             "source_checkpoint_sha256": source_hash,
             "contract": contract,
         }
-        print(json.dumps(result, indent=2), flush=True)
+        if args.compact_output:
+            print(
+                f"Preflight OK: phase={args.phase} seed={seed} device={device} "
+                f"samples={len(train):,}/{len(validation):,} "
+                f"input={list(batch['point_values'].shape)} "
+                f"output={list(prediction.shape)} finite={result['finite']} "
+                f"trainable={result['trainable_parameters']:,}",
+                flush=True,
+            )
+        else:
+            print(json.dumps(result, indent=2), flush=True)
         train.close(); validation.close(); return 0
 
     optimizer = optimizer_for(model, args.phase, config)
@@ -688,7 +702,16 @@ def main() -> int:
         "contract": contract,
     }
     write_json(output / f"{args.mode}_summary.json", summary)
-    print(json.dumps(summary, indent=2), flush=True)
+    if args.compact_output:
+        print(
+            f"Completed: phase={args.phase} mode={args.mode} seed={seed} "
+            f"best_epoch={summary['best_epoch']} "
+            f"best_validation={summary['best_validation_loss']:.6f} "
+            f"reconstruction_gate={summary['reconstruction']['preservation_gate_passed']}",
+            flush=True,
+        )
+    else:
+        print(json.dumps(summary, indent=2), flush=True)
     print(f"Artifacts: {output}", flush=True)
     train.close(); validation.close(); return 0
 
