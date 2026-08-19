@@ -52,3 +52,26 @@ def test_v9_protocol_rejects_confirmation_leakage() -> None:
     with pytest.raises(ValueError, match="not frozen"):
         module.require_development_protocol(config)
 
+
+def test_v9_a_refinement_is_development_only_and_controlled() -> None:
+    module = load_trainer()
+    config = module.load_config(ROOT / "configs" / "v9_a_refinement.yaml")
+    module.require_development_protocol(config)
+    assert config["data"]["train_years"] == [2020, 2021, 2022]
+    assert config["data"]["validation_years"] == [2023]
+    assert config["data"]["confirmation_years"] == [2024]
+    assert config["data"]["test_years"] == [2025]
+    assert config["training"]["output_dir"] == "artifacts/v9_a_refinement"
+    assert config["refinement"]["candidates"] == [
+        {
+            "name": "A_lr25e6_recon002",
+            "learning_rate": 0.000025,
+            "reconstruction_loss_weight": 0.02,
+        },
+        {
+            "name": "A_lr25e6_recon000",
+            "learning_rate": 0.000025,
+            "reconstruction_loss_weight": 0.0,
+        },
+    ]
+

@@ -60,6 +60,28 @@ All four candidates first train with seed 42 until early stopping. The best two 
 select exactly one candidate for the one-time 2024 confirmation. This screening result is
 not yet the final scientific test result.
 
+## 2023-only warm-start refinement
+
+The initial screen selected candidate A (absolute field, autoregressive) consistently, but
+its best epochs occurred unusually early. Before reading 2024, a controlled diagnostic
+measured the untouched epoch-0 warm start and varied only learning rate and reconstruction
+weight. The epoch-0 2023 validation MSE was `0.337319`; the original A two-seed mean was
+`0.316049`.
+
+Reducing learning rate from `1e-4` to `2.5e-5` moved the best epochs to 14 and 9. Removing
+the auxiliary reconstruction loss produced a two-seed mean of `0.310496`, a 1.76% reduction
+relative to the original A screen. A reconstruction weight of `0.02` was effectively tied
+on the primary seed but slightly worse. The candidate frozen before confirmation is:
+
+- absolute-field autoregressive V9-A;
+- learning rate `2.5e-5`, reconstruction-loss weight `0`;
+- primary seed `42`, best epoch `14`;
+- checkpoint SHA-256
+  `e8486b695d03e4a27f8ba5921eb3bb77e5e2d66c649f02ad289392576aeab7c3`.
+
+The full record is in `results/v9_a_refinement/`. The checkpoint remains local. This
+refinement used only 2020--2023; neither 2024 nor 2025 was instantiated.
+
 Before 2024 is read, the confirmation gate is frozen as follows:
 
 - mean sea RMSE skill must be positive relative to frozen V7-B;

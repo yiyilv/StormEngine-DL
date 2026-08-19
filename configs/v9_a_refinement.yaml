@@ -1,0 +1,32 @@
+extends: v9_dev_output_form.yaml
+
+experiment: V9-A-warm-start-refinement
+
+training:
+  # Keep the original epoch/patience limits. Only the fine-tuning strength is
+  # varied, so stopping behaviour remains directly comparable.
+  max_epochs: 80
+  early_stopping_patience: 12
+  progress_every_batches: 0
+  output_dir: artifacts/v9_a_refinement
+
+refinement:
+  incumbent:
+    variant: A_field_autoregressive
+    primary_seed: 42
+    replication_seed: 43
+    primary_summary: artifacts/v9_output_form/A_field_autoregressive/seed_42/train_summary.json
+    replication_summary: artifacts/v9_output_form/A_field_autoregressive/seed_43/train_summary.json
+    primary_checkpoint: artifacts/v9_output_form/A_field_autoregressive/seed_42/best.pt
+  epoch_zero_variant: A_epoch0_warm_start
+  candidates:
+    - name: A_lr25e6_recon002
+      learning_rate: 0.000025
+      reconstruction_loss_weight: 0.02
+    - name: A_lr25e6_recon000
+      learning_rate: 0.000025
+      reconstruction_loss_weight: 0.00
+  primary_seed: 42
+  replication_seed: 43
+  replicate_only_if_primary_beats_incumbent: true
+

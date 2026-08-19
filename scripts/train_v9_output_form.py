@@ -122,13 +122,47 @@ def model_contract(
         "reconstruction_loss_weight": float(
             config["training"]["reconstruction_loss_weight"]
         ),
+        "learning_rate": float(config["training"]["learning_rate"]),
+        "weight_decay": float(config["training"]["weight_decay"]),
         "warm_start": warm_start,
+    }
+
+
+def evaluate_validation(
+    model: StormEngineV9ForecastModel,
+    loader: DataLoader,
+    device: torch.device,
+    static: torch.Tensor,
+    weights: torch.Tensor,
+    max_batches: int,
+) -> dict[str, float | int]:
+    model.eval()
+    forecast_total = 0.0
+    reconstruction_total = 0.0
+    count = 0
+    with torch.no_grad():
+        for raw in loader:
+            if count >= max_batches:
+                break
+            batch = move(raw, device)
+            prediction, current = forward_components(model, batch, static)
+            forecast_total += float(weighted_mse(prediction, batch["target"], weights))
+            reconstruction_total += float(
+                weighted_mse(current, batch["current_target"], weights)
+            )
+            count += 1
+    if count == 0:
+        raise RuntimeError("V9 validation loader produced no batches")
+    return {
+        "validation_loss": forecast_total / count,
+        "validation_reconstruction_loss": reconstruction_total / count,
+        "validation_batches": count,
     }
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("mode", choices=("preflight", "smoke", "train"))
+    parser.add_argument("mode", choices=("preflight", "baseline", "smoke", "train"))
     parser.add_argument("--config", default="configs/v9_dev_output_form.yaml")
     parser.add_argument("--temporal-mode", choices=("autoregressive", "direct"), required=True)
     parser.add_argument("--output-mode", choices=("field", "residual"), required=True)
@@ -140,10 +174,18 @@ def main() -> int:
     parser.add_argument("--epochs", type=int)
     parser.add_argument("--max-train-batches", type=int)
     parser.add_argument("--max-validation-batches", type=int)
+    parser.add_argument("--learning-rate", type=float)
+    parser.add_argument("--reconstruction-loss-weight", type=float)
     args = parser.parse_args()
 
     config = load_config(resolve(args.config))
     require_development_protocol(config)
+    if args.learning_rate is not None:
+        config["training"]["learning_rate"] = args.learning_rate
+    if args.reconstruction_loss_weight is not None:
+        config["training"]["reconstruction_loss_weight"] = (
+            args.reconstruction_loss_weight
+        )
     random.seed(args.seed); np.random.seed(args.seed); torch.manual_seed(args.seed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(args.seed)
@@ -212,6 +254,31 @@ def main() -> int:
         raise ValueError("reconstruction_loss_weight must be non-negative")
     output = resolve(training["output_dir"]) / args.variant_name / f"seed_{args.seed}"
     output.mkdir(parents=True, exist_ok=True)
+    if args.mode == "baseline":
+        started = time.perf_counter()
+        metrics = evaluate_validation(
+            model,
+            validation_loader,
+            device,
+            static,
+            weights,
+            int(args.max_validation_batches or len(validation_loader)),
+        )
+        result = {
+            "mode": "baseline",
+            "variant": args.variant_name,
+            "seed": args.seed,
+            "selection_metric": "validation_sea_weighted_mse",
+            **metrics,
+            "elapsed_seconds": time.perf_counter() - started,
+            "contract": contract,
+        }
+        (output / "baseline_summary.json").write_text(
+            json.dumps(result, indent=2) + "\n", encoding="utf-8"
+        )
+        print(json.dumps(result, indent=2))
+        train.close(); validation.close(); return 0
+
     optimizer = torch.optim.AdamW(
         model.parameters(),
         lr=float(training["learning_rate"]),
@@ -288,29 +355,15 @@ def main() -> int:
                     f"loss={train_total / train_count:.6f}",
                     flush=True,
                 )
-        model.eval()
-        validation_total = 0.0
-        validation_reconstruction_total = 0.0
-        validation_count = 0
-        with torch.no_grad():
-            for raw in validation_loader:
-                if validation_count >= max_val:
-                    break
-                batch = move(raw, device)
-                prediction, current = forward_components(model, batch, static)
-                validation_total += float(
-                    weighted_mse(prediction, batch["target"], weights)
-                )
-                validation_reconstruction_total += float(
-                    weighted_mse(current, batch["current_target"], weights)
-                )
-                validation_count += 1
+        validation_metrics = evaluate_validation(
+            model, validation_loader, device, static, weights, max_val
+        )
         train_loss = train_total / max(1, train_count)
         train_forecast_loss = train_forecast_total / max(1, train_count)
         train_reconstruction_loss = train_reconstruction_total / max(1, train_count)
-        validation_loss = validation_total / max(1, validation_count)
-        validation_reconstruction_loss = (
-            validation_reconstruction_total / max(1, validation_count)
+        validation_loss = float(validation_metrics["validation_loss"])
+        validation_reconstruction_loss = float(
+            validation_metrics["validation_reconstruction_loss"]
         )
         scheduler.step(validation_loss)
         improved = validation_loss < best

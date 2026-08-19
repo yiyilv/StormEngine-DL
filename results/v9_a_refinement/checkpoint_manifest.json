@@ -1,0 +1,31 @@
+{
+  "policy": "Checkpoints remain local; Git records paths, sizes, and SHA-256 only.",
+  "selected_variant": "A_lr25e6_recon000",
+  "selected_primary_seed": 42,
+  "checkpoints": [
+    {
+      "variant": "A_lr25e6_recon002",
+      "seed": 42,
+      "path": "artifacts/v9_a_refinement/A_lr25e6_recon002/seed_42/best.pt",
+      "size_bytes": 7229124,
+      "sha256": "1e2b181aa21a185eb7b570c6815aeb4fbc3ee8db58bfa402abb235e456d7b344",
+      "tracked_by_git": false
+    },
+    {
+      "variant": "A_lr25e6_recon000",
+      "seed": 42,
+      "path": "artifacts/v9_a_refinement/A_lr25e6_recon000/seed_42/best.pt",
+      "size_bytes": 7229124,
+      "sha256": "e8486b695d03e4a27f8ba5921eb3bb77e5e2d66c649f02ad289392576aeab7c3",
+      "tracked_by_git": false
+    },
+    {
+      "variant": "A_lr25e6_recon000",
+      "seed": 43,
+      "path": "artifacts/v9_a_refinement/A_lr25e6_recon000/seed_43/best.pt",
+      "size_bytes": 7228676,
+      "sha256": "621b9e91c0046cf930f2c144fcaf35d078c190edd3c4739a12a8972f80a01384",
+      "tracked_by_git": false
+    }
+  ]
+}
