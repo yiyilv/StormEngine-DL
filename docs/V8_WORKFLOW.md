@@ -143,12 +143,56 @@ mean normalized sea-weighted 2016 validation loss. If the mean gap is below
 1%, the smaller spatial MLP is preferred. Per-variable and per-lead-hour
 metrics must still be reviewed before Stage 3.
 
+## Stage 3: six-year gradual unfreezing
+
+Stage 2 retained `PH64-LAT96` with ConvGRU L3K3. Stage 3 expands training to
+2010--2015 while keeping 2016 as the only development validation year and
+leaving 2017 uninstantiated. It deliberately avoids an abrupt equal-rate
+unfreeze:
+
+1. **Stage 3A** loads each retained Stage-2 `best.pt`, keeps Encoder frozen,
+   and trains Processor plus Decoder for at most 10 adaptation epochs. The
+   initial learning rates are `5e-5` and `1e-5`, respectively.
+2. **Stage 3B** loads the matching Stage-3A `best.pt` and jointly fine-tunes
+   Encoder, Processor, and Decoder with discriminative learning rates of
+   `5e-6`, `3e-5`, and `1e-5`.
+
+Both seed-42 and seed-43 lineages are retained. Optimizer and scheduler state
+are rebuilt at each phase boundary because the trainable modules and data span
+change. Generic missingness remains active only in training; validation is
+clean and chronological.
+
+The same clean 2016 simultaneous reconstruction diagnostic is evaluated on
+the original Stage-2 source and on each selected Stage-3 checkpoint. Stage 3B
+must remain within a preregistered 3% normalized reconstruction-loss
+degradation relative to the original Stage-2 spatial state. Failing that gate
+blocks 2017 and triggers a reconstruction-auxiliary-loss experiment; the
+auxiliary objective is not added unless the diagnostic demonstrates a need.
+
+On Windows CUDA, retain these local Stage-2 checkpoints:
+
+```text
+artifacts/v8_stage2_dev3y_ph064_lat096_seed42/best.pt
+artifacts/v8_stage2_dev3y_ph064_lat096_seed43/best.pt
+```
+
+Open `notebooks/StormEngine_V8_Stage3_Gradual_Unfreezing.ipynb` and run its
+single code cell, or invoke:
+
+```text
+python -u scripts/run_v8_stage3.py --phase all --device cuda
+```
+
+The two phases and two seeds run sequentially. A repeated invocation skips
+validated completed runs and resumes interrupted formal runs from `last.pt`.
+Lightweight comparison results are published under
+`results/v8_stage3_6y_gradual_unfreezing/`; checkpoints remain local.
+
 ## Later stages
 
-1. review Stage-2 two-seed variable/region/lead-hour metrics and retain one
-   spatial candidate;
-2. jointly fine-tune Encoder, Processor, and Decoder from each retained
-   Stage-2 `best.pt`, using smaller spatial-module learning rates;
+1. run the two-seed Stage-3A/Stage-3B gradual-unfreezing workflow;
+2. verify the reconstruction-preservation gate and review variable/region/
+   lead-hour metrics;
 3. compare Stage 2 and Stage 3 against frozen V7-B on 2016;
 4. run 2017 once after the complete V8 architecture and hyperparameters are
    frozen;
