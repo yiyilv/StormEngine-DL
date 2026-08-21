@@ -1,0 +1,54 @@
+extends: v7_b.yaml
+
+experiment: V9-output-form-development
+seed: 42
+
+data:
+  era5_manifest: data/manifests/era5_manifest_2010_2025.csv
+  training_cache: cache/stormengine_2010_2025
+  cache_identity: data/manifests/v9_cache_identity_2010_2025.json
+  window_stride_hours: 3
+  # Fast development split. 2024 is confirmation-only and 2025 remains locked.
+  train_years: [2020, 2021, 2022]
+  validation_years: [2023]
+  confirmation_years: [2024]
+  test_years: [2025]
+
+model:
+  temporal_mode: autoregressive
+  output_mode: field
+
+training:
+  max_epochs: 80
+  early_stopping_patience: 12
+  lr_scheduler_patience: 4
+  lr_scheduler_factor: 0.5
+  reconstruction_loss_weight: 0.10
+  progress_every_batches: 0
+  output_dir: artifacts/v9_output_form
+
+development:
+  variants:
+    - {name: A_field_autoregressive, temporal_mode: autoregressive, output_mode: field}
+    - {name: B_residual_autoregressive, temporal_mode: autoregressive, output_mode: residual}
+    - {name: C_field_direct, temporal_mode: direct, output_mode: field}
+    - {name: D_residual_direct, temporal_mode: direct, output_mode: residual}
+  primary_seed: 42
+  replication_seed: 43
+  top_k_for_replication: 2
+  selection_metric: validation_sea_weighted_mse
+  v7b_checkpoint_sha256: 2149960f7c71ebb88324aee033ed11fe903f2c34b4064eafdaa5ee95c677f991
+
+confirmation:
+  year: 2024
+  candidate_reference: frozen_v7_b
+  minimum_mean_sea_rmse_skill: 0.0
+  minimum_positive_sea_wind_component_leads: 7
+  maximum_reconstruction_degradation_percent: 3.0
+  failure_action: stop_without_reading_2025
+
+final_test:
+  year: 2025
+  run_once: true
+  no_post_test_tuning: true
+

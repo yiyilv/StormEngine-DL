@@ -1,0 +1,12 @@
+extends: v8_stage2_dev3y.yaml
+
+seed: 42
+experiment: V8-Stage2-PH064-LAT096-Seed42
+
+model:
+  point_hidden: 64
+  latent_channels: 96
+
+stage2:
+  spatial_checkpoint: artifacts/v8_spatial_dev3y_ph064_lat096/best.pt
+  output_dir: artifacts/v8_stage2_dev3y_ph064_lat096_seed42

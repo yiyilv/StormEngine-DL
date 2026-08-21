@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "scientific_status": "v8_stage2_processor_only_two_seed_validation",
+  "task": "frozen Stage-1 Encoder/Decoder plus trainable random-init L3K3 Processor",
+  "train_years": [
+    2013,
+    2014,
+    2015
+  ],
+  "validation_years": [
+    2016
+  ],
+  "test_years_read": [],
+  "primary_metric": "normalized sea-weighted validation loss",
+  "ranking_by_two_seed_mean": [
+    {
+      "candidate": "PH64-LAT96",
+      "point_hidden": 64,
+      "latent_channels": 96,
+      "validation_loss_by_seed": {
+        "42": 0.3466828828931995,
+        "43": 0.3470679740396028
+      },
+      "mean_validation_loss": 0.3468754284664012,
+      "sample_std_validation_loss": 0.00027230056099670184,
+      "best_epoch_by_seed": {
+        "42": 38,
+        "43": 36
+      }
+    },
+    {
+      "candidate": "PH96-LAT96",
+      "point_hidden": 96,
+      "latent_channels": 96,
+      "validation_loss_by_seed": {
+        "42": 0.34804675346393077,
+        "43": 0.3466895386434155
+      },
+      "mean_validation_loss": 0.34736814605367317,
+      "sample_std_validation_loss": 0.000959695803113225,
+      "best_epoch_by_seed": {
+        "42": 40,
+        "43": 34
+      }
+    }
+  ],
+  "relative_mean_gap_percent": 0.14184305408241232,
+  "provisional_spatial_recommendation": "PH64-LAT96",
+  "recommendation_rule": "two-seed mean losses differ by <1%; prefer the smaller spatial MLP",
+  "next_gate": "review per-variable/lead-hour metrics, then Stage 3 joint fine-tuning"
+}

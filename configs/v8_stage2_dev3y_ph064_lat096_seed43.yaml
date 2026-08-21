@@ -1,0 +1,7 @@
+extends: v8_stage2_dev3y_ph064_lat096_seed42.yaml
+
+seed: 43
+experiment: V8-Stage2-PH064-LAT096-Seed43
+
+stage2:
+  output_dir: artifacts/v8_stage2_dev3y_ph064_lat096_seed43

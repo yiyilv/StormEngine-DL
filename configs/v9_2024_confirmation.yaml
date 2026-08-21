@@ -1,0 +1,46 @@
+protocol: v9-2024-confirmation-v1
+
+data_config: configs/v9_a_refinement.yaml
+v7_b_config: configs/v7_b.yaml
+normalization_stats: data/normalization/era5_2010_2015.json
+preflight_years: [2023]
+confirmation_years: [2024]
+locked_test_years: [2025]
+window_stride_hours: 3
+
+freeze_evidence:
+  path: results/v9_a_refinement/metrics.json
+  sha256_lf: e2368bed57c28e8df0cb71ecd83c0b2045d74a1723eae98da0cd6ccd567ad69a
+  required_candidate: A_lr25e6_recon000
+  required_confirmation_year_read: false
+  required_locked_test_year_read: false
+
+checkpoints:
+  v9_a:
+    path: artifacts/v9_a_refinement/A_lr25e6_recon000/seed_42/best.pt
+    sha256: e8486b695d03e4a27f8ba5921eb3bb77e5e2d66c649f02ad289392576aeab7c3
+    temporal_mode: autoregressive
+    output_mode: field
+    learning_rate: 0.000025
+    reconstruction_loss_weight: 0.0
+    seed: 42
+  v7_b:
+    path: artifacts/v7_b_2010_2017/best.pt
+    sha256: 2149960f7c71ebb88324aee033ed11fe903f2c34b4064eafdaa5ee95c677f991
+
+baselines:
+  sparse_reconstruction_persistence: frozen V7-B current-field reconstruction repeated for +1--+6 h
+  dense_era5_persistence: true dense current ERA5 grid repeated for +1--+6 h
+
+decision:
+  candidate: v9_a
+  reference: v7_b
+  minimum_mean_sea_rmse_skill: 0.0
+  minimum_positive_sea_wind_component_leads: 7
+  maximum_mean_sea_reconstruction_degradation_percent: 3.0
+
+evaluation:
+  batch_size: 16
+  progress_every_batches: 25
+  output_dir: artifacts/v9_2024_confirmation
+  publish_dir: results/v9_2024_confirmation

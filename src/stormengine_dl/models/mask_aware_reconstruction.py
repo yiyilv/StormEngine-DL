@@ -97,6 +97,69 @@ def load_spatial_pretraining(
     return contract
 
 
+def freeze_spatial_modules(forecast_model: StormEngineV7ForecastModel) -> tuple[str, ...]:
+    """Freeze pretrained spatial modules and expose only Processor parameters.
+
+    Stage 2 deliberately optimizes the temporal Processor while preserving the
+    exact Stage-1 Encoder/Decoder solution.  Returning the trainable parameter
+    names makes that contract easy to assert before an expensive run.
+    """
+
+    forecast_model.encoder.requires_grad_(False)
+    forecast_model.decoder.requires_grad_(False)
+    forecast_model.processor.requires_grad_(True)
+    forecast_model.encoder.eval()
+    forecast_model.decoder.eval()
+    return tuple(
+        name for name, parameter in forecast_model.named_parameters()
+        if parameter.requires_grad
+    )
+
+
+def set_processor_only_training_mode(
+    forecast_model: StormEngineV7ForecastModel, training: bool
+) -> None:
+    """Set Stage-2 mode without re-enabling training mode on frozen modules."""
+
+    forecast_model.train(training)
+    if training:
+        forecast_model.encoder.eval()
+        forecast_model.decoder.eval()
+
+
+def configure_gradual_unfreezing(
+    forecast_model: StormEngineV7ForecastModel, phase: str
+) -> tuple[str, ...]:
+    """Configure the trainable modules for V8 Stage 3.
+
+    ``stage3a`` adapts the forecast Processor and Decoder while preserving the
+    Stage-1 spatial representation. ``stage3b`` then permits low-rate joint
+    optimization of all three modules.
+    """
+
+    if phase not in {"stage3a", "stage3b"}:
+        raise ValueError(f"Unknown gradual-unfreezing phase: {phase}")
+    forecast_model.encoder.requires_grad_(phase == "stage3b")
+    forecast_model.processor.requires_grad_(True)
+    forecast_model.decoder.requires_grad_(True)
+    if phase == "stage3a":
+        forecast_model.encoder.eval()
+    return tuple(
+        name for name, parameter in forecast_model.named_parameters()
+        if parameter.requires_grad
+    )
+
+
+def set_gradual_unfreezing_mode(
+    forecast_model: StormEngineV7ForecastModel, phase: str, training: bool
+) -> None:
+    """Set train/eval mode without activating a frozen Stage-3A Encoder."""
+
+    forecast_model.train(training)
+    if training and phase == "stage3a":
+        forecast_model.encoder.eval()
+
+
 def restore_spatial_training_checkpoint(
     resume_path: Path,
     output: Path,

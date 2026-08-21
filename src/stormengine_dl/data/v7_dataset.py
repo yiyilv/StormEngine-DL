@@ -448,6 +448,9 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
         target = np.asarray(
             self.target_grids[history_stop:target_stop], dtype=np.float32
         ).copy()
+        current_target = np.asarray(
+            self.target_grids[history_stop - 1], dtype=np.float32
+        ).copy()
         return {
             "point_values": torch.from_numpy(current),
             "value_mask": torch.from_numpy(mask),
@@ -461,5 +464,6 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
             "point_coords": self._coords,
             "point_static": self._static,
             "target": torch.from_numpy(target),
+            "current_target": torch.from_numpy(current_target),
             "start_index": torch.tensor(global_start, dtype=torch.long),
         }

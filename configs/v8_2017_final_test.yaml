@@ -1,0 +1,61 @@
+experiment: V8-One-Time-2017-Final-Test
+
+# This is the locked final comparison. It is permitted only because both
+# Stage-3A seeds passed the pre-registered 2016 validation gate. No model,
+# threshold, hyperparameter, or checkpoint may be changed after seeing 2017.
+data_config: configs/v8_stage3_6y.yaml
+v7_b_config: configs/v7_b.yaml
+threshold_years: [2010, 2011, 2012, 2013, 2014, 2015]
+test_years: [2017]
+window_stride_hours: 3
+
+unlock_evidence:
+  path: results/v8_2016_validation_benchmark/benchmark.json
+  sha256: 30f7cded2daafd5de25c9234c2711e910b04d562f8ad175c80973de9689f4999
+  required_scientific_status: frozen_2016_validation_benchmark
+  required_both_seeds_passed: true
+
+checkpoints:
+  v7_b:
+    path: artifacts/v7_b_2010_2017/best.pt
+    sha256: 2149960f7c71ebb88324aee033ed11fe903f2c34b4064eafdaa5ee95c677f991
+  v8_stage2_seed42:
+    path: artifacts/v8_stage2_dev3y_ph064_lat096_seed42/best.pt
+    sha256: a2f0ed307b1438cf8d6becc046dcb460ab6fa0b198f7e3dae5efa3ef544a8024
+    seed: 42
+    phase: stage2
+  v8_stage3a_seed42:
+    path: artifacts/v8_stage3a_6y_ph064_lat096_seed42/best.pt
+    sha256: 9278d0f971c06ed7cf0b59061458ac0257237856d124a4818940c9f4692e7b8f
+    seed: 42
+    phase: stage3a
+
+models: [v7_b, v8_stage3a_seed42]
+
+baselines:
+  sparse_reconstruction_checkpoint: v8_stage2_seed42
+  dense_persistence_note: last complete current ERA5 grid repeated to all six leads; stronger-information diagnostic
+  sparse_persistence_note: frozen Stage-2 Encoder-Decoder current-grid reconstruction from the same sparse input, repeated to all six leads
+
+events:
+  strong_wind_quantile: 0.95
+  wet_precipitation_minimum_mm: 0.1
+  wet_precipitation_quantile: 0.95
+  fixed_precipitation_threshold_mm: 5.0
+  low_msl_quantile: 0.05
+
+# Pre-declared interpretation rule. A positive value means V8 is better.
+# V8 supports a replacement claim only if its mean sea skill is positive and
+# it wins a majority of the 12 sea-wind component/lead comparisons. Otherwise
+# V7-B remains the stronger frozen reference. No post-test retraining follows.
+decision:
+  candidate: v8_stage3a_seed42
+  reference: v7_b
+  minimum_positive_sea_wind_component_leads: 7
+  total_sea_wind_component_leads: 12
+
+evaluation:
+  batch_size: 8
+  progress_every_batches: 50
+  output_dir: artifacts/v8_2017_final_test
+  publish_dir: results/v8_2017_final_test

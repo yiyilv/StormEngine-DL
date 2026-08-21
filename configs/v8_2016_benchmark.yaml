@@ -1,0 +1,58 @@
+experiment: V8-2016-Frozen-Validation-Benchmark
+
+# This benchmark is a model-development gate. It may read 2010--2015 only to
+# derive event thresholds and 2016 for verification. It must never instantiate
+# the locked 2017 split.
+data_config: configs/v8_stage3_6y.yaml
+v7_b_config: configs/v7_b.yaml
+threshold_years: [2010, 2011, 2012, 2013, 2014, 2015]
+validation_years: [2016]
+window_stride_hours: 3
+
+checkpoints:
+  v7_b:
+    path: artifacts/v7_b_2010_2017/best.pt
+    sha256: 2149960f7c71ebb88324aee033ed11fe903f2c34b4064eafdaa5ee95c677f991
+  v8_stage2_seed42:
+    path: artifacts/v8_stage2_dev3y_ph064_lat096_seed42/best.pt
+    sha256: a2f0ed307b1438cf8d6becc046dcb460ab6fa0b198f7e3dae5efa3ef544a8024
+    seed: 42
+    phase: stage2
+  v8_stage2_seed43:
+    path: artifacts/v8_stage2_dev3y_ph064_lat096_seed43/best.pt
+    sha256: c0e716c7bf74a65b2c91c0d93fad7a2a46cab55a953fdefbe28d72a542240c5a
+    seed: 43
+    phase: stage2
+  v8_stage3a_seed42:
+    path: artifacts/v8_stage3a_6y_ph064_lat096_seed42/best.pt
+    sha256: 9278d0f971c06ed7cf0b59061458ac0257237856d124a4818940c9f4692e7b8f
+    seed: 42
+    phase: stage3a
+    summary: results/v8_stage3_6y_gradual_unfreezing/runs/seed42/stage3a/train_summary.json
+  v8_stage3a_seed43:
+    path: artifacts/v8_stage3a_6y_ph064_lat096_seed43/best.pt
+    sha256: 114cbc807e0e09b0f83ebaa11731505a8beab889160ad87a0db683a7fa9c610f
+    seed: 43
+    phase: stage3a
+    summary: results/v8_stage3_6y_gradual_unfreezing/runs/seed43/stage3a/train_summary.json
+
+baselines:
+  sparse_reconstruction_checkpoint: v8_stage2_seed42
+  dense_persistence_note: last complete current ERA5 grid repeated to all six leads; stronger-information diagnostic
+  sparse_persistence_note: Stage-2 Encoder-Decoder current-grid reconstruction from the same sparse input, repeated to all six leads
+
+events:
+  strong_wind_quantile: 0.95
+  wet_precipitation_minimum_mm: 0.1
+  wet_precipitation_quantile: 0.95
+  fixed_precipitation_threshold_mm: 5.0
+  low_msl_quantile: 0.05
+
+acceptance:
+  minimum_positive_wind_leads_per_component: 4
+  maximum_reconstruction_degradation_percent: 3.0
+
+evaluation:
+  batch_size: 8
+  progress_every_batches: 50
+  output_dir: artifacts/v8_2016_benchmark

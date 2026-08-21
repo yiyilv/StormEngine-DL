@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "experiment": "v8_stage2_dev3y_processor_only",
+  "source_commit": "064cce9",
+  "checkpoint_policy": "local_only_sha256_recorded",
+  "checkpoints": {
+    "ph064_lat096_seed42": {
+      "best_pt_sha256": "a2f0ed307b1438cf8d6becc046dcb460ab6fa0b198f7e3dae5efa3ef544a8024",
+      "last_pt_sha256": "b36befa02beabeb268ee7dd058faff0b0941c1c039085a8cea88dfa85cb36731"
+    },
+    "ph064_lat096_seed43": {
+      "best_pt_sha256": "c0e716c7bf74a65b2c91c0d93fad7a2a46cab55a953fdefbe28d72a542240c5a",
+      "last_pt_sha256": "83834140746922dc3c12303deee7373115a1fcb3ee1c925f43c3b514beea9723"
+    },
+    "ph096_lat096_seed42": {
+      "best_pt_sha256": "37b2cc3ba882695dc8fc05c4790c53bf8ef26ba4280f8cdd0a8c7e95fc191428",
+      "last_pt_sha256": "f9cf44ffd420a285f947cc4f0602154fd26749ca218e46266aabae1f591bd6dc"
+    },
+    "ph096_lat096_seed43": {
+      "best_pt_sha256": "576ee063132122600c76330c85fcea462b10703a1f55d797ec124632688917c1",
+      "last_pt_sha256": "758ade77bebb36d7f7f33cbec383edd8602912d761c7211b665dcd0e2dd88709"
+    }
+  }
+}

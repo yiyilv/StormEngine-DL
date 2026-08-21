@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "confirmation_years_read": [
+    2024
+  ],
+  "test_years_read": [
+    2025
+  ],
+  "one_time_final_test": true,
+  "files": [
+    {
+      "path": "benchmark.json",
+      "bytes": 125315,
+      "sha256": "f44a9425132c6f405764efab87c53760c2f197499c6213294517690916958f5a"
+    },
+    {
+      "path": "README.md",
+      "bytes": 586,
+      "sha256": "bbb570b2f9435c7d2c2a6086d29f4707636172fe251c99a3c3d4598fcd3afacd"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "scientific_status": "post_freeze_real_input_diagnosis",
+  "input_period": "2026-08-01/2026-08-08",
+  "windows": 152,
+  "no_training": true,
+  "files": [
+    {
+      "path": "metrics.json",
+      "bytes": 351566,
+      "sha256": "9f75867b497962244a67a12980fa3ea01606135a7607e4cfe6781b3b4aa11b31"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2490,
+      "sha256": "479d552889a0c0b96e41571099df7bba1524d7b4c8d80488b54a02e81c55b7b2"
+    }
+  ]
+}

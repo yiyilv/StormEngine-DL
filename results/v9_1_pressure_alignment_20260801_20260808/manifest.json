@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "scientific_status": "pre_training_input_alignment",
+  "period": "2026-08-01/2026-08-08",
+  "no_training": true,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 3325,
+      "sha256": "f70ce80ec17754482f4ae81c81bfa995bcc391876f018cee462a1330048fbd15"
+    },
+    {
+      "path": "source_alignment.json",
+      "bytes": 2524,
+      "sha256": "be6954bd7c23e643ef6f0615b94381fec8b335f42ca0a1ed112eb8c93ae6466f"
+    }
+  ]
+}

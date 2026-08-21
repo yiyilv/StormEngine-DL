@@ -290,3 +290,11 @@ Processor-transfer pilots on 2016 future-forecast metrics.
 The full Stage-1 run and later Processor/joint-fine-tuning sequence are
 documented in [`docs/V8_WORKFLOW.md`](docs/V8_WORKFLOW.md). V7 checkpoints and
 published results remain immutable baselines.
+
+Both Stage-3A seeds subsequently passed the frozen 2016 benchmark. The final
+one-time 2017 comparison is therefore unlocked and documented in
+[`docs/V8_2017_FINAL_TEST.md`](docs/V8_2017_FINAL_TEST.md). Run only
+`notebooks/StormEngine_V8_2017_Final_Test.ipynb` on the Windows checkpoint
+computer. It evaluates frozen V8 Seed 42, frozen V7-B, input-fair sparse
+persistence, and dense ERA5 persistence without any training or post-test
+hyperparameter changes.

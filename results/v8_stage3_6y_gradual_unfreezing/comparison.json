@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "scientific_status": "v8_stage3_two_seed_six_year_validation",
+  "model": "PH64-LAT96 plus ConvGRU-L3K3",
+  "train_years": [
+    2010,
+    2011,
+    2012,
+    2013,
+    2014,
+    2015
+  ],
+  "validation_years": [
+    2016
+  ],
+  "test_years_read": [],
+  "reconstruction_preservation_threshold_percent": 3.0,
+  "runs": [
+    {
+      "seed": 42,
+      "stage2_processor_only_validation_loss": 0.3466828828931995,
+      "stage3a_processor_decoder_validation_loss": 0.32494378940818086,
+      "stage3b_joint_validation_loss": 0.3236215793186687,
+      "stage3a_skill_vs_stage2_percent": 6.270599028021717,
+      "stage3b_skill_vs_stage2_percent": 6.651987944162552,
+      "stage3b_skill_vs_stage3a_percent": 0.4069042500920883,
+      "stage3a_reconstruction_degradation_percent": 2.07445406031852,
+      "stage3b_reconstruction_degradation_percent": 3.6516545574931225,
+      "stage3a_reconstruction_gate_passed": true,
+      "stage3b_reconstruction_gate_passed": false,
+      "stage3a_best_epoch": 3,
+      "stage3b_best_epoch": 3
+    },
+    {
+      "seed": 43,
+      "stage2_processor_only_validation_loss": 0.3470679740396028,
+      "stage3a_processor_decoder_validation_loss": 0.3287846471686832,
+      "stage3b_joint_validation_loss": 0.3263907271941177,
+      "stage3a_skill_vs_stage2_percent": 5.2679383401804,
+      "stage3b_skill_vs_stage2_percent": 5.957693706168832,
+      "stage3b_skill_vs_stage3a_percent": 0.7281118492547201,
+      "stage3a_reconstruction_degradation_percent": 2.1987982996435784,
+      "stage3b_reconstruction_degradation_percent": 8.865603410835554,
+      "stage3a_reconstruction_gate_passed": true,
+      "stage3b_reconstruction_gate_passed": false,
+      "stage3a_best_epoch": 4,
+      "stage3b_best_epoch": 18
+    }
+  ],
+  "stage3b_mean_validation_loss": 0.3250061532563932,
+  "stage3b_sample_std_validation_loss": 0.001958083240838322,
+  "all_stage3b_reconstruction_gates_passed": false,
+  "provisional_checkpoint_seed": null,
+  "next_gate": "do not unlock 2017; test reconstruction auxiliary loss first"
+}

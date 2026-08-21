@@ -1,0 +1,43 @@
+seed: 42
+
+domain:
+  lat_min: 39.0
+  lat_max: 46.5
+  lon_min: 12.0
+  lon_max: 20.0
+  height: 31
+  width: 33
+
+data:
+  era5_root: ../DownloadDate
+  era5_manifest: data/manifests/era5_manifest_2010_2025.csv
+  station_registry: data/stations_registry.csv
+  station_profile: dpc_plus_sea
+  # Retain the frozen 2010-2015 scaling so that V7-B weights remain transferable.
+  # These statistics pre-date every V9 validation/confirmation/test year.
+  normalization_stats: data/normalization/era5_2010_2015.json
+  static_fields: data/static/adriatic_390_fields.npz
+  input_variables: [u10, v10, i10fg, t2m, tp]
+  target_variables: [msl, u10, v10, t2m, tp]
+  history_hours: 12
+  forecast_hours: 6
+  cache_months: 1
+  training_cache: cache/stormengine_2010_2025
+  # Cache construction covers every available hour. Development splits are
+  # defined separately in v9_dev_output_form.yaml.
+  train_years: [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]
+  validation_years: [2024]
+  test_years: [2025]
+
+model:
+  point_hidden: 64
+  latent_channels: 64
+  processor_layers: 2
+  kernel_size: 3
+  gaussian_sigma: 0.10
+  static_channels: 2
+  point_static_channels: 2
+
+training:
+  batch_size: 16
+

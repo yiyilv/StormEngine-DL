@@ -1,0 +1,135 @@
+{
+  "protocol": "v9-a-warm-start-refinement-v1",
+  "development_years_only": {
+    "train": [
+      2020,
+      2021,
+      2022
+    ],
+    "validation": [
+      2023
+    ],
+    "confirmation_not_read": [
+      2024
+    ],
+    "test_not_read": [
+      2025
+    ]
+  },
+  "epoch_zero": {
+    "mode": "baseline",
+    "variant": "A_epoch0_warm_start",
+    "seed": 42,
+    "selection_metric": "validation_sea_weighted_mse",
+    "validation_loss": 0.3373186955523621,
+    "validation_reconstruction_loss": 1.0721620726780814,
+    "validation_batches": 183,
+    "elapsed_seconds": 17.29004669992719,
+    "contract": {
+      "version": "stormengine-v9-output-form-v1",
+      "temporal_mode": "autoregressive",
+      "output_mode": "field",
+      "history_hours": 12,
+      "forecast_hours": 6,
+      "input_variables": [
+        "u10",
+        "v10",
+        "i10fg",
+        "t2m",
+        "tp"
+      ],
+      "target_variables": [
+        "msl",
+        "u10",
+        "v10",
+        "t2m",
+        "tp"
+      ],
+      "station_count": 390,
+      "cache_identity": "v9_cache_identity_2010_2025.json",
+      "train_years": [
+        2020,
+        2021,
+        2022
+      ],
+      "validation_years": [
+        2023
+      ],
+      "confirmation_years": [
+        2024
+      ],
+      "locked_test_years": [
+        2025
+      ],
+      "reconstruction_loss_weight": 0.1,
+      "learning_rate": 0.0001,
+      "weight_decay": 0.0001,
+      "warm_start": {
+        "checkpoint": "artifacts/v7_b_2010_2017/best.pt",
+        "sha256": "2149960f7c71ebb88324aee033ed11fe903f2c34b4064eafdaa5ee95c677f991",
+        "loaded_tensor_count": 25,
+        "loaded_tensors": [
+          "encoder.grid_coords",
+          "encoder.point_mlp.0.weight",
+          "encoder.point_mlp.0.bias",
+          "encoder.point_mlp.2.weight",
+          "encoder.point_mlp.2.bias",
+          "processor.cells.0.gates.weight",
+          "processor.cells.0.gates.bias",
+          "processor.cells.0.candidate.weight",
+          "processor.cells.0.candidate.bias",
+          "processor.cells.1.gates.weight",
+          "processor.cells.1.gates.bias",
+          "processor.cells.1.candidate.weight",
+          "processor.cells.1.candidate.bias",
+          "decoder.network.0.weight",
+          "decoder.network.0.bias",
+          "decoder.network.2.weight",
+          "decoder.network.2.bias",
+          "decoder.network.4.weight",
+          "decoder.network.4.bias",
+          "decoder.network.0.weight->reconstruction_decoder.network.0.weight",
+          "decoder.network.0.bias->reconstruction_decoder.network.0.bias",
+          "decoder.network.2.weight->reconstruction_decoder.network.2.weight",
+          "decoder.network.2.bias->reconstruction_decoder.network.2.bias",
+          "decoder.network.4.weight->reconstruction_decoder.network.4.weight",
+          "decoder.network.4.bias->reconstruction_decoder.network.4.bias"
+        ],
+        "skipped_source_tensors": [],
+        "zero_initialized_tensors": []
+      }
+    }
+  },
+  "incumbent": {
+    "variant": "A_field_autoregressive",
+    "primary_validation_loss": 0.3170994402118068,
+    "two_seed_mean": 0.3160490533082537
+  },
+  "primary_results": [
+    {
+      "name": "A_lr25e6_recon000",
+      "learning_rate": 2.5e-05,
+      "reconstruction_loss_weight": 0.0,
+      "primary_validation_loss": 0.3107933782733203,
+      "primary_best_epoch": 14
+    },
+    {
+      "name": "A_lr25e6_recon002",
+      "learning_rate": 2.5e-05,
+      "reconstruction_loss_weight": 0.02,
+      "primary_validation_loss": 0.3108125790302219,
+      "primary_best_epoch": 14
+    }
+  ],
+  "primary_gate_passed": true,
+  "replication": {
+    "variant": "A_lr25e6_recon000",
+    "replication_validation_loss": 0.3101980511119457,
+    "replication_best_epoch": 9,
+    "two_seed_mean": 0.31049571469263304,
+    "incumbent_two_seed_mean": 0.3160490533082537
+  },
+  "selected_for_frozen_2024_confirmation": "A_lr25e6_recon000",
+  "selected_primary_checkpoint": "artifacts/v9_a_refinement/A_lr25e6_recon000/seed_42/best.pt",
+  "selected_primary_checkpoint_sha256": "e8486b695d03e4a27f8ba5921eb3bb77e5e2d66c649f02ad289392576aeab7c3"
+}

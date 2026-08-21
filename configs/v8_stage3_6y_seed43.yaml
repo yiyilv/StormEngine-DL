@@ -1,0 +1,13 @@
+extends: v8_stage3_6y.yaml
+
+experiment: V8-Stage3-Six-Year-Gradual-Unfreezing-Seed43
+seed: 43
+
+stage3:
+  stage3a:
+    source_checkpoint: artifacts/v8_stage2_dev3y_ph064_lat096_seed43/best.pt
+    output_dir: artifacts/v8_stage3a_6y_ph064_lat096_seed43
+
+  stage3b:
+    source_checkpoint: artifacts/v8_stage3a_6y_ph064_lat096_seed43/best.pt
+    output_dir: artifacts/v8_stage3b_6y_ph064_lat096_seed43

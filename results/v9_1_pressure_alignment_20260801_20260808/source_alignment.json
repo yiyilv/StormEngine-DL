@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "scientific_status": "pre_training_input_alignment",
+  "period": "2026-08-01/2026-08-08",
+  "hour_count": 169,
+  "no_training": true,
+  "contract": {
+    "variable": "msl",
+    "unit": "hPa",
+    "coordinate_order": "239 DPC physical stations followed by 151 Open-Meteo marine points",
+    "tensor_shape": [169, 390, 1],
+    "valid_fraction": 0.42045,
+    "future_observations_allowed": false
+  },
+  "dpc_physical": {
+    "registry_station_count": 239,
+    "pressure_station_count": 13,
+    "valid_cells": 2193,
+    "registry_cell_coverage_fraction": 0.054294273476764625,
+    "source_variable": "station_pressure_hpa",
+    "conversion": "low-elevation hypsometric reduction using trailing temperature and humidity support",
+    "raw_vs_era5t": {
+      "bias_hpa": -3.703382833874829,
+      "mae_hpa": 4.086324751784798,
+      "rmse_hpa": 9.190783574767883,
+      "correlation": -0.027958236501580594
+    },
+    "corrected_vs_era5t": {
+      "bias_hpa": -0.5089888948857159,
+      "mae_hpa": 1.1451626424097983,
+      "rmse_hpa": 1.6774286901825595,
+      "correlation": 0.6060255149302549
+    },
+    "local_product": {
+      "path": "data_external/meteohub/processed/20260801_20260808/official_hourly_physical_msl.npz",
+      "bytes": 56192,
+      "sha256": "4fb3c9aee50a57932d902c83f8516326a728760abd832b1e55170bc0dedb2587"
+    }
+  },
+  "open_meteo_marine": {
+    "model": "italia_meteo_arpae_icon_2i",
+    "station_count": 151,
+    "valid_cells": 25519,
+    "coverage_fraction": 1.0,
+    "source_field": "pressure_msl",
+    "surface_pressure_used": false,
+    "vs_era5t": {
+      "bias_hpa": 0.26250046491622925,
+      "mae_hpa": 0.4085932970046997,
+      "rmse_hpa": 0.5100786685943604,
+      "correlation": 0.9571949110861055
+    },
+    "local_product": {
+      "path": "data_external/open_meteo/processed/20260801_20260808/icon2i_hourly_marine_pressure.npz",
+      "bytes": 26482,
+      "sha256": "4f64fe16c592f794fafd2fad1ec7df26ad6377f81edaed5de755f427a9e25676"
+    }
+  },
+  "interpretation": [
+    "The DPC reduction aligns station pressure to the MSL contract and substantially reduces the elevation-driven mismatch.",
+    "Open-Meteo pressure_msl is already on the correct physical scale and closely follows same-time ERA5T at marine support coordinates.",
+    "The one-week comparison constrains interface and missingness design; it must not be used to fit permanent station bias corrections.",
+    "ERA5T is a gridded diagnostic reference rather than error-free in-situ truth."
+  ]
+}

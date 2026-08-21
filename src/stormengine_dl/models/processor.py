@@ -58,3 +58,58 @@ class ConvGRUProcessor(nn.Module):
             predictions.append(current)
         return torch.stack(predictions, dim=1)
 
+
+class DirectHorizonConvGRUProcessor(nn.Module):
+    """Encode the history once and predict every future latent lead directly.
+
+    Unlike :class:`ConvGRUProcessor`, this processor does not feed a predicted
+    latent grid back into itself.  A horizon-specific convolutional head maps
+    the final recurrent state to all requested lead times, avoiding recurrent
+    error accumulation while preserving the same history encoder.
+    """
+
+    def __init__(
+        self,
+        channels: int,
+        forecast_steps: int,
+        layers: int = 2,
+        kernel_size: int = 3,
+    ) -> None:
+        super().__init__()
+        self.channels = channels
+        self.forecast_steps = forecast_steps
+        self.cells = nn.ModuleList(
+            ConvGRUCell(channels, kernel_size=kernel_size) for _ in range(layers)
+        )
+        self.horizon_head = nn.Conv2d(
+            channels,
+            forecast_steps * channels,
+            kernel_size=3,
+            padding=1,
+        )
+
+    def _step(self, x: torch.Tensor, states: list[torch.Tensor]) -> list[torch.Tensor]:
+        next_states: list[torch.Tensor] = []
+        for cell, hidden in zip(self.cells, states):
+            hidden = cell(x, hidden)
+            next_states.append(hidden)
+            x = hidden
+        return next_states
+
+    def forward(self, encoded_history: torch.Tensor, forecast_steps: int) -> torch.Tensor:
+        if forecast_steps != self.forecast_steps:
+            raise ValueError(
+                f"Direct-horizon processor was built for {self.forecast_steps} steps, "
+                f"not {forecast_steps}"
+            )
+        batch, history, channels, height, width = encoded_history.shape
+        if channels != self.channels:
+            raise ValueError("encoded channel count does not match processor channels")
+        states = [
+            encoded_history.new_zeros(batch, channels, height, width)
+            for _ in self.cells
+        ]
+        for index in range(history):
+            states = self._step(encoded_history[:, index], states)
+        output = self.horizon_head(states[-1])
+        return output.reshape(batch, forecast_steps, channels, height, width)
