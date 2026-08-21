@@ -75,3 +75,19 @@ def test_v9_a_refinement_is_development_only_and_controlled() -> None:
         },
     ]
 
+
+def test_v9_1_pressure_protocol_reserves_2018_and_2019() -> None:
+    module = load_trainer()
+    control = module.load_config(ROOT / "configs" / "v9_1_control_5var.yaml")
+    pressure = module.load_config(ROOT / "configs" / "v9_1_pressure_6var.yaml")
+    module.require_development_protocol(control)
+    module.require_development_protocol(pressure)
+    assert control["data"]["train_years"] == list(range(2010, 2018))
+    assert control["data"]["validation_years"] == [2018]
+    assert control["data"]["test_years"] == [2019]
+    assert control["data"]["input_variables"] == ["u10", "v10", "i10fg", "t2m", "tp"]
+    assert pressure["data"]["input_variables"] == [
+        "msl", "u10", "v10", "i10fg", "t2m", "tp"
+    ]
+    assert pressure["data"]["variable_capabilities"]["msl"]["include_virtual"] is True
+    assert pressure["data"]["expected_variable_capability_counts"] == {"msl": 164}

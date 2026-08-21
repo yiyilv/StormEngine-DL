@@ -94,6 +94,23 @@ def make_dataset(
         if empirical_path is not None
         else None
     )
+    capability_station_ids: dict[str, list[str]] = {}
+    capability_include_virtual: list[str] = []
+    for variable, specification in data.get("variable_capabilities", {}).items():
+        if not isinstance(specification, dict):
+            raise ValueError(f"Variable capability for {variable} must be a mapping")
+        station_ids = [str(value) for value in specification.get("station_ids", [])]
+        manifest_path = specification.get("physical_station_manifest")
+        if manifest_path:
+            manifest = json.loads(resolve(manifest_path).read_text(encoding="utf-8"))
+            station_ids.extend(
+                str(row["station_id"])
+                for row in manifest.get("stations", [])
+                if int(row.get("valid_corrected_hours", 0)) > 0
+            )
+        capability_station_ids[str(variable)] = sorted(set(station_ids))
+        if bool(specification.get("include_virtual", False)):
+            capability_include_virtual.append(str(variable))
     return V7CachedSequenceDataset(
         cache_dir(data), resolve(data["station_registry"]), resolve(data["cache_identity"]),
         years=years, input_variables=data["input_variables"],
@@ -104,6 +121,11 @@ def make_dataset(
         empirical_mask_path=empirical_path,
         empirical_mask_manifest_path=empirical_manifest,
         station_profile=str(data.get("station_profile", "physical_only")),
+        variable_capability_station_ids=capability_station_ids,
+        variable_capability_include_virtual=capability_include_virtual,
+        expected_variable_capability_counts=data.get(
+            "expected_variable_capability_counts", {}
+        ),
     )
 
 

@@ -1,0 +1,19 @@
+protocol: v9-2025-post-freeze-event-extension-v1
+
+final_test_config: configs/v9_2025_final_test.yaml
+frozen_benchmark: results/v9_2025_final_test/benchmark.json
+frozen_benchmark_sha256: f44a9425132c6f405764efab87c53760c2f197499c6213294517690916958f5a
+threshold_years: [2010, 2011, 2012, 2013, 2014, 2015]
+
+events:
+  strong_wind_quantile: 0.95
+  wet_precipitation_minimum_mm: 0.1
+  wet_precipitation_quantile: 0.95
+  fixed_precipitation_threshold_mm: 5.0
+  low_msl_quantile: 0.05
+
+evaluation:
+  batch_size: 16
+  progress_every_batches: 25
+  output_dir: artifacts/v9_2025_event_extension
+  publish_dir: results/v9_2025_event_extension

@@ -1,0 +1,16 @@
+extends: v9_1_pressure_ablation_base.yaml
+
+experiment: V9.1-Pressure-6Var
+
+data:
+  input_variables: [msl, u10, v10, i10fg, t2m, tp]
+  variable_capabilities:
+    msl:
+      physical_station_manifest: data/manifests/dpc_msl_20260801_20260808.json
+      include_virtual: true
+  # 13 DPC/MeteoHub pressure stations plus all 151 marine support points.
+  expected_variable_capability_counts:
+    msl: 164
+
+training:
+  output_dir: artifacts/v9_1_pressure_ablation/pressure_6var

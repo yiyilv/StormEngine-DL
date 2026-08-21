@@ -1,0 +1,36 @@
+protocol: v9.1-pressure-ablation-evaluation-v1
+
+control_config: configs/v9_1_control_5var.yaml
+pressure_config: configs/v9_1_pressure_6var.yaml
+normalization_stats: data/normalization/era5_2010_2015.json
+threshold_years: [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017]
+validation_years: [2018]
+test_years: [2019]
+window_stride_hours: 3
+
+checkpoints:
+  control_seed42: artifacts/v9_1_pressure_ablation/control_5var/control_5var/seed_42/best.pt
+  pressure_seed42: artifacts/v9_1_pressure_ablation/pressure_6var/pressure_6var/seed_42/best.pt
+  control_seed43: artifacts/v9_1_pressure_ablation/control_5var/control_5var/seed_43/best.pt
+  pressure_seed43: artifacts/v9_1_pressure_ablation/pressure_6var/pressure_6var/seed_43/best.pt
+
+events:
+  strong_wind_quantile: 0.95
+  wet_precipitation_minimum_mm: 0.1
+  wet_precipitation_quantile: 0.95
+  fixed_precipitation_threshold_mm: 5.0
+  low_msl_quantile: 0.05
+
+acceptance:
+  require_positive_full_msl_skill_each_seed: true
+  require_positive_sea_msl_skill_each_seed: true
+  maximum_mean_non_msl_sea_rmse_degradation: 0.01
+  require_lower_low_msl_event_rmse_each_seed: true
+
+evaluation:
+  batch_size: 16
+  progress_every_batches: 25
+  validation_output_dir: artifacts/v9_1_pressure_ablation/validation_2018
+  validation_publish_dir: results/v9_1_pressure_validation_2018
+  test_output_dir: artifacts/v9_1_pressure_ablation/final_test_2019
+  test_publish_dir: results/v9_1_pressure_final_test_2019

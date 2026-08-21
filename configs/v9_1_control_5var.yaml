@@ -1,0 +1,9 @@
+extends: v9_1_pressure_ablation_base.yaml
+
+experiment: V9.1-Control-5Var
+
+data:
+  input_variables: [u10, v10, i10fg, t2m, tp]
+
+training:
+  output_dir: artifacts/v9_1_pressure_ablation/control_5var

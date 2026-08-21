@@ -25,18 +25,31 @@ from stormengine_dl.data import StaticFields  # noqa: E402
 from stormengine_dl.models.v9 import (  # noqa: E402
     StormEngineV9ForecastModel,
     warm_start_from_v7b,
+    warm_start_from_v7b_expanded_encoder,
 )
 from stormengine_dl.training import sea_weight_map, weighted_mse  # noqa: E402
 
 
 def require_development_protocol(config: dict[str, Any]) -> None:
     data = config["data"]
-    expected = {
-        "train_years": [2020, 2021, 2022],
-        "validation_years": [2023],
-        "confirmation_years": [2024],
-        "test_years": [2025],
+    protocol = str(config.get("development_protocol", "v9-output-form-2020-2025"))
+    protocols = {
+        "v9-output-form-2020-2025": {
+            "train_years": [2020, 2021, 2022],
+            "validation_years": [2023],
+            "confirmation_years": [2024],
+            "test_years": [2025],
+        },
+        "v9.1-pressure-ablation-2010-2019": {
+            "train_years": list(range(2010, 2018)),
+            "validation_years": [2018],
+            "confirmation_years": [],
+            "test_years": [2019],
+        },
     }
+    if protocol not in protocols:
+        raise ValueError(f"Unknown frozen V9 development protocol: {protocol}")
+    expected = protocols[protocol]
     mismatches = {
         key: {"expected": value, "actual": data.get(key)}
         for key, value in expected.items()
@@ -44,7 +57,8 @@ def require_development_protocol(config: dict[str, Any]) -> None:
     }
     if mismatches:
         raise ValueError(f"V9 development split is not frozen: {mismatches}")
-    if set(data["train_years"] + data["validation_years"]) & {2024, 2025}:
+    held_out = set(data["confirmation_years"] + data["test_years"])
+    if set(data["train_years"] + data["validation_years"]) & held_out:
         raise ValueError("V9 development may not read confirmation or locked-test years")
 
 
@@ -125,6 +139,13 @@ def model_contract(
         "learning_rate": float(config["training"]["learning_rate"]),
         "weight_decay": float(config["training"]["weight_decay"]),
         "warm_start": warm_start,
+        "development_protocol": str(
+            config.get("development_protocol", "v9-output-form-2020-2025")
+        ),
+        "variable_capabilities": dict(config["data"].get("variable_capabilities", {})),
+        "expected_variable_capability_counts": dict(
+            config["data"].get("expected_variable_capability_counts", {})
+        ),
     }
 
 
@@ -206,11 +227,26 @@ def main() -> int:
     model = make_model(config, args.temporal_mode, args.output_mode)
     transfer: dict[str, object] | None = None
     if args.warm_start:
-        transfer = warm_start_from_v7b(
-            model,
-            resolve(args.warm_start),
-            expected_sha256=config["development"].get("v7b_checkpoint_sha256"),
+        source_inputs = list(
+            config["development"].get(
+                "warm_start_source_input_variables", config["data"]["input_variables"]
+            )
         )
+        target_inputs = list(config["data"]["input_variables"])
+        if source_inputs == target_inputs:
+            transfer = warm_start_from_v7b(
+                model,
+                resolve(args.warm_start),
+                expected_sha256=config["development"].get("v7b_checkpoint_sha256"),
+            )
+        else:
+            transfer = warm_start_from_v7b_expanded_encoder(
+                model,
+                resolve(args.warm_start),
+                source_input_variables=source_inputs,
+                target_input_variables=target_inputs,
+                expected_sha256=config["development"].get("v7b_checkpoint_sha256"),
+            )
     model = model.to(device)
     contract = model_contract(config, model, len(train.station_ids), transfer)
     static = StaticFields.load(resolve(config["data"]["static_fields"])).as_tensor()
@@ -244,6 +280,7 @@ def main() -> int:
             "current_reconstruction_finite": bool(torch.isfinite(current).all()),
             "current_reconstruction_loss": float(reconstruction_loss),
             "contract": contract,
+            "variable_capability_counts": train.variable_capability_counts,
         }
         print(json.dumps(result, indent=2))
         train.close(); validation.close(); return 0

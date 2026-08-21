@@ -170,3 +170,90 @@ def warm_start_from_v7b(
         "skipped_source_tensors": skipped,
         "zero_initialized_tensors": reset_tensors,
     }
+
+
+def warm_start_from_v7b_expanded_encoder(
+    model: StormEngineV9ForecastModel,
+    checkpoint_path: Path,
+    *,
+    source_input_variables: list[str],
+    target_input_variables: list[str],
+    expected_sha256: str | None = None,
+) -> dict[str, object]:
+    """Transfer V7-B while inserting zero-initialized columns for new inputs.
+
+    The mask-aware point feature order is coordinates, values, masks, ages, and
+    point-static fields. Common feature columns are copied exactly; columns for
+    newly introduced variables start at zero so the expanded model initially
+    behaves like the source model and must earn any use of the new channel.
+    """
+
+    if not model.encoder.include_age:
+        raise ValueError("Expanded V9.1 warm start requires observation-age channels")
+    if not set(source_input_variables).issubset(target_input_variables):
+        raise ValueError("Expanded target inputs must retain every source input variable")
+    actual_sha256 = sha256(checkpoint_path)
+    if expected_sha256 and actual_sha256 != expected_sha256:
+        raise ValueError(
+            f"V7-B checkpoint SHA-256 mismatch: expected {expected_sha256}, got {actual_sha256}"
+        )
+    checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+    source = checkpoint["model_state_dict"]
+    target = model.state_dict()
+    first_key = "encoder.point_mlp.0.weight"
+    if first_key not in source or first_key not in target:
+        raise ValueError("Checkpoint is missing the mask-aware point-MLP input layer")
+    loaded: list[str] = []
+    skipped: list[str] = []
+    for key, value in source.items():
+        if key == first_key:
+            continue
+        if key in target and target[key].shape == value.shape:
+            target[key] = value
+            loaded.append(key)
+        else:
+            skipped.append(key)
+    for key, value in source.items():
+        if not key.startswith("decoder."):
+            continue
+        target_key = "reconstruction_decoder." + key.removeprefix("decoder.")
+        if target_key in target and target[target_key].shape == value.shape:
+            target[target_key] = value
+            loaded.append(f"{key}->{target_key}")
+
+    source_weight = source[first_key]
+    target_weight = target[first_key].clone()
+    target_weight.zero_()
+    source_count = len(source_input_variables)
+    target_count = len(target_input_variables)
+    static_count = model.encoder.point_static_channels
+    expected_source_features = 2 + 3 * source_count + static_count
+    expected_target_features = 2 + 3 * target_count + static_count
+    if source_weight.shape[1] != expected_source_features:
+        raise ValueError("Source point-MLP feature width does not match its variable contract")
+    if target_weight.shape[1] != expected_target_features:
+        raise ValueError("Target point-MLP feature width does not match its variable contract")
+    target_weight[:, :2] = source_weight[:, :2]
+    for source_index, variable in enumerate(source_input_variables):
+        target_index = target_input_variables.index(variable)
+        for block in range(3):
+            source_column = 2 + block * source_count + source_index
+            target_column = 2 + block * target_count + target_index
+            target_weight[:, target_column] = source_weight[:, source_column]
+    if static_count:
+        target_weight[:, 2 + 3 * target_count :] = source_weight[:, 2 + 3 * source_count :]
+    target[first_key] = target_weight
+    loaded.append(first_key + " (column-mapped)")
+    model.load_state_dict(target)
+    new_variables = [name for name in target_input_variables if name not in source_input_variables]
+    return {
+        "checkpoint": str(checkpoint_path),
+        "sha256": actual_sha256,
+        "loaded_tensor_count": len(loaded),
+        "loaded_tensors": loaded,
+        "skipped_source_tensors": skipped,
+        "source_input_variables": source_input_variables,
+        "target_input_variables": target_input_variables,
+        "zero_initialized_new_variable_columns": new_variables,
+        "expanded_encoder": True,
+    }

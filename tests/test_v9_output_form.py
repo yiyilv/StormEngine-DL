@@ -2,7 +2,11 @@ from __future__ import annotations
 
 import torch
 
-from stormengine_dl.models.v9 import StormEngineV9ForecastModel, warm_start_from_v7b
+from stormengine_dl.models.v9 import (
+    StormEngineV9ForecastModel,
+    warm_start_from_v7b,
+    warm_start_from_v7b_expanded_encoder,
+)
 
 
 def make_model(temporal_mode: str, output_mode: str) -> StormEngineV9ForecastModel:
@@ -12,6 +16,25 @@ def make_model(temporal_mode: str, output_mode: str) -> StormEngineV9ForecastMod
         6,
         temporal_mode=temporal_mode,
         output_mode=output_mode,
+        include_age=True,
+        point_hidden=8,
+        latent_channels=8,
+        height=5,
+        width=7,
+        processor_layers=2,
+        kernel_size=3,
+        static_channels=2,
+        point_static_channels=2,
+    )
+
+
+def make_model_with_channels(channels: int) -> StormEngineV9ForecastModel:
+    return StormEngineV9ForecastModel(
+        channels,
+        5,
+        6,
+        temporal_mode="autoregressive",
+        output_mode="field",
         include_age=True,
         point_hidden=8,
         latent_channels=8,
@@ -114,3 +137,34 @@ def test_v7b_warm_start_copies_compatible_and_residual_decoder_tensors(tmp_path)
         "decoder.network.4.weight",
         "decoder.network.4.bias",
     ]
+
+
+def test_expanded_pressure_warm_start_maps_common_columns_and_zeros_new_columns(tmp_path) -> None:
+    source_variables = ["u10", "v10", "i10fg", "t2m", "tp"]
+    target_variables = ["msl", *source_variables]
+    source = make_model_with_channels(5)
+    source_weight = source.encoder.point_mlp[0].weight
+    source_weight.data.copy_(torch.arange(source_weight.numel()).reshape_as(source_weight))
+    checkpoint = tmp_path / "best.pt"
+    torch.save({"model_state_dict": source.state_dict()}, checkpoint)
+    target = make_model_with_channels(6)
+    transfer = warm_start_from_v7b_expanded_encoder(
+        target,
+        checkpoint,
+        source_input_variables=source_variables,
+        target_input_variables=target_variables,
+    )
+    target_weight = target.encoder.point_mlp[0].weight
+    assert torch.equal(target_weight[:, :2], source_weight[:, :2])
+    for old_index, variable in enumerate(source_variables):
+        new_index = target_variables.index(variable)
+        for block in range(3):
+            assert torch.equal(
+                target_weight[:, 2 + block * 6 + new_index],
+                source_weight[:, 2 + block * 5 + old_index],
+            )
+    for block in range(3):
+        assert torch.count_nonzero(target_weight[:, 2 + block * 6]) == 0
+    assert torch.equal(target_weight[:, -2:], source_weight[:, -2:])
+    assert transfer["zero_initialized_new_variable_columns"] == ["msl"]
+    assert transfer["expanded_encoder"] is True

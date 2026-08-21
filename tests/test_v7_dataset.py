@@ -166,6 +166,51 @@ class V7DatasetTests(unittest.TestCase):
             self.assertFalse(torch.equal(first["value_mask"], changed["value_mask"]))
             dataset.close()
 
+    def test_structural_variable_capability_masks_only_declared_stations(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            cache, registry, identity = self._fixture(Path(directory))
+            dataset = V7CachedSequenceDataset(
+                cache,
+                registry,
+                identity,
+                years=[2010],
+                input_variables=["u10"],
+                target_variables=["u10"],
+                strategy=MissingnessStrategy({}),
+                history_hours=2,
+                forecast_hours=1,
+                station_profile="dpc_plus_sea",
+                variable_capability_station_ids={"u10": ["LAND::a"]},
+                variable_capability_include_virtual=["u10"],
+            )
+            sample = dataset[0]
+            self.assertEqual(dataset.variable_capability_counts, {"u10": 2})
+            self.assertTrue(sample["value_mask"][:, 0, 0].all())
+            self.assertFalse(sample["value_mask"][:, 1, 0].any())
+            self.assertTrue(sample["value_mask"][:, 2, 0].all())
+            self.assertTrue((sample["point_values"][:, 1, 0] == 0).all())
+            dataset.close()
+
+    def test_expected_variable_capability_count_rejects_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            cache, registry, identity = self._fixture(Path(directory))
+            with self.assertRaisesRegex(ValueError, "capability counts"):
+                V7CachedSequenceDataset(
+                    cache,
+                    registry,
+                    identity,
+                    years=[2010],
+                    input_variables=["u10"],
+                    target_variables=["u10"],
+                    strategy=MissingnessStrategy({}),
+                    history_hours=2,
+                    forecast_hours=1,
+                    station_profile="dpc_plus_sea",
+                    variable_capability_station_ids={"u10": ["LAND::a"]},
+                    variable_capability_include_virtual=["u10"],
+                    expected_variable_capability_counts={"u10": 3},
+                )
+
     def test_empirical_dpc_mask_and_fractional_age_are_replayed(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             cache, registry, identity = self._fixture(Path(directory))

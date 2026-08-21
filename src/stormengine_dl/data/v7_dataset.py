@@ -248,6 +248,9 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
         empirical_mask_path: str | Path | None = None,
         empirical_mask_manifest_path: str | Path | None = None,
         station_profile: str = "physical_only",
+        variable_capability_station_ids: Mapping[str, Sequence[str]] | None = None,
+        variable_capability_include_virtual: Sequence[str] = (),
+        expected_variable_capability_counts: Mapping[str, int] | None = None,
     ) -> None:
         if history_hours < 1 or forecast_hours < 1 or window_stride_hours < 1:
             raise ValueError("history, forecast, and stride must be positive")
@@ -286,6 +289,54 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
         self.station_networks = tuple(
             identity["station_networks"][index] for index in self.station_indices  # type: ignore[index]
         )
+        self._structural_capability = np.ones(
+            (len(self.station_ids), len(self.input_variables)), dtype=bool
+        )
+        capability_ids = variable_capability_station_ids or {}
+        include_virtual = set(variable_capability_include_virtual)
+        unknown_variables = (set(capability_ids) | include_virtual) - set(self.input_variables)
+        if unknown_variables:
+            raise ValueError(
+                f"Variable capability refers to absent inputs: {sorted(unknown_variables)}"
+            )
+        known_station_ids = set(self.station_ids)
+        for variable in sorted(set(capability_ids) | include_virtual):
+            allowed = set(capability_ids.get(variable, ()))
+            unknown_stations = allowed - known_station_ids
+            if unknown_stations:
+                raise ValueError(
+                    f"Variable capability for {variable} contains unknown stations: "
+                    f"{sorted(unknown_stations)[:5]}"
+                )
+            if variable in include_virtual:
+                allowed.update(
+                    station_id
+                    for station_id in self.station_ids
+                    if not station_id.startswith("LAND::")
+                )
+            channel = self.input_variables.index(variable)
+            self._structural_capability[:, channel] = np.asarray(
+                [station_id in allowed for station_id in self.station_ids], dtype=bool
+            )
+            if not self._structural_capability[:, channel].any():
+                raise ValueError(f"Variable capability leaves {variable} unavailable everywhere")
+        self.variable_capability_counts = {
+            variable: int(self._structural_capability[:, self.input_variables.index(variable)].sum())
+            for variable in sorted(set(capability_ids) | include_virtual)
+        }
+        expected_capability_counts = {
+            str(variable): int(count)
+            for variable, count in (expected_variable_capability_counts or {}).items()
+        }
+        actual_expected_counts = {
+            variable: self.variable_capability_counts.get(variable)
+            for variable in expected_capability_counts
+        }
+        if actual_expected_counts != expected_capability_counts:
+            raise ValueError(
+                "Variable capability counts do not match the frozen data contract: "
+                f"expected={expected_capability_counts}, actual={self.variable_capability_counts}"
+            )
         self._input_sources = tuple(
             ("point", cached_inputs.index(name))
             if name in cached_inputs else ("grid", cached_targets.index(name))
@@ -377,6 +428,7 @@ class V7CachedSequenceDataset(Dataset[dict[str, torch.Tensor]]):
         target_stop = history_stop + self.forecast_hours
         current = self._read_input_values(slice(global_start, history_stop)).copy()
         mask = np.ones(current.shape, dtype=bool)
+        mask &= self._structural_capability[None, :, :]
         age = np.zeros(current.shape, dtype=np.float32)
         rng = np.random.default_rng(
             self.seed + self.epoch * 1_000_003 + global_start * 97
