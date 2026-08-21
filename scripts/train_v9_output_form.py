@@ -40,8 +40,8 @@ def require_development_protocol(config: dict[str, Any]) -> None:
             "confirmation_years": [2024],
             "test_years": [2025],
         },
-        "v9.1-pressure-ablation-2010-2019": {
-            "train_years": list(range(2010, 2018)),
+        "v9.1-pressure-ablation-2015-2019": {
+            "train_years": [2015, 2016, 2017],
             "validation_years": [2018],
             "confirmation_years": [],
             "test_years": [2019],

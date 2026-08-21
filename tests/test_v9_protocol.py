@@ -82,7 +82,7 @@ def test_v9_1_pressure_protocol_reserves_2018_and_2019() -> None:
     pressure = module.load_config(ROOT / "configs" / "v9_1_pressure_6var.yaml")
     module.require_development_protocol(control)
     module.require_development_protocol(pressure)
-    assert control["data"]["train_years"] == list(range(2010, 2018))
+    assert control["data"]["train_years"] == [2015, 2016, 2017]
     assert control["data"]["validation_years"] == [2018]
     assert control["data"]["test_years"] == [2019]
     assert control["data"]["input_variables"] == ["u10", "v10", "i10fg", "t2m", "tp"]

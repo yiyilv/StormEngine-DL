@@ -17,9 +17,15 @@ tuning.
 
 The pressure experiment reserves a new chronological split:
 
-- training: 2010--2017;
+- training: 2015--2017;
 - validation and model selection: 2018;
 - acknowledged one-time test: 2019.
+
+The compact three-year development period is deliberate: this is a paired
+input ablation rather than the final production retraining. It reduces the four
+run training cost while preserving multiple annual cycles and a strictly later
+validation/test chronology. A successful pressure contract can subsequently be
+used in the final long-record training.
 
 The paired control uses `u10,v10,i10fg,t2m,tp`. The pressure candidate adds
 `msl` and changes nothing else. Both use the field-autoregressive V9 form, the

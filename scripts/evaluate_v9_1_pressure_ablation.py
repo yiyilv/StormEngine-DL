@@ -47,12 +47,12 @@ def checkpoint(path: Path, config: dict[str, Any], device: torch.device) -> tupl
     model = make_model(config, "autoregressive", "field").to(device)
     expected_inputs = list(config["data"]["input_variables"])
     contract = saved.get("model_contract", {})
-    if contract.get("development_protocol") != "v9.1-pressure-ablation-2010-2019":
+    if contract.get("development_protocol") != "v9.1-pressure-ablation-2015-2019":
         raise ValueError(f"Checkpoint has the wrong V9.1 protocol: {path}")
     if contract.get("input_variables") != expected_inputs:
         raise ValueError(f"Checkpoint input contract does not match {expected_inputs}: {path}")
-    if contract.get("train_years") != list(range(2010, 2018)):
-        raise ValueError("V9.1 checkpoint did not train on the frozen 2010--2017 split")
+    if contract.get("train_years") != [2015, 2016, 2017]:
+        raise ValueError("V9.1 checkpoint did not train on the frozen 2015--2017 split")
     if contract.get("validation_years") != [2018] or contract.get("locked_test_years") != [2019]:
         raise ValueError("V9.1 checkpoint has the wrong validation/test contract")
     model.load_state_dict(saved["model_state_dict"], strict=True)
@@ -159,7 +159,7 @@ def publish(source: Path, destination: Path, result: dict[str, Any]) -> None:
         f"- Passed: `{decision['passed']}`",
         "",
         "The only controlled input difference is the deployment-compatible MSL channel. "
-        "Event thresholds come exclusively from 2010--2017.",
+        "Event thresholds come exclusively from 2015--2017.",
     ]
     readme = destination / "README.md"
     readme.write_bytes(("\n".join(lines) + "\n").encode("utf-8"))
@@ -320,7 +320,7 @@ def main() -> int:
         "schema_version": 1,
         "scientific_status": status,
         "contract": {
-            "training_years": list(range(2010, 2018)),
+            "training_years": [2015, 2016, 2017],
             "threshold_years": list(config["threshold_years"]),
             "evaluation_years": years,
             "test_years_read": [2019] if args.mode == "test" else [],
