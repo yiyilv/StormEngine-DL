@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "product": "Open-Meteo Historical Forecast API",
+  "model": "italia_meteo_arpae_icon_2i",
+  "role": "model-derived marine mean-sea-level-pressure support",
+  "source_field": "pressure_msl",
+  "contract_variable": "msl",
+  "unit": "hPa",
+  "time_start": "2026-08-01T00:00:00.000000000",
+  "time_end": "2026-08-08T00:00:00.000000000",
+  "hour_count": 169,
+  "station_count": 151,
+  "shape": [
+    169,
+    151,
+    1
+  ],
+  "valid_cells": 25519,
+  "total_cells": 25519,
+  "coverage_fraction": 1.0,
+  "minimum_hpa": 1008.7000122070312,
+  "maximum_hpa": 1017.0,
+  "mean_hpa": 1012.943603515625,
+  "processed_external": {
+    "path": "data_external/open_meteo/processed/20260801_20260808/icon2i_hourly_marine_pressure.npz",
+    "bytes": 26482,
+    "sha256": "4f64fe16c592f794fafd2fad1ec7df26ad6377f81edaed5de755f427a9e25676"
+  },
+  "raw_download_manifest": "data_external/open_meteo/raw/20260801_20260808/icon2i/download_manifest.json",
+  "surface_pressure_excluded": true,
+  "surface_pressure_exclusion_reason": "returned model cells can have terrain elevation and are not interchangeable with mean-sea-level pressure",
+  "future_leakage_rule": "input windows may use only pressure valid_time <= forecast origin",
+  "same_time_same_coordinate_era5t_alignment": {
+    "reference": "ERA5T bilinearly sampled at the 151 requested coordinates",
+    "count": 25519,
+    "bias_hpa": 0.26250046491622925,
+    "mae_hpa": 0.4085932970046997,
+    "rmse_hpa": 0.5100786685943604,
+    "correlation": 0.9571949110861055,
+    "open_meteo_mean_hpa": 1012.943603515625,
+    "era5t_mean_hpa": 1012.68115234375,
+    "interpretation": "source-minus-ERA5T; diagnostic alignment, not a claim that ERA5T is error-free truth"
+  }
+}

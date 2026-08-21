@@ -1,0 +1,281 @@
+{
+  "schema_version": 1,
+  "product": "DPC station pressure reduced to mean sea level",
+  "source_variable": "station_pressure_hpa",
+  "contract_variable": "msl",
+  "unit": "hPa",
+  "method": {
+    "equation": "p_msl = p_station * exp(g*z/(R_d*T_v_mean_layer))",
+    "temperature": "trailing observed temperature at or before valid time, up to 12 hours; mean layer adds half of a 6.5 K/km lapse-rate correction",
+    "humidity": "trailing RH is used for virtual temperature when available; otherwise dry-air temperature is explicit",
+    "fallback": "15 C standard temperature only where elevation <= 10 m and no temperature exists",
+    "scope": "project coastal stations at elevations from 0 to 268 m; not a general high-elevation reduction",
+    "method_codes": {
+      "0": "invalid",
+      "1": "trailing_temperature_and_humidity",
+      "2": "trailing_temperature_dry_air",
+      "3": "standard_temperature_low_elevation_fallback"
+    }
+  },
+  "time_start": "2026-08-01T00:00:00.000000000",
+  "time_end": "2026-08-08T00:00:00.000000000",
+  "hour_count": 169,
+  "registry_station_count": 239,
+  "pressure_station_count": 13,
+  "raw_pressure_valid_cells": 2193,
+  "corrected_valid_cells": 2193,
+  "coverage_fraction_all_registry_cells": 0.054294273476764625,
+  "methods": {
+    "invalid": 0,
+    "trailing_temperature_and_humidity": 1855,
+    "trailing_temperature_dry_air": 169,
+    "standard_temperature_low_elevation_fallback": 169
+  },
+  "elevation_range_m": [
+    0.0,
+    268.0
+  ],
+  "correction_hpa": {
+    "minimum": 0.0,
+    "maximum": 30.87701416015625,
+    "mean": 3.194394111633301
+  },
+  "same_time_same_coordinate_era5t_alignment": {
+    "raw_station_pressure": {
+      "count": 2193,
+      "bias_hpa": -3.703382833874829,
+      "mae_hpa": 4.086324751784798,
+      "rmse_hpa": 9.190783574767883,
+      "correlation": -0.027958236501580594
+    },
+    "corrected_msl": {
+      "count": 2193,
+      "bias_hpa": -0.5089888948857159,
+      "mae_hpa": 1.1451626424097983,
+      "rmse_hpa": 1.6774286901825595,
+      "correlation": 0.6060255149302549
+    },
+    "interpretation": "source-minus-ERA5T; ERA5T is a gridded diagnostic reference rather than error-free station truth"
+  },
+  "stations": [
+    {
+      "station_id": "LAND::MH::dpcn-marche::5b2f428cb313",
+      "source_station_id": "MH::dpcn-marche::5b2f428cb313",
+      "station_name": "San Benedetto",
+      "network": "dpcn-marche",
+      "elevation_m": "1.0",
+      "valid_corrected_hours": 168,
+      "mean_correction_hpa": 0.1137237548828125,
+      "corrected_vs_era5t": {
+        "count": 168,
+        "bias_hpa": -0.6451939174107143,
+        "mae_hpa": 0.7482343401227679,
+        "rmse_hpa": 0.8744272015901686,
+        "correlation": 0.8882319933573805
+      }
+    },
+    {
+      "station_id": "LAND::MH::dpcn-marche::b738a6e21c00",
+      "source_station_id": "MH::dpcn-marche::b738a6e21c00",
+      "station_name": "Porto S.Elpidio",
+      "network": "dpcn-marche",
+      "elevation_m": "5.0",
+      "valid_corrected_hours": 168,
+      "mean_correction_hpa": 0.5728709101676941,
+      "corrected_vs_era5t": {
+        "count": 168,
+        "bias_hpa": 1.126706804547991,
+        "mae_hpa": 1.1387285505022322,
+        "rmse_hpa": 1.2918897497279649,
+        "correlation": 0.8751449942362954
+      }
+    },
+    {
+      "station_id": "LAND::MH::dpcn-marche::ee28b7fb66ee",
+      "source_station_id": "MH::dpcn-marche::ee28b7fb66ee",
+      "station_name": "Ancona Regione",
+      "network": "dpcn-marche",
+      "elevation_m": "47.0",
+      "valid_corrected_hours": 168,
+      "mean_correction_hpa": 5.282494068145752,
+      "corrected_vs_era5t": {
+        "count": 168,
+        "bias_hpa": -4.834742591494606,
+        "mae_hpa": 4.834742591494606,
+        "rmse_hpa": 4.854905662699398,
+        "correlation": 0.9339649559573111
+      }
+    },
+    {
+      "station_id": "LAND::MH::dpcn-marche::8e8c478988f1",
+      "source_station_id": "MH::dpcn-marche::8e8c478988f1",
+      "station_name": "Villa Fastiggi",
+      "network": "dpcn-marche",
+      "elevation_m": "25.0",
+      "valid_corrected_hours": 168,
+      "mean_correction_hpa": 2.8294808864593506,
+      "corrected_vs_era5t": {
+        "count": 168,
+        "bias_hpa": -1.0500263032459078,
+        "mae_hpa": 1.0500263032459078,
+        "rmse_hpa": 1.1613577395842132,
+        "correlation": 0.9086630937534079
+      }
+    },
+    {
+      "station_id": "LAND::MH::spdsra::68d811e822c8",
+      "source_station_id": "MH::spdsra::68d811e822c8",
+      "station_name": "Museo della marineria",
+      "network": "spdsra",
+      "elevation_m": "2.0",
+      "valid_corrected_hours": 169,
+      "mean_correction_hpa": 0.23994870483875275,
+      "corrected_vs_era5t": {
+        "count": 169,
+        "bias_hpa": -0.6246355948363536,
+        "mae_hpa": 0.629727154793824,
+        "rmse_hpa": 0.6660136037448778,
+        "correlation": 0.9802726655508052
+      }
+    },
+    {
+      "station_id": "LAND::MH::marefe::20b85f55b0d6",
+      "source_station_id": "MH::marefe::20b85f55b0d6",
+      "station_name": "Porto Garibaldi",
+      "network": "marefe",
+      "elevation_m": "0.0",
+      "valid_corrected_hours": 169,
+      "mean_correction_hpa": 0.0,
+      "corrected_vs_era5t": {
+        "count": 169,
+        "bias_hpa": -0.005169569387943787,
+        "mae_hpa": 0.1888319387943787,
+        "rmse_hpa": 0.23774221599013226,
+        "correlation": 0.9801749072535066
+      }
+    },
+    {
+      "station_id": "LAND::MH::simnbo::1a848d255777",
+      "source_station_id": "MH::simnbo::1a848d255777",
+      "station_name": "Guagnino",
+      "network": "simnbo",
+      "elevation_m": "1.0",
+      "valid_corrected_hours": 169,
+      "mean_correction_hpa": 0.11457418650388718,
+      "corrected_vs_era5t": {
+        "count": 169,
+        "bias_hpa": 1.7820951021634615,
+        "mae_hpa": 1.7820951021634615,
+        "rmse_hpa": 1.86345422544085,
+        "correlation": 0.9061463066048382
+      }
+    },
+    {
+      "station_id": "LAND::MH::arpafvg::dba70820e0fe",
+      "source_station_id": "MH::arpafvg::dba70820e0fe",
+      "station_name": "Trieste molo F.lli Bandiera",
+      "network": "arpafvg",
+      "elevation_m": "1.0",
+      "valid_corrected_hours": 169,
+      "mean_correction_hpa": 0.1131606251001358,
+      "corrected_vs_era5t": {
+        "count": 169,
+        "bias_hpa": -1.168003782012759,
+        "mae_hpa": 1.168003782012759,
+        "rmse_hpa": 1.2782709869959163,
+        "correlation": 0.9141475795261239
+      }
+    },
+    {
+      "station_id": "LAND::MH::arpafvg::d6f17e8d87f1",
+      "source_station_id": "MH::arpafvg::d6f17e8d87f1",
+      "station_name": "Lignano Sabbiadoro",
+      "network": "arpafvg",
+      "elevation_m": "7.0",
+      "valid_corrected_hours": 169,
+      "mean_correction_hpa": 0.7920961976051331,
+      "corrected_vs_era5t": {
+        "count": 169,
+        "bias_hpa": 0.529699201414571,
+        "mae_hpa": 0.5472534901997042,
+        "rmse_hpa": 0.6168438207990722,
+        "correlation": 0.967896626975988
+      }
+    },
+    {
+      "station_id": "LAND::MH::arpafvg::97ea1f2362a7",
+      "source_station_id": "MH::arpafvg::97ea1f2362a7",
+      "station_name": "Fossalon",
+      "network": "arpafvg",
+      "elevation_m": "0.0",
+      "valid_corrected_hours": 169,
+      "mean_correction_hpa": 0.0,
+      "corrected_vs_era5t": {
+        "count": 169,
+        "bias_hpa": -0.8710944723095414,
+        "mae_hpa": 0.8711667032636834,
+        "rmse_hpa": 0.9922212445362412,
+        "correlation": 0.9435682160069523
+      }
+    },
+    {
+      "station_id": "LAND::MH::arpafvg::92a4d4785303",
+      "source_station_id": "MH::arpafvg::92a4d4785303",
+      "station_name": "Sgonico-Zgonik",
+      "network": "arpafvg",
+      "elevation_m": "268.0",
+      "valid_corrected_hours": 169,
+      "mean_correction_hpa": 29.966611862182617,
+      "corrected_vs_era5t": {
+        "count": 169,
+        "bias_hpa": -1.1572897645848743,
+        "mae_hpa": 1.2028154903615014,
+        "rmse_hpa": 1.3826642113865064,
+        "correlation": 0.9013720735862196
+      }
+    },
+    {
+      "station_id": "LAND::MH::arpafvg::456d8f8fed63",
+      "source_station_id": "MH::arpafvg::456d8f8fed63",
+      "station_name": "Palazzolo dello Stella",
+      "network": "arpafvg",
+      "elevation_m": "5.0",
+      "valid_corrected_hours": 169,
+      "mean_correction_hpa": 0.5680274963378906,
+      "corrected_vs_era5t": {
+        "count": 169,
+        "bias_hpa": 0.37621131310096156,
+        "mae_hpa": 0.4418381911057692,
+        "rmse_hpa": 0.5070436666526105,
+        "correlation": 0.9665801835986192
+      }
+    },
+    {
+      "station_id": "LAND::MH::arpafvg::ed01dbfad1d3",
+      "source_station_id": "MH::arpafvg::ed01dbfad1d3",
+      "station_name": "Cervignano del Friuli",
+      "network": "arpafvg",
+      "elevation_m": "8.0",
+      "valid_corrected_hours": 169,
+      "mean_correction_hpa": 0.9105892777442932,
+      "corrected_vs_era5t": {
+        "count": 169,
+        "bias_hpa": -0.0953369140625,
+        "mae_hpa": 0.3025328506379438,
+        "rmse_hpa": 0.4258783853081479,
+        "correlation": 0.9588016279729112
+      }
+    }
+  ],
+  "processed_external": {
+    "path": "data_external/meteohub/processed/20260801_20260808/official_hourly_physical_msl.npz",
+    "bytes": 56192,
+    "sha256": "4fb3c9aee50a57932d902c83f8516326a728760abd832b1e55170bc0dedb2587"
+  },
+  "provenance": {
+    "input": "data_external/meteohub/processed/20260801_20260808/official_hourly_physical.npz",
+    "station_summary": "data/audits/meteohub_official_20260801_20260808/station_summary.csv",
+    "raw_station_pressure_preserved": true,
+    "future_observation_used": false
+  }
+}

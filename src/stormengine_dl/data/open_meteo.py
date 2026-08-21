@@ -17,6 +17,7 @@ SOURCE_VARIABLES = (
     "temperature_2m", "precipitation",
 )
 CONTRACT_VARIABLES = ("u10", "v10", "i10fg", "t2m", "tp")
+PRESSURE_CONTRACT_VARIABLES = ("msl",)
 
 
 @dataclass(frozen=True)
@@ -112,3 +113,81 @@ def load_download_chunks(raw_dir: str | Path, points: Sequence[MarinePoint]) -> 
         returned[station] = [float(response["latitude"]), float(response["longitude"])]
         elevation[station] = float(response.get("elevation", np.nan))
     return OpenMeteoBatch(expected_times.astype("datetime64[ns]"), expected_ids, CONTRACT_VARIABLES, values, mask, np.zeros_like(values), np.asarray([[p.latitude, p.longitude] for p in points], np.float32), np.zeros((len(points), 2), np.float32), tuple(OPEN_METEO_SOURCE for _ in points), returned, elevation)
+
+
+def load_download_pressure_chunks(
+    raw_dir: str | Path, points: Sequence[MarinePoint]
+) -> OpenMeteoBatch:
+    """Extract aligned mean-sea-level pressure from validated marine chunks.
+
+    ``pressure_msl`` is retained as the deployment-compatible ``msl`` channel.
+    ``surface_pressure`` is intentionally not substituted because returned model
+    cells can have non-zero terrain elevation even for requested sea coordinates.
+    """
+    directory = Path(raw_dir)
+    by_id: dict[str, dict[str, object]] = {}
+    for path in sorted(directory.glob("chunk_*.json")):
+        wrapper = json.loads(path.read_text(encoding="utf-8"))
+        requested = str(wrapper.get("request_parameters", {}).get("hourly", "")).split(",")
+        if "pressure_msl" not in requested:
+            raise ValueError(f"Raw chunk was not requested with pressure_msl: {path}")
+        ids = list(wrapper["station_ids"])
+        responses = wrapper["response"]
+        if isinstance(responses, dict):
+            responses = [responses]
+        if len(ids) != len(responses):
+            raise ValueError(f"Response count mismatch in {path}")
+        for station_id, response in zip(ids, responses, strict=True):
+            if station_id in by_id:
+                raise ValueError(f"Duplicate Open-Meteo station {station_id}")
+            units = response.get("hourly_units", {})
+            if units.get("pressure_msl") != "hPa":
+                raise ValueError(f"Unexpected pressure_msl unit for {station_id}: {units.get('pressure_msl')}")
+            by_id[station_id] = response
+
+    expected_ids = tuple(point.station_id for point in points)
+    if set(by_id) != set(expected_ids):
+        raise ValueError(
+            f"Open-Meteo pressure coverage mismatch: missing={sorted(set(expected_ids) - set(by_id))}"
+        )
+    expected_times = np.arange(
+        np.datetime64("2026-08-01T00"),
+        np.datetime64("2026-08-08T01"),
+        np.timedelta64(1, "h"),
+    )
+    values = np.zeros((169, len(points), 1), np.float32)
+    mask = np.zeros_like(values, bool)
+    returned = np.zeros((len(points), 2), np.float32)
+    elevation = np.full(len(points), np.nan, np.float32)
+    for station, point in enumerate(points):
+        response = by_id[point.station_id]
+        hourly = response["hourly"]
+        times = np.asarray(hourly["time"], dtype="datetime64[h]")
+        select = (times >= expected_times[0]) & (times <= expected_times[-1])
+        if not np.array_equal(times[select], expected_times):
+            raise ValueError(f"Invalid 169-hour pressure axis for {point.station_id}")
+        pressure = np.asarray(hourly["pressure_msl"], dtype=np.float64)[select]
+        valid = np.isfinite(pressure)
+        values[:, station, 0][valid] = pressure[valid]
+        mask[:, station, 0] = valid
+        returned[station] = [float(response["latitude"]), float(response["longitude"])]
+        elevation[station] = float(response.get("elevation", np.nan))
+
+    valid_pressure = values[mask]
+    if valid_pressure.size and (
+        float(valid_pressure.min()) < 850.0 or float(valid_pressure.max()) > 1100.0
+    ):
+        raise ValueError("pressure_msl falls outside the plausible 850--1100 hPa range")
+    return OpenMeteoBatch(
+        expected_times.astype("datetime64[ns]"),
+        expected_ids,
+        PRESSURE_CONTRACT_VARIABLES,
+        values,
+        mask,
+        np.zeros_like(values),
+        np.asarray([[p.latitude, p.longitude] for p in points], np.float32),
+        np.zeros((len(points), 2), np.float32),
+        tuple(OPEN_METEO_SOURCE for _ in points),
+        returned,
+        elevation,
+    )
