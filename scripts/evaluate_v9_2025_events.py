@@ -29,6 +29,7 @@ from evaluate_v8_2016_benchmark import (  # noqa: E402
 )
 from stormengine_dl.baselines import dense_grid_persistence  # noqa: E402
 from stormengine_dl.data import NormalizationStats, StaticFields  # noqa: E402
+from stormengine_dl.event_metrics import PhysicalSixHourEventAccumulator  # noqa: E402
 from stormengine_dl.runtime import denormalize_channels  # noqa: E402
 from stormengine_dl.training import ForecastMetricAccumulator  # noqa: E402
 
@@ -54,26 +55,82 @@ def publish(source: Path, destination: Path, result: dict[str, Any]) -> None:
     destination.mkdir(parents=True, exist_ok=True)
     output = destination / "events.json"
     shutil.copyfile(source, output)
+    physical = result.get("physical_six_hour_event_metrics", {})
+    percentile = result.get("event_metrics", {})
+    title = (
+        "# Frozen 2025 original physical-event extension"
+        if physical and not percentile
+        else "# V9-A frozen 2025 event-metric extension"
+    )
     lines = [
-        "# V9-A frozen 2025 event-metric extension",
+        title,
         "",
         "This is a post-freeze metric extension of the existing one-time 2025 test. "
-        "It reuses the unchanged checkpoint, windows, predictions, and thresholds derived "
-        "only from 2010--2015. It does not permit model or threshold changes.",
-        "",
-        "| model | event | POD | FAR | CSI | event RMSE | peak bias |",
-        "|---|---|---:|---:|---:|---:|---:|",
+        "It reuses the unchanged checkpoints, windows, prediction pipeline, and baselines. "
+        "It does not permit model or threshold changes.",
     ]
-    for model in ("v7_b", "v9_a", "sparse_reconstruction_persistence", "dense_era5_persistence"):
-        for event, value in result["event_metrics"][model].items():
-            aggregate = value["aggregate"]
-            def fmt(name: str) -> str:
-                item = aggregate[name]
-                return "NA" if item is None else f"{float(item):.4f}"
-            lines.append(
-                f"| {model} | {event} | {fmt('pod')} | {fmt('far')} | {fmt('csi')} "
-                f"| {fmt('event_conditioned_rmse')} | {fmt('peak_intensity_bias')} |"
-            )
+    model_names = (
+        "v7_b",
+        "v9_a",
+        "sparse_reconstruction_persistence",
+        "dense_era5_persistence",
+    )
+    if percentile:
+        lines.extend(
+            [
+                "",
+                "## Training-distribution event thresholds",
+                "",
+                "Thresholds are derived only from 2010--2015.",
+                "",
+                "| model | event | POD | FAR | CSI | event RMSE | peak bias |",
+                "|---|---|---:|---:|---:|---:|---:|",
+            ]
+        )
+        for model in model_names:
+            for event, value in percentile[model].items():
+                aggregate = value["aggregate"]
+
+                def fmt(name: str) -> str:
+                    item = aggregate[name]
+                    return "NA" if item is None else f"{float(item):.4f}"
+
+                lines.append(
+                    f"| {model} | {event} | {fmt('pod')} | {fmt('far')} | {fmt('csi')} "
+                    f"| {fmt('event_conditioned_rmse')} | {fmt('peak_intensity_bias')} |"
+                )
+    if physical:
+        lines.extend(
+            [
+                "",
+                "## Original six-hour physical event definitions",
+                "",
+                "Hourly precipitation is clipped at zero and summed over +1--+6 h. "
+                "Wind speed is derived from u10/v10 and maximized over the same window. "
+                "Both grid-cell localization and whole-forecast-case detection are reported.",
+                "",
+                "| model | event | grid POD | grid FAR | grid CSI | case POD | case FAR | case CSI | tp6h RMSE | wind-max RMSE |",
+                "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|",
+            ]
+        )
+        for model in model_names:
+            for event, value in physical[model]["events"].items():
+                grid = value["grid_cell"]
+                case = value["forecast_case"]
+                components = value["components"]
+
+                def number(item: float | int | None) -> str:
+                    return "NA" if item is None else f"{float(item):.4f}"
+
+                tp_rmse = components.get("tp_6h_mm", {}).get("event_conditioned_rmse")
+                wind_rmse = components.get("max_wind_speed_ms", {}).get(
+                    "event_conditioned_rmse"
+                )
+                lines.append(
+                    f"| {model} | {event} | {number(grid['pod'])} | {number(grid['far'])} "
+                    f"| {number(grid['csi'])} | {number(case['pod'])} | {number(case['far'])} "
+                    f"| {number(case['csi'])} | {number(tp_rmse)} | {number(wind_rmse)} |"
+                )
     readme = destination / "README.md"
     readme.write_bytes(("\n".join(lines) + "\n").encode("utf-8"))
     files = [
@@ -134,21 +191,41 @@ def main() -> int:
     normalization = NormalizationStats.load(resolve(final_config["normalization_stats"]))
     forecast_hours = int(data_config["data"]["forecast_hours"])
     history_hours = int(data_config["data"]["history_hours"])
-    thresholds = derive_event_thresholds(
-        dataset,
-        variables,
-        normalization,
-        static_data.land_sea_mask,
-        list(config["threshold_years"]),
-        config["events"],
+    include_percentile = bool(config.get("include_percentile_events", True))
+    thresholds = (
+        derive_event_thresholds(
+            dataset,
+            variables,
+            normalization,
+            static_data.land_sea_mask,
+            list(config["threshold_years"]),
+            config["events"],
+        )
+        if include_percentile
+        else None
     )
     names = tuple(v9_common.FORECAST_NAMES)
     metric_accumulators = {
         name: ForecastMetricAccumulator(tuple(variables), forecast_hours) for name in names
     }
-    event_accumulators = {
-        name: make_event_accumulators(forecast_hours, thresholds) for name in names
-    }
+    event_accumulators = (
+        {name: make_event_accumulators(forecast_hours, thresholds) for name in names}
+        if thresholds is not None
+        else {}
+    )
+    physical_spec = config.get("physical_six_hour_events")
+    physical_accumulators = (
+        {
+            name: PhysicalSixHourEventAccumulator(
+                forecast_hours,
+                thresholds=physical_spec.get("thresholds"),
+                region_name=str(physical_spec.get("region", "sea")),
+            )
+            for name in names
+        }
+        if physical_spec
+        else {}
+    )
     loader = DataLoader(
         dataset,
         batch_size=int(config["evaluation"]["batch_size"]),
@@ -200,7 +277,14 @@ def main() -> int:
             )
             for name, prediction in predictions.items():
                 metric_accumulators[name].update(prediction, target, land_mask)
-                update_events(event_accumulators[name], prediction, target, sea_mask, variables)
+                if event_accumulators:
+                    update_events(
+                        event_accumulators[name], prediction, target, sea_mask, variables
+                    )
+                if physical_accumulators:
+                    physical_accumulators[name].update(
+                        prediction, target, sea_mask, variables
+                    )
             processed += int(target.shape[0])
             completed = batch_index + 1
             every = int(config["evaluation"]["progress_every_batches"])
@@ -215,14 +299,20 @@ def main() -> int:
         name: {event: accumulator.compute() for event, accumulator in values.items()}
         for name, values in event_accumulators.items()
     }
+    physical_event_metrics = {
+        name: accumulator.compute() for name, accumulator in physical_accumulators.items()
+    }
+    full_status = str(
+        config.get("scientific_status", "frozen_2025_event_metric_extension")
+    )
     result = {
-        "schema_version": 1,
+        "schema_version": 2 if physical_event_metrics else 1,
         "scientific_status": (
-            "bounded_event_pipeline_check" if bounded else "frozen_2025_event_metric_extension"
+            "bounded_event_pipeline_check" if bounded else full_status
         ),
         "contract": {
             "test_years_read": [2025],
-            "threshold_years": list(config["threshold_years"]),
+            "threshold_years": list(config.get("threshold_years", [])),
             "samples": processed,
             "batches": expected_batches,
             "checkpoint_and_predictions_unchanged": True,
@@ -233,6 +323,7 @@ def main() -> int:
         "event_thresholds": thresholds,
         "metric_replay": metrics,
         "event_metrics": event_metrics,
+        "physical_six_hour_event_metrics": physical_event_metrics,
         "elapsed_seconds": time.perf_counter() - started,
     }
     output_dir = resolve(config["evaluation"]["output_dir"])

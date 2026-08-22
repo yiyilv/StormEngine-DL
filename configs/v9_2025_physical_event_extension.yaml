@@ -1,0 +1,26 @@
+protocol: v9-2025-post-freeze-original-physical-events-v1
+scientific_status: frozen_2025_original_physical_event_extension
+
+final_test_config: configs/v9_2025_final_test.yaml
+frozen_benchmark: results/v9_2025_final_test/benchmark.json
+frozen_benchmark_sha256: f44a9425132c6f405764efab87c53760c2f197499c6213294517690916958f5a
+
+# The original project thresholds are fixed physical definitions, not values
+# selected from the 2025 test distribution. Existing percentile-event results
+# remain frozen in results/v9_2025_event_extension.
+include_percentile_events: false
+
+physical_six_hour_events:
+  region: sea
+  thresholds:
+    rain_6h_mm: 10.0
+    storm_rain_6h_mm: 30.0
+    extreme_rain_6h_mm: 50.0
+    strong_wind_ms: 15.0
+    extreme_wind_ms: 20.0
+
+evaluation:
+  batch_size: 16
+  progress_every_batches: 25
+  output_dir: artifacts/v9_2025_physical_event_extension
+  publish_dir: results/v9_2025_physical_event_extension

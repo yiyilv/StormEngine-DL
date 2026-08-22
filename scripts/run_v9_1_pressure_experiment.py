@@ -69,7 +69,16 @@ def specs() -> tuple[tuple[str, str, str], ...]:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "mode", choices=("events", "preflight", "smoke", "train", "validate", "test")
+        "mode",
+        choices=(
+            "events",
+            "physical-events",
+            "preflight",
+            "smoke",
+            "train",
+            "validate",
+            "test",
+        ),
     )
     parser.add_argument("--device", choices=("auto", "cuda", "cpu"), default="cuda")
     parser.add_argument(
@@ -85,6 +94,19 @@ def main() -> int:
                 sys.executable,
                 "-u",
                 str(ROOT / "scripts" / "evaluate_v9_2025_events.py"),
+                "--device",
+                args.device,
+            ]
+        )
+        return 0
+    if args.mode == "physical-events":
+        run(
+            [
+                sys.executable,
+                "-u",
+                str(ROOT / "scripts" / "evaluate_v9_2025_events.py"),
+                "--config",
+                str(ROOT / "configs" / "v9_2025_physical_event_extension.yaml"),
                 "--device",
                 args.device,
             ]

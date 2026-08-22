@@ -298,3 +298,13 @@ one-time 2017 comparison is therefore unlocked and documented in
 computer. It evaluates frozen V8 Seed 42, frozen V7-B, input-fair sparse
 persistence, and dense ERA5 persistence without any training or post-test
 hyperparameter changes.
+
+## Original six-hour physical events
+
+The frozen 2025 forecasts can be evaluated against the original project
+thresholds without retraining. The evaluator accumulates hourly precipitation
+over +1--+6 h, takes the maximum u10/v10 wind speed over the same window, and
+reports rain, wind, OR-storm, compound-storm, and extreme-weather POD/FAR/CSI
+for both event regions and whole forecast cases. See
+[`docs/ORIGINAL_PHYSICAL_EVENT_EVALUATION.md`](docs/ORIGINAL_PHYSICAL_EVENT_EVALUATION.md)
+for definitions, scope, and the Windows command.
