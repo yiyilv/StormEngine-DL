@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "scientific_status": "frozen_2025_event_metric_extension",
+  "test_years_read": [
+    2025
+  ],
+  "no_training_or_tuning": true,
+  "files": [
+    {
+      "path": "events.json",
+      "bytes": 109921,
+      "sha256_lf": "56d1b88e87ad5ce45756bb9230d546b006d84ecb59f52eb354683cc364f4e97f"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1796,
+      "sha256_lf": "1b569634b2a5cbd24ce597751dc16d40960bc2447770d966331793ad83cbdd47"
+    }
+  ]
+}

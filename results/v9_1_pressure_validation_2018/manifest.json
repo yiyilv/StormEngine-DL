@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "scientific_status": "frozen_2018_pressure_validation",
+  "evaluation_years": [
+    2018
+  ],
+  "test_years_read": [],
+  "files": [
+    {
+      "path": "benchmark.json",
+      "bytes": 162812,
+      "sha256_lf": "725201a343b1db7e09623fd027f3ba8c3d777963a75057897936f206d9f4ebbd"
+    },
+    {
+      "path": "README.md",
+      "bytes": 314,
+      "sha256_lf": "f70288a3dfb2a54df745a959c87dfcaa08d8db6269843f052df78aedf302fbe7"
+    }
+  ]
+}

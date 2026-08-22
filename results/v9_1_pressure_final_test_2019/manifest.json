@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "scientific_status": "one_time_2019_pressure_final_test",
+  "evaluation_years": [
+    2019
+  ],
+  "test_years_read": [
+    2019
+  ],
+  "files": [
+    {
+      "path": "benchmark.json",
+      "bytes": 163041,
+      "sha256_lf": "41aa43f1c14fa4a043b15a5c3019aaf331476eff74d896c3b53a68f8beb987bb"
+    },
+    {
+      "path": "README.md",
+      "bytes": 316,
+      "sha256_lf": "f504c3fe53ea1a1d543debd7aee6fe4d73c13fc54e755c30ffb77c5e1604cc9e"
+    }
+  ]
+}
