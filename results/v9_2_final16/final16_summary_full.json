@@ -1,0 +1,222 @@
+{
+  "scientific_status": "production_refit_no_internal_holdout",
+  "years_trained": [
+    2010,
+    2011,
+    2012,
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "epochs": 1,
+  "batches": 2922,
+  "samples": 46747,
+  "mean_train_loss": 0.5433993712169597,
+  "mean_forecast_loss": 0.4049719288272045,
+  "mean_event_loss": 0.13842744178464605,
+  "event_window_sampling": {
+    "training_windows": 46747,
+    "event_windows": 374,
+    "event_window_fraction": 0.008000513401929536,
+    "event_window_multiplier": 20.0
+  },
+  "elapsed_seconds": 559.0328047999647,
+  "checkpoint": "final.pt",
+  "contract": {
+    "version": "stormengine-v9-output-form-v1",
+    "temporal_mode": "autoregressive",
+    "output_mode": "field",
+    "history_hours": 12,
+    "forecast_hours": 6,
+    "input_variables": [
+      "msl",
+      "u10",
+      "v10",
+      "i10fg",
+      "t2m",
+      "tp"
+    ],
+    "target_variables": [
+      "msl",
+      "u10",
+      "v10",
+      "t2m",
+      "tp"
+    ],
+    "station_count": 390,
+    "cache_identity": "v9_cache_identity_2010_2025.json",
+    "train_years": [
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "validation_years": [],
+    "confirmation_years": [],
+    "locked_test_years": [],
+    "reconstruction_loss_weight": 0.0,
+    "learning_rate": 2e-05,
+    "weight_decay": 0.0001,
+    "warm_start": {
+      "checkpoint": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v9_1_pressure_ablation\\pressure_6var\\pressure_6var\\seed_42\\best.pt",
+      "sha256": "eca9d3d82ed7bae0b7760bc026a31b6ff684c2cffb4bb97474be7011ef0b2bd0",
+      "strict": true,
+      "source_contract": {
+        "version": "stormengine-v9-output-form-v1",
+        "temporal_mode": "autoregressive",
+        "output_mode": "field",
+        "history_hours": 12,
+        "forecast_hours": 6,
+        "input_variables": [
+          "msl",
+          "u10",
+          "v10",
+          "i10fg",
+          "t2m",
+          "tp"
+        ],
+        "target_variables": [
+          "msl",
+          "u10",
+          "v10",
+          "t2m",
+          "tp"
+        ],
+        "station_count": 390,
+        "cache_identity": "v9_cache_identity_2010_2025.json",
+        "train_years": [
+          2015,
+          2016,
+          2017
+        ],
+        "validation_years": [
+          2018
+        ],
+        "confirmation_years": [],
+        "locked_test_years": [
+          2019
+        ],
+        "reconstruction_loss_weight": 0.0,
+        "learning_rate": 0.0001,
+        "weight_decay": 0.0001,
+        "warm_start": {
+          "checkpoint": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v7_b_2010_2017\\best.pt",
+          "sha256": "2149960f7c71ebb88324aee033ed11fe903f2c34b4064eafdaa5ee95c677f991",
+          "loaded_tensor_count": 25,
+          "loaded_tensors": [
+            "encoder.grid_coords",
+            "encoder.point_mlp.0.bias",
+            "encoder.point_mlp.2.weight",
+            "encoder.point_mlp.2.bias",
+            "processor.cells.0.gates.weight",
+            "processor.cells.0.gates.bias",
+            "processor.cells.0.candidate.weight",
+            "processor.cells.0.candidate.bias",
+            "processor.cells.1.gates.weight",
+            "processor.cells.1.gates.bias",
+            "processor.cells.1.candidate.weight",
+            "processor.cells.1.candidate.bias",
+            "decoder.network.0.weight",
+            "decoder.network.0.bias",
+            "decoder.network.2.weight",
+            "decoder.network.2.bias",
+            "decoder.network.4.weight",
+            "decoder.network.4.bias",
+            "decoder.network.0.weight->reconstruction_decoder.network.0.weight",
+            "decoder.network.0.bias->reconstruction_decoder.network.0.bias",
+            "decoder.network.2.weight->reconstruction_decoder.network.2.weight",
+            "decoder.network.2.bias->reconstruction_decoder.network.2.bias",
+            "decoder.network.4.weight->reconstruction_decoder.network.4.weight",
+            "decoder.network.4.bias->reconstruction_decoder.network.4.bias",
+            "encoder.point_mlp.0.weight (column-mapped)"
+          ],
+          "skipped_source_tensors": [],
+          "source_input_variables": [
+            "u10",
+            "v10",
+            "i10fg",
+            "t2m",
+            "tp"
+          ],
+          "target_input_variables": [
+            "msl",
+            "u10",
+            "v10",
+            "i10fg",
+            "t2m",
+            "tp"
+          ],
+          "zero_initialized_new_variable_columns": [
+            "msl"
+          ],
+          "expanded_encoder": true
+        },
+        "development_protocol": "v9.1-pressure-ablation-2015-2019",
+        "variable_capabilities": {
+          "msl": {
+            "physical_station_manifest": "data/manifests/dpc_msl_20260801_20260808.json",
+            "include_virtual": true
+          }
+        },
+        "expected_variable_capability_counts": {
+          "msl": 164
+        }
+      }
+    },
+    "development_protocol": "v9.2-final-production-2010-2025",
+    "variable_capabilities": {
+      "msl": {
+        "physical_station_manifest": "data/manifests/dpc_msl_20260801_20260808.json",
+        "include_virtual": true
+      }
+    },
+    "expected_variable_capability_counts": {
+      "msl": 164
+    },
+    "event_aware": {
+      "enabled": true,
+      "region": "sea",
+      "classification_weight": 0.2,
+      "intensity_weight": 0.5,
+      "focal_gamma": 2.0,
+      "rain_temperature_mm": 5.0,
+      "wind_temperature_ms": 2.0,
+      "thresholds": {
+        "storm_rain_6h_mm": 30.0,
+        "extreme_rain_6h_mm": 50.0,
+        "strong_wind_ms": 15.0,
+        "extreme_wind_ms": 20.0
+      },
+      "oversampling": {
+        "enabled": true,
+        "event_window_multiplier": 20.0
+      }
+    },
+    "scientific_status": "production_refit_no_internal_holdout",
+    "fixed_refit_epochs": 1,
+    "no_internal_validation_or_test": true
+  },
+  "independent_accuracy_claim": false
+}

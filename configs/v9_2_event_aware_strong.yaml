@@ -1,0 +1,22 @@
+extends: v9_2_event_aware.yaml
+
+experiment: V9.2-Event-Aware-Strong-Pilot
+
+training:
+  output_dir: artifacts/v9_2_event_aware_strong
+  event_aware:
+    enabled: true
+    region: sea
+    classification_weight: 0.20
+    intensity_weight: 0.50
+    focal_gamma: 2.0
+    rain_temperature_mm: 5.0
+    wind_temperature_ms: 2.0
+    thresholds:
+      storm_rain_6h_mm: 30.0
+      extreme_rain_6h_mm: 50.0
+      strong_wind_ms: 15.0
+      extreme_wind_ms: 20.0
+    oversampling:
+      enabled: true
+      event_window_multiplier: 20.0

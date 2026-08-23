@@ -118,6 +118,44 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def load_exact_v9_checkpoint(
+    model: StormEngineV9ForecastModel,
+    checkpoint_path: Path,
+    *,
+    expected_sha256: str | None = None,
+    expected_input_variables: list[str] | None = None,
+) -> dict[str, object]:
+    """Strictly initialize a new experiment from a frozen V9 checkpoint."""
+    actual_sha256 = sha256(checkpoint_path)
+    if expected_sha256 and actual_sha256 != expected_sha256:
+        raise ValueError(
+            f"V9 checkpoint SHA-256 mismatch: expected {expected_sha256}, got {actual_sha256}"
+        )
+    checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+    source_contract = checkpoint.get("model_contract")
+    if not isinstance(source_contract, dict):
+        raise ValueError("V9 checkpoint is missing its frozen model contract")
+    expected_inputs = int(model.encoder.value_channels)
+    source_inputs = source_contract.get("input_variables", [])
+    if len(source_inputs) != expected_inputs:
+        raise ValueError("V9 checkpoint input-variable contract is incompatible")
+    if expected_input_variables is not None and source_inputs != expected_input_variables:
+        raise ValueError("V9 checkpoint input-variable names/order are incompatible")
+    if source_contract.get("forecast_hours") != model.forecast_steps:
+        raise ValueError("V9 checkpoint forecast horizon is incompatible")
+    if source_contract.get("temporal_mode") != model.temporal_mode:
+        raise ValueError("V9 checkpoint temporal mode is incompatible")
+    if source_contract.get("output_mode") != model.output_mode:
+        raise ValueError("V9 checkpoint output mode is incompatible")
+    model.load_state_dict(checkpoint["model_state_dict"], strict=True)
+    return {
+        "checkpoint": str(checkpoint_path),
+        "sha256": actual_sha256,
+        "strict": True,
+        "source_contract": source_contract,
+    }
+
+
 def warm_start_from_v7b(
     model: StormEngineV9ForecastModel,
     checkpoint_path: Path,

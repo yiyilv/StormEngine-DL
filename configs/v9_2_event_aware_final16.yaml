@@ -1,0 +1,20 @@
+extends: v9_2_event_aware_strong.yaml
+
+experiment: V9.2-Event-Aware-Final16-Production
+development_protocol: v9.2-final-production-2010-2025
+
+data:
+  train_years: [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
+  validation_years: []
+  confirmation_years: []
+  test_years: []
+
+training:
+  output_dir: artifacts/v9_2_event_aware_final16
+  fixed_refit_epochs: 1
+
+production_refit:
+  scientific_status: production_refit_no_internal_holdout
+  schedule_selected_from: artifacts/v9_2_event_aware_strong/formal/seed_42/train_summary.json
+  schedule_rule: one_complete_epoch_selected_before_all_year_refit
+  independent_accuracy_claim: false

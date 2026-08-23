@@ -14,20 +14,25 @@ from typing import Any
 
 import numpy as np
 import torch
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, WeightedRandomSampler
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from check_v7 import cache_dir, load_config, make_dataset, move, resolve  # noqa: E402
-from stormengine_dl.data import StaticFields  # noqa: E402
+from stormengine_dl.data import NormalizationStats, StaticFields  # noqa: E402
 from stormengine_dl.models.v9 import (  # noqa: E402
     StormEngineV9ForecastModel,
+    load_exact_v9_checkpoint,
     warm_start_from_v7b,
     warm_start_from_v7b_expanded_encoder,
 )
-from stormengine_dl.training import sea_weight_map, weighted_mse  # noqa: E402
+from stormengine_dl.training import (  # noqa: E402
+    physical_six_hour_event_loss,
+    sea_weight_map,
+    weighted_mse,
+)
 
 
 def require_development_protocol(config: dict[str, Any]) -> None:
@@ -45,6 +50,12 @@ def require_development_protocol(config: dict[str, Any]) -> None:
             "validation_years": [2018],
             "confirmation_years": [],
             "test_years": [2019],
+        },
+        "v9.2-event-aware-development-2015-2018": {
+            "train_years": [2015, 2016, 2017],
+            "validation_years": [2018],
+            "confirmation_years": [],
+            "test_years": [],
         },
     }
     if protocol not in protocols:
@@ -146,6 +157,110 @@ def model_contract(
         "expected_variable_capability_counts": dict(
             config["data"].get("expected_variable_capability_counts", {})
         ),
+        "event_aware": dict(config["training"].get("event_aware", {})),
+    }
+
+
+def event_context(
+    config: dict[str, Any], static: torch.Tensor, device: torch.device
+) -> dict[str, Any] | None:
+    settings = config["training"].get("event_aware", {})
+    if not bool(settings.get("enabled", False)):
+        return None
+    stats = NormalizationStats.load(resolve(config["data"]["normalization_stats"]))
+    normalization = {
+        name: (stats.variables[name].mean, stats.variables[name].std)
+        for name in ("u10", "v10", "tp")
+    }
+    region = str(settings.get("region", "sea"))
+    land = static[0, 0]
+    masks = {
+        "full": torch.ones_like(land, dtype=torch.bool),
+        "land": land >= 0.5,
+        "sea": land < 0.5,
+    }
+    if region not in masks:
+        raise ValueError("event_aware.region must be full, land, or sea")
+    return {
+        "settings": settings,
+        "normalization": normalization,
+        "spatial_mask": masks[region].to(device),
+    }
+
+
+def event_objective(
+    prediction: torch.Tensor,
+    target: torch.Tensor,
+    variables: list[str],
+    context: dict[str, Any] | None,
+) -> tuple[torch.Tensor, dict[str, torch.Tensor]]:
+    if context is None:
+        zero = prediction.sum() * 0.0
+        return zero, {
+            "event_loss": zero,
+            "event_classification_loss": zero,
+            "event_intensity_loss": zero,
+            "event_positive_rain_cells": zero,
+            "event_positive_wind_cells": zero,
+            "event_positive_compound_cells": zero,
+        }
+    settings = context["settings"]
+    return physical_six_hour_event_loss(
+        prediction,
+        target,
+        variables,
+        context["normalization"],
+        context["spatial_mask"],
+        thresholds=settings["thresholds"],
+        classification_weight=float(settings["classification_weight"]),
+        intensity_weight=float(settings["intensity_weight"]),
+        focal_gamma=float(settings.get("focal_gamma", 2.0)),
+        rain_temperature_mm=float(settings.get("rain_temperature_mm", 5.0)),
+        wind_temperature_ms=float(settings.get("wind_temperature_ms", 2.0)),
+    )
+
+
+def event_window_sample_weights(
+    dataset: Any,
+    variables: list[str],
+    context: dict[str, Any],
+    multiplier: float,
+) -> tuple[torch.Tensor, dict[str, int | float]]:
+    """Find event windows from training targets only; never reads validation/test."""
+    settings = context["settings"]
+    thresholds = settings["thresholds"]
+    normalization = context["normalization"]
+    spatial = context["spatial_mask"].detach().cpu().numpy().astype(bool)
+    u_index, v_index, tp_index = (variables.index(name) for name in ("u10", "v10", "tp"))
+    weights = np.ones(len(dataset), dtype=np.float64)
+    event_count = 0
+    for item, split_start in enumerate(dataset.window_starts):
+        global_start = int(dataset.global_indices[int(split_start)]) + dataset.history_hours
+        values = np.asarray(
+            dataset.target_grids[global_start : global_start + dataset.forecast_hours],
+            dtype=np.float32,
+        )
+        u = values[:, u_index] * normalization["u10"][1] + normalization["u10"][0]
+        v = values[:, v_index] * normalization["v10"][1] + normalization["v10"][0]
+        tp = values[:, tp_index] * normalization["tp"][1] + normalization["tp"][0]
+        tp_6h = np.maximum(tp, 0.0).sum(axis=0)
+        wind = np.hypot(u, v).max(axis=0)
+        event = (
+            (tp_6h > float(thresholds["extreme_rain_6h_mm"]))
+            | (wind > float(thresholds["extreme_wind_ms"]))
+            | (
+                (tp_6h > float(thresholds["storm_rain_6h_mm"]))
+                & (wind > float(thresholds["strong_wind_ms"]))
+            )
+        )
+        if bool(event[spatial].any()):
+            weights[item] = multiplier
+            event_count += 1
+    return torch.from_numpy(weights), {
+        "training_windows": len(dataset),
+        "event_windows": event_count,
+        "event_window_fraction": event_count / max(1, len(dataset)),
+        "event_window_multiplier": multiplier,
     }
 
 
@@ -156,11 +271,16 @@ def evaluate_validation(
     static: torch.Tensor,
     weights: torch.Tensor,
     max_batches: int,
+    variables: list[str],
+    event: dict[str, Any] | None,
 ) -> dict[str, float | int]:
     model.eval()
     forecast_total = 0.0
     reconstruction_total = 0.0
     count = 0
+    event_total = 0.0
+    event_classification_total = 0.0
+    event_intensity_total = 0.0
     with torch.no_grad():
         for raw in loader:
             if count >= max_batches:
@@ -168,6 +288,12 @@ def evaluate_validation(
             batch = move(raw, device)
             prediction, current = forward_components(model, batch, static)
             forecast_total += float(weighted_mse(prediction, batch["target"], weights))
+            event_loss, event_components = event_objective(
+                prediction, batch["target"], variables, event
+            )
+            event_total += float(event_loss)
+            event_classification_total += float(event_components["event_classification_loss"])
+            event_intensity_total += float(event_components["event_intensity_loss"])
             reconstruction_total += float(
                 weighted_mse(current, batch["current_target"], weights)
             )
@@ -178,6 +304,10 @@ def evaluate_validation(
         "validation_loss": forecast_total / count,
         "validation_reconstruction_loss": reconstruction_total / count,
         "validation_batches": count,
+        "validation_event_loss": event_total / count,
+        "validation_event_classification_loss": event_classification_total / count,
+        "validation_event_intensity_loss": event_intensity_total / count,
+        "validation_total_loss": (forecast_total + event_total) / count,
     }
 
 
@@ -191,6 +321,8 @@ def main() -> int:
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--device", choices=("auto", "cuda", "cpu"), default="auto")
     parser.add_argument("--warm-start")
+    parser.add_argument("--initial-checkpoint")
+    parser.add_argument("--initial-checkpoint-sha256")
     parser.add_argument("--resume")
     parser.add_argument("--epochs", type=int)
     parser.add_argument("--max-train-batches", type=int)
@@ -226,7 +358,16 @@ def main() -> int:
         raise ValueError("V9 requires the fixed 390-point V7-B station contract")
     model = make_model(config, args.temporal_mode, args.output_mode)
     transfer: dict[str, object] | None = None
-    if args.warm_start:
+    if args.warm_start and args.initial_checkpoint:
+        raise ValueError("use either --warm-start or --initial-checkpoint, not both")
+    if args.initial_checkpoint:
+        transfer = load_exact_v9_checkpoint(
+            model,
+            resolve(args.initial_checkpoint),
+            expected_sha256=args.initial_checkpoint_sha256,
+            expected_input_variables=list(config["data"]["input_variables"]),
+        )
+    elif args.warm_start:
         source_inputs = list(
             config["development"].get(
                 "warm_start_source_input_variables", config["data"]["input_variables"]
@@ -252,12 +393,31 @@ def main() -> int:
     static = StaticFields.load(resolve(config["data"]["static_fields"])).as_tensor()
     static = static.unsqueeze(0).to(device)
     weights = sea_weight_map(static[0, 0], float(config["training"]["sea_weight"])).to(device)
+    event = event_context(config, static, device)
     options = {
         "batch_size": int(config["training"]["batch_size"]),
         "num_workers": int(config["training"].get("num_workers", 0)),
         "pin_memory": device.type == "cuda",
     }
-    train_loader = DataLoader(train, shuffle=True, **options)
+    sampling_summary: dict[str, int | float] | None = None
+    sampler = None
+    sampling = config["training"].get("event_aware", {}).get("oversampling", {})
+    if event is not None and args.mode == "train" and bool(sampling.get("enabled", False)):
+        sample_weights, sampling_summary = event_window_sample_weights(
+            train,
+            list(config["data"]["target_variables"]),
+            event,
+            float(sampling.get("event_window_multiplier", 8.0)),
+        )
+        generator = torch.Generator().manual_seed(args.seed)
+        sampler = WeightedRandomSampler(
+            sample_weights,
+            num_samples=len(train),
+            replacement=True,
+            generator=generator,
+        )
+        print("Event-window sampling:", json.dumps(sampling_summary), flush=True)
+    train_loader = DataLoader(train, shuffle=sampler is None, sampler=sampler, **options)
     validation_loader = DataLoader(validation, shuffle=False, **options)
 
     if args.mode == "preflight":
@@ -266,6 +426,12 @@ def main() -> int:
             prediction, current = forward_components(model, batch, static)
             reconstruction_loss = weighted_mse(
                 current, batch["current_target"], weights
+            )
+            preflight_event_loss, preflight_event_components = event_objective(
+                prediction,
+                batch["target"],
+                list(config["data"]["target_variables"]),
+                event,
             )
         result = {
             "mode": "preflight",
@@ -279,6 +445,10 @@ def main() -> int:
             "current_reconstruction_shape": list(current.shape),
             "current_reconstruction_finite": bool(torch.isfinite(current).all()),
             "current_reconstruction_loss": float(reconstruction_loss),
+            "event_loss": float(preflight_event_loss),
+            "event_components": {
+                key: float(value) for key, value in preflight_event_components.items()
+            },
             "contract": contract,
             "variable_capability_counts": train.variable_capability_counts,
         }
@@ -300,6 +470,8 @@ def main() -> int:
             static,
             weights,
             int(args.max_validation_batches or len(validation_loader)),
+            list(config["data"]["target_variables"]),
+            event,
         )
         result = {
             "mode": "baseline",
@@ -363,6 +535,9 @@ def main() -> int:
         train_total = 0.0
         train_forecast_total = 0.0
         train_reconstruction_total = 0.0
+        train_event_total = 0.0
+        train_event_classification_total = 0.0
+        train_event_intensity_total = 0.0
         train_count = 0
         for raw in train_loader:
             if train_count >= max_train:
@@ -375,7 +550,17 @@ def main() -> int:
                 reconstruction_loss = weighted_mse(
                     current, batch["current_target"], weights
                 )
-                loss = forecast_loss + reconstruction_weight * reconstruction_loss
+                event_loss, event_components = event_objective(
+                    prediction,
+                    batch["target"],
+                    list(config["data"]["target_variables"]),
+                    event,
+                )
+                loss = (
+                    forecast_loss
+                    + reconstruction_weight * reconstruction_loss
+                    + event_loss
+                )
             scaler.scale(loss).backward()
             scaler.unscale_(optimizer)
             torch.nn.utils.clip_grad_norm_(
@@ -385,6 +570,13 @@ def main() -> int:
             train_total += float(loss.detach())
             train_forecast_total += float(forecast_loss.detach())
             train_reconstruction_total += float(reconstruction_loss.detach())
+            train_event_total += float(event_loss.detach())
+            train_event_classification_total += float(
+                event_components["event_classification_loss"].detach()
+            )
+            train_event_intensity_total += float(
+                event_components["event_intensity_loss"].detach()
+            )
             train_count += 1
             if progress_every and (train_count % progress_every == 0 or train_count == max_train):
                 print(
@@ -393,12 +585,22 @@ def main() -> int:
                     flush=True,
                 )
         validation_metrics = evaluate_validation(
-            model, validation_loader, device, static, weights, max_val
+            model,
+            validation_loader,
+            device,
+            static,
+            weights,
+            max_val,
+            list(config["data"]["target_variables"]),
+            event,
         )
         train_loss = train_total / max(1, train_count)
         train_forecast_loss = train_forecast_total / max(1, train_count)
         train_reconstruction_loss = train_reconstruction_total / max(1, train_count)
-        validation_loss = float(validation_metrics["validation_loss"])
+        train_event_loss = train_event_total / max(1, train_count)
+        train_event_classification_loss = train_event_classification_total / max(1, train_count)
+        train_event_intensity_loss = train_event_intensity_total / max(1, train_count)
+        validation_loss = float(validation_metrics["validation_total_loss"])
         validation_reconstruction_loss = float(
             validation_metrics["validation_reconstruction_loss"]
         )
@@ -413,7 +615,11 @@ def main() -> int:
             "train_loss": train_loss,
             "train_forecast_loss": train_forecast_loss,
             "train_reconstruction_loss": train_reconstruction_loss,
-            "validation_loss": validation_loss,
+            "train_event_loss": train_event_loss,
+            "train_event_classification_loss": train_event_classification_loss,
+            "train_event_intensity_loss": train_event_intensity_loss,
+            **validation_metrics,
+            "validation_selection_loss": validation_loss,
             "validation_reconstruction_loss": validation_reconstruction_loss,
             "learning_rate": float(optimizer.param_groups[0]["lr"]),
         }
@@ -437,8 +643,10 @@ def main() -> int:
         elapsed = time.perf_counter() - epoch_started
         print(
             f"Epoch {epoch + 1}/{epochs}: train={train_loss:.6f} "
-            f"forecast={train_forecast_loss:.6f} recon={train_reconstruction_loss:.6f} "
-            f"validation={validation_loss:.6f} val_recon={validation_reconstruction_loss:.6f} "
+            f"forecast={train_forecast_loss:.6f} event={train_event_loss:.6f} "
+            f"recon={train_reconstruction_loss:.6f} validation={validation_loss:.6f} "
+            f"val_event={validation_metrics['validation_event_loss']:.6f} "
+            f"val_recon={validation_reconstruction_loss:.6f} "
             f"best={best:.6f} "
             f"lr={optimizer.param_groups[0]['lr']:.2e} time={elapsed / 60:.1f}m",
             flush=True,
@@ -453,13 +661,14 @@ def main() -> int:
         "output_mode": args.output_mode,
         "seed": args.seed,
         "mode": args.mode,
-        "selection_metric": "validation_sea_weighted_mse",
+        "selection_metric": "validation_forecast_mse_plus_event_loss",
         "reconstruction_loss_weight": reconstruction_weight,
         "best_validation_loss": best,
-        "best_epoch": min(history, key=lambda row: row["validation_loss"])["epoch"],
+        "best_epoch": min(history, key=lambda row: row["validation_selection_loss"])["epoch"],
         "epochs_completed": len(history),
         "elapsed_seconds": time.perf_counter() - started_all,
         "contract": contract,
+        "event_window_sampling": sampling_summary,
         "history": history,
     }
     (output / f"{args.mode}_summary.json").write_text(

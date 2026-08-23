@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "scientific_status": "production_refit_no_internal_holdout",
+  "model": "V9.2-Event-Aware-Strong-Final16",
+  "years_trained": [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+  "epochs": 1,
+  "samples": 46747,
+  "batches": 2922,
+  "mean_train_loss": 0.5433993712169597,
+  "mean_forecast_loss": 0.4049719288272045,
+  "mean_event_loss": 0.13842744178464605,
+  "event_windows": 374,
+  "event_window_fraction": 0.008000513401929536,
+  "event_window_multiplier": 20.0,
+  "checkpoint": {
+    "local_path": "artifacts/v9_2_event_aware_final16/seed_42/final.pt",
+    "bytes": 2421073,
+    "sha256": "ea0afde51397bd88bc6aeca45e452cabadfd956821112c6828eb826fdc03e86f",
+    "uploaded_to_git": false
+  },
+  "development_decision": "results/v9_2_2018_development_decision/README.md",
+  "independent_accuracy_claim": false
+}

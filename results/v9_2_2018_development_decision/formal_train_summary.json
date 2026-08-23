@@ -1,0 +1,355 @@
+{
+  "variant": "formal",
+  "temporal_mode": "autoregressive",
+  "output_mode": "field",
+  "seed": 42,
+  "mode": "train",
+  "selection_metric": "validation_forecast_mse_plus_event_loss",
+  "reconstruction_loss_weight": 0.0,
+  "best_validation_loss": 0.3178112616470471,
+  "best_epoch": 1,
+  "epochs_completed": 9,
+  "elapsed_seconds": 1105.9244278999977,
+  "contract": {
+    "version": "stormengine-v9-output-form-v1",
+    "temporal_mode": "autoregressive",
+    "output_mode": "field",
+    "history_hours": 12,
+    "forecast_hours": 6,
+    "input_variables": [
+      "msl",
+      "u10",
+      "v10",
+      "i10fg",
+      "t2m",
+      "tp"
+    ],
+    "target_variables": [
+      "msl",
+      "u10",
+      "v10",
+      "t2m",
+      "tp"
+    ],
+    "station_count": 390,
+    "cache_identity": "v9_cache_identity_2010_2025.json",
+    "train_years": [
+      2015,
+      2016,
+      2017
+    ],
+    "validation_years": [
+      2018
+    ],
+    "confirmation_years": [],
+    "locked_test_years": [],
+    "reconstruction_loss_weight": 0.0,
+    "learning_rate": 2e-05,
+    "weight_decay": 0.0001,
+    "warm_start": {
+      "checkpoint": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v9_1_pressure_ablation\\pressure_6var\\pressure_6var\\seed_42\\best.pt",
+      "sha256": "eca9d3d82ed7bae0b7760bc026a31b6ff684c2cffb4bb97474be7011ef0b2bd0",
+      "strict": true,
+      "source_contract": {
+        "version": "stormengine-v9-output-form-v1",
+        "temporal_mode": "autoregressive",
+        "output_mode": "field",
+        "history_hours": 12,
+        "forecast_hours": 6,
+        "input_variables": [
+          "msl",
+          "u10",
+          "v10",
+          "i10fg",
+          "t2m",
+          "tp"
+        ],
+        "target_variables": [
+          "msl",
+          "u10",
+          "v10",
+          "t2m",
+          "tp"
+        ],
+        "station_count": 390,
+        "cache_identity": "v9_cache_identity_2010_2025.json",
+        "train_years": [
+          2015,
+          2016,
+          2017
+        ],
+        "validation_years": [
+          2018
+        ],
+        "confirmation_years": [],
+        "locked_test_years": [
+          2019
+        ],
+        "reconstruction_loss_weight": 0.0,
+        "learning_rate": 0.0001,
+        "weight_decay": 0.0001,
+        "warm_start": {
+          "checkpoint": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v7_b_2010_2017\\best.pt",
+          "sha256": "2149960f7c71ebb88324aee033ed11fe903f2c34b4064eafdaa5ee95c677f991",
+          "loaded_tensor_count": 25,
+          "loaded_tensors": [
+            "encoder.grid_coords",
+            "encoder.point_mlp.0.bias",
+            "encoder.point_mlp.2.weight",
+            "encoder.point_mlp.2.bias",
+            "processor.cells.0.gates.weight",
+            "processor.cells.0.gates.bias",
+            "processor.cells.0.candidate.weight",
+            "processor.cells.0.candidate.bias",
+            "processor.cells.1.gates.weight",
+            "processor.cells.1.gates.bias",
+            "processor.cells.1.candidate.weight",
+            "processor.cells.1.candidate.bias",
+            "decoder.network.0.weight",
+            "decoder.network.0.bias",
+            "decoder.network.2.weight",
+            "decoder.network.2.bias",
+            "decoder.network.4.weight",
+            "decoder.network.4.bias",
+            "decoder.network.0.weight->reconstruction_decoder.network.0.weight",
+            "decoder.network.0.bias->reconstruction_decoder.network.0.bias",
+            "decoder.network.2.weight->reconstruction_decoder.network.2.weight",
+            "decoder.network.2.bias->reconstruction_decoder.network.2.bias",
+            "decoder.network.4.weight->reconstruction_decoder.network.4.weight",
+            "decoder.network.4.bias->reconstruction_decoder.network.4.bias",
+            "encoder.point_mlp.0.weight (column-mapped)"
+          ],
+          "skipped_source_tensors": [],
+          "source_input_variables": [
+            "u10",
+            "v10",
+            "i10fg",
+            "t2m",
+            "tp"
+          ],
+          "target_input_variables": [
+            "msl",
+            "u10",
+            "v10",
+            "i10fg",
+            "t2m",
+            "tp"
+          ],
+          "zero_initialized_new_variable_columns": [
+            "msl"
+          ],
+          "expanded_encoder": true
+        },
+        "development_protocol": "v9.1-pressure-ablation-2015-2019",
+        "variable_capabilities": {
+          "msl": {
+            "physical_station_manifest": "data/manifests/dpc_msl_20260801_20260808.json",
+            "include_virtual": true
+          }
+        },
+        "expected_variable_capability_counts": {
+          "msl": 164
+        }
+      }
+    },
+    "development_protocol": "v9.2-event-aware-development-2015-2018",
+    "variable_capabilities": {
+      "msl": {
+        "physical_station_manifest": "data/manifests/dpc_msl_20260801_20260808.json",
+        "include_virtual": true
+      }
+    },
+    "expected_variable_capability_counts": {
+      "msl": 164
+    },
+    "event_aware": {
+      "enabled": true,
+      "region": "sea",
+      "classification_weight": 0.2,
+      "intensity_weight": 0.5,
+      "focal_gamma": 2.0,
+      "rain_temperature_mm": 5.0,
+      "wind_temperature_ms": 2.0,
+      "thresholds": {
+        "storm_rain_6h_mm": 30.0,
+        "extreme_rain_6h_mm": 50.0,
+        "strong_wind_ms": 15.0,
+        "extreme_wind_ms": 20.0
+      },
+      "oversampling": {
+        "enabled": true,
+        "event_window_multiplier": 20.0
+      }
+    }
+  },
+  "event_window_sampling": {
+    "training_windows": 8763,
+    "event_windows": 66,
+    "event_window_fraction": 0.007531667237247518,
+    "event_window_multiplier": 20.0
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.3275600568574928,
+      "train_forecast_loss": 0.2816728782860467,
+      "train_reconstruction_loss": 1.3909920099442892,
+      "train_event_loss": 0.04588717863855927,
+      "train_event_classification_loss": 0.14457504559071369,
+      "train_event_intensity_loss": 0.03394433759353732,
+      "validation_loss": 0.2983045153156981,
+      "validation_reconstruction_loss": 1.0558147550932044,
+      "validation_batches": 183,
+      "validation_event_loss": 0.01950674633134894,
+      "validation_event_classification_loss": 0.05975101609430467,
+      "validation_event_intensity_loss": 0.015113085711914333,
+      "validation_total_loss": 0.3178112616470471,
+      "validation_selection_loss": 0.3178112616470471,
+      "learning_rate": 2e-05
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.2893338918985024,
+      "train_forecast_loss": 0.2671495161162023,
+      "train_reconstruction_loss": 1.3767530072997087,
+      "train_event_loss": 0.022184376134891173,
+      "train_event_classification_loss": 0.07424467545436385,
+      "train_event_intensity_loss": 0.014670881265624386,
+      "validation_loss": 0.29883728770773266,
+      "validation_reconstruction_loss": 1.0571707185826016,
+      "validation_batches": 183,
+      "validation_event_loss": 0.020063216957389995,
+      "validation_event_classification_loss": 0.06126379293737404,
+      "validation_event_intensity_loss": 0.015620915941853341,
+      "validation_total_loss": 0.31890050466512265,
+      "validation_selection_loss": 0.31890050466512265,
+      "learning_rate": 2e-05
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.29150767912612346,
+      "train_forecast_loss": 0.2734264879195142,
+      "train_reconstruction_loss": 1.4082755410540713,
+      "train_event_loss": 0.01808119163224756,
+      "train_event_classification_loss": 0.05796358008631794,
+      "train_event_intensity_loss": 0.012976950844224646,
+      "validation_loss": 0.2971091249886432,
+      "validation_reconstruction_loss": 1.0568803429929285,
+      "validation_batches": 183,
+      "validation_event_loss": 0.021423901957979937,
+      "validation_event_classification_loss": 0.06533238213610677,
+      "validation_event_intensity_loss": 0.0167148503286591,
+      "validation_total_loss": 0.31853302694662317,
+      "validation_selection_loss": 0.31853302694662317,
+      "learning_rate": 2e-05
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.27567700247694976,
+      "train_forecast_loss": 0.26495110727574706,
+      "train_reconstruction_loss": 1.379313079980168,
+      "train_event_loss": 0.010725894818617509,
+      "train_event_classification_loss": 0.03530092934519009,
+      "train_event_intensity_loss": 0.00733141769713615,
+      "validation_loss": 0.2987281399997857,
+      "validation_reconstruction_loss": 1.0566057367403,
+      "validation_batches": 183,
+      "validation_event_loss": 0.020270597241561925,
+      "validation_event_classification_loss": 0.061973620546852584,
+      "validation_event_intensity_loss": 0.015751745165045794,
+      "validation_total_loss": 0.31899873724134764,
+      "validation_selection_loss": 0.31899873724134764,
+      "learning_rate": 2e-05
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.26397579824076084,
+      "train_forecast_loss": 0.2545301422857455,
+      "train_reconstruction_loss": 1.364054319741082,
+      "train_event_loss": 0.009445656109236698,
+      "train_event_classification_loss": 0.03021844996323903,
+      "train_event_intensity_loss": 0.006803932023480441,
+      "validation_loss": 0.29858980293238097,
+      "validation_reconstruction_loss": 1.056913320484057,
+      "validation_batches": 183,
+      "validation_event_loss": 0.02154511521362067,
+      "validation_event_classification_loss": 0.06498925894029249,
+      "validation_event_intensity_loss": 0.017094525686704398,
+      "validation_total_loss": 0.32013491814600165,
+      "validation_selection_loss": 0.32013491814600165,
+      "learning_rate": 2e-05
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.269799531865729,
+      "train_forecast_loss": 0.2610921534798006,
+      "train_reconstruction_loss": 1.4138582901362955,
+      "train_event_loss": 0.0087073780025135,
+      "train_event_classification_loss": 0.02777928630621058,
+      "train_event_intensity_loss": 0.006303041288674649,
+      "validation_loss": 0.300367206314711,
+      "validation_reconstruction_loss": 1.0573670882019188,
+      "validation_batches": 183,
+      "validation_event_loss": 0.021130457417633558,
+      "validation_event_classification_loss": 0.0639530374446265,
+      "validation_event_intensity_loss": 0.01667970019937213,
+      "validation_total_loss": 0.3214976637323445,
+      "validation_selection_loss": 0.3214976637323445,
+      "learning_rate": 1e-05
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.2660312608401053,
+      "train_forecast_loss": 0.25629219454951097,
+      "train_reconstruction_loss": 1.3708229525028355,
+      "train_event_loss": 0.009739066799630634,
+      "train_event_classification_loss": 0.03124042349535844,
+      "train_event_intensity_loss": 0.006981964065636372,
+      "validation_loss": 0.29954452208075366,
+      "validation_reconstruction_loss": 1.0565754595350048,
+      "validation_batches": 183,
+      "validation_event_loss": 0.02117786914911472,
+      "validation_event_classification_loss": 0.06426340818660468,
+      "validation_event_intensity_loss": 0.016650375365559522,
+      "validation_total_loss": 0.3207223912298684,
+      "validation_selection_loss": 0.3207223912298684,
+      "learning_rate": 1e-05
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.25696035138718837,
+      "train_forecast_loss": 0.24889767430994633,
+      "train_reconstruction_loss": 1.3854551787359002,
+      "train_event_loss": 0.008062677042205542,
+      "train_event_classification_loss": 0.026263558165592057,
+      "train_event_intensity_loss": 0.0056199305747412455,
+      "validation_loss": 0.30021830013052364,
+      "validation_reconstruction_loss": 1.0555308637071827,
+      "validation_batches": 183,
+      "validation_event_loss": 0.020819607754075375,
+      "validation_event_classification_loss": 0.06327037897189393,
+      "validation_event_intensity_loss": 0.016331063430817402,
+      "validation_total_loss": 0.32103790788459896,
+      "validation_selection_loss": 0.32103790788459896,
+      "learning_rate": 1e-05
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.25613756454719677,
+      "train_forecast_loss": 0.24700049101544994,
+      "train_reconstruction_loss": 1.3781702651159606,
+      "train_event_loss": 0.009137073811990628,
+      "train_event_classification_loss": 0.03005736039862768,
+      "train_event_intensity_loss": 0.006251203228665533,
+      "validation_loss": 0.30004091226989454,
+      "validation_reconstruction_loss": 1.0550846244142356,
+      "validation_batches": 183,
+      "validation_event_loss": 0.020715051701598392,
+      "validation_event_classification_loss": 0.06286239574894587,
+      "validation_event_intensity_loss": 0.016285144688327455,
+      "validation_total_loss": 0.3207559639714929,
+      "validation_selection_loss": 0.3207559639714929,
+      "learning_rate": 1e-05
+    }
+  ]
+}

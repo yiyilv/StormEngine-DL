@@ -1,0 +1,39 @@
+extends: v9_1_pressure_6var.yaml
+
+experiment: V9.2-Event-Aware-6Var
+development_protocol: v9.2-event-aware-development-2015-2018
+
+data:
+  normalization_stats: data/normalization/era5_2010_2015.json
+  train_years: [2015, 2016, 2017]
+  validation_years: [2018]
+  confirmation_years: []
+  # 2019 was already exposed by V9.1 and cannot be reused as an independent test.
+  test_years: []
+
+training:
+  output_dir: artifacts/v9_2_event_aware
+  learning_rate: 0.00002
+  max_epochs: 40
+  early_stopping_patience: 8
+  progress_every_batches: 50
+  event_aware:
+    enabled: true
+    region: sea
+    classification_weight: 0.05
+    intensity_weight: 0.10
+    focal_gamma: 2.0
+    rain_temperature_mm: 5.0
+    wind_temperature_ms: 2.0
+    thresholds:
+      storm_rain_6h_mm: 30.0
+      extreme_rain_6h_mm: 50.0
+      strong_wind_ms: 15.0
+      extreme_wind_ms: 20.0
+    oversampling:
+      enabled: true
+      event_window_multiplier: 6.0
+
+development:
+  source_checkpoint: artifacts/v9_1_pressure_ablation/pressure_6var/pressure_6var/seed_42/best.pt
+  source_checkpoint_sha256: eca9d3d82ed7bae0b7760bc026a31b6ff684c2cffb4bb97474be7011ef0b2bd0
