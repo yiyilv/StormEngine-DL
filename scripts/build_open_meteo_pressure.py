@@ -54,10 +54,10 @@ def main() -> int:
     raw_dir = ROOT / args.raw_dir
     points = load_marine_points(ROOT / args.registry)
     batch = load_download_pressure_chunks(raw_dir, points)
-    if batch.values.shape != (169, 151, 1):
+    if batch.values.ndim != 3 or batch.values.shape[1:] != (151, 1):
         raise ValueError(f"Unexpected pressure tensor shape: {batch.values.shape}")
     if not batch.value_mask.all():
-        raise ValueError("Open-Meteo pressure_msl is not complete for all 169 x 151 cells")
+        raise ValueError("Open-Meteo pressure_msl is not complete for every requested hour and marine point")
     if not np.isfinite(batch.values).all():
         raise ValueError("Open-Meteo pressure tensor contains non-finite values")
 

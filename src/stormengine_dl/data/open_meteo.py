@@ -69,6 +69,22 @@ def sha256_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
 
 
+def _expected_times_from_wrapper(wrapper: dict[str, object], path: Path) -> np.ndarray:
+    parameters = wrapper.get("request_parameters", {})
+    if not isinstance(parameters, dict):
+        raise ValueError(f"Invalid request_parameters in {path}")
+    start = parameters.get("start_date")
+    end = parameters.get("end_date")
+    if not start or not end:
+        # Compatibility with the original published 2026-08-01--08 snapshot.
+        start, end = "2026-08-01", "2026-08-08"
+    first = np.datetime64(f"{start}T00")
+    last = np.datetime64(f"{end}T00")
+    if last < first:
+        raise ValueError(f"Invalid requested time range in {path}: {start}--{end}")
+    return np.arange(first, last + np.timedelta64(1, "h"), np.timedelta64(1, "h"))
+
+
 def wind_components(speed: np.ndarray, direction_degrees: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     radians = np.deg2rad(direction_degrees)
     return -speed * np.sin(radians), -speed * np.cos(radians)
@@ -83,9 +99,14 @@ def haversine_km(first: np.ndarray, second: np.ndarray) -> np.ndarray:
 
 def load_download_chunks(raw_dir: str | Path, points: Sequence[MarinePoint]) -> OpenMeteoBatch:
     """Merge validated raw chunks into the unnormalised common V7 contract."""
-    directory = Path(raw_dir); by_id: dict[str, dict[str, object]] = {}
+    directory = Path(raw_dir); by_id: dict[str, dict[str, object]] = {}; expected_times = None
     for path in sorted(directory.glob("chunk_*.json")):
         wrapper = json.loads(path.read_text(encoding="utf-8"))
+        chunk_times = _expected_times_from_wrapper(wrapper, path)
+        if expected_times is None:
+            expected_times = chunk_times
+        elif not np.array_equal(expected_times, chunk_times):
+            raise ValueError(f"Inconsistent requested time range in {path}")
         ids = list(wrapper["station_ids"]); responses = wrapper["response"]
         if isinstance(responses, dict): responses = [responses]
         if len(ids) != len(responses): raise ValueError(f"Response count mismatch in {path}")
@@ -95,14 +116,15 @@ def load_download_chunks(raw_dir: str | Path, points: Sequence[MarinePoint]) -> 
     expected_ids = tuple(point.station_id for point in points)
     if set(by_id) != set(expected_ids):
         raise ValueError(f"Open-Meteo coverage mismatch: missing={sorted(set(expected_ids)-set(by_id))}")
-    expected_times = np.arange(np.datetime64("2026-08-01T00"), np.datetime64("2026-08-08T01"), np.timedelta64(1, "h"))
-    values = np.zeros((169, len(points), 5), np.float32); mask = np.zeros_like(values, bool)
+    if expected_times is None:
+        raise ValueError(f"No Open-Meteo chunks found in {directory}")
+    values = np.zeros((len(expected_times), len(points), 5), np.float32); mask = np.zeros_like(values, bool)
     returned = np.zeros((len(points), 2), np.float32); elevation = np.full(len(points), np.nan, np.float32)
     for station, point in enumerate(points):
         response = by_id[point.station_id]; hourly = response["hourly"]
         times = np.asarray(hourly["time"], dtype="datetime64[h]")
         select = (times >= expected_times[0]) & (times <= expected_times[-1])
-        if not np.array_equal(times[select], expected_times): raise ValueError(f"Invalid 169-hour axis for {point.station_id}")
+        if not np.array_equal(times[select], expected_times): raise ValueError(f"Invalid requested hourly axis for {point.station_id}")
         arrays = {name: np.asarray(hourly[name], dtype=np.float64)[select] for name in SOURCE_VARIABLES}
         wind_valid = np.isfinite(arrays["wind_speed_10m"]) & np.isfinite(arrays["wind_direction_10m"])
         u, v = wind_components(arrays["wind_speed_10m"], arrays["wind_direction_10m"])
@@ -126,8 +148,14 @@ def load_download_pressure_chunks(
     """
     directory = Path(raw_dir)
     by_id: dict[str, dict[str, object]] = {}
+    expected_times = None
     for path in sorted(directory.glob("chunk_*.json")):
         wrapper = json.loads(path.read_text(encoding="utf-8"))
+        chunk_times = _expected_times_from_wrapper(wrapper, path)
+        if expected_times is None:
+            expected_times = chunk_times
+        elif not np.array_equal(expected_times, chunk_times):
+            raise ValueError(f"Inconsistent requested time range in {path}")
         requested = str(wrapper.get("request_parameters", {}).get("hourly", "")).split(",")
         if "pressure_msl" not in requested:
             raise ValueError(f"Raw chunk was not requested with pressure_msl: {path}")
@@ -150,12 +178,9 @@ def load_download_pressure_chunks(
         raise ValueError(
             f"Open-Meteo pressure coverage mismatch: missing={sorted(set(expected_ids) - set(by_id))}"
         )
-    expected_times = np.arange(
-        np.datetime64("2026-08-01T00"),
-        np.datetime64("2026-08-08T01"),
-        np.timedelta64(1, "h"),
-    )
-    values = np.zeros((169, len(points), 1), np.float32)
+    if expected_times is None:
+        raise ValueError(f"No Open-Meteo chunks found in {directory}")
+    values = np.zeros((len(expected_times), len(points), 1), np.float32)
     mask = np.zeros_like(values, bool)
     returned = np.zeros((len(points), 2), np.float32)
     elevation = np.full(len(points), np.nan, np.float32)
@@ -165,7 +190,7 @@ def load_download_pressure_chunks(
         times = np.asarray(hourly["time"], dtype="datetime64[h]")
         select = (times >= expected_times[0]) & (times <= expected_times[-1])
         if not np.array_equal(times[select], expected_times):
-            raise ValueError(f"Invalid 169-hour pressure axis for {point.station_id}")
+            raise ValueError(f"Invalid requested hourly pressure axis for {point.station_id}")
         pressure = np.asarray(hourly["pressure_msl"], dtype=np.float64)[select]
         valid = np.isfinite(pressure)
         values[:, station, 0][valid] = pressure[valid]

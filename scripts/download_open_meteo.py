@@ -51,11 +51,20 @@ def main() -> int:
     parser = argparse.ArgumentParser(); parser.add_argument("--mode", choices=("sample", "full"), required=True)
     parser.add_argument("--registry", default="data/stations_registry.csv"); parser.add_argument("--chunk-size", type=int, default=25)
     parser.add_argument("--timeout", type=int, default=120); parser.add_argument("--retries", type=int, default=4)
-    parser.add_argument("--output-dir", default="data_external/open_meteo/raw/20260801_20260808/icon2i")
+    parser.add_argument("--start-date", default="2026-08-01", help="First UTC date (YYYY-MM-DD)")
+    parser.add_argument("--end-date", help="Last UTC endpoint date; defaults to the start date in sample mode and 2026-08-08 in full mode")
+    parser.add_argument("--output-dir", help="Defaults to data_external/open_meteo/raw/<YYYYMMDD_YYYYMMDD>/icon2i")
     args = parser.parse_args(); points = load_marine_points(ROOT / args.registry)
-    start, end = ("2026-08-01", "2026-08-01") if args.mode == "sample" else ("2026-08-01", "2026-08-08")
+    start = args.start_date
+    end = args.end_date or (start if args.mode == "sample" else "2026-08-08")
+    start_value = datetime.strptime(start, "%Y-%m-%d")
+    end_value = datetime.strptime(end, "%Y-%m-%d")
+    if end_value < start_value:
+        raise ValueError("--end-date must not precede --start-date")
     selected = [points[0], points[len(points)//2], points[-1]] if args.mode == "sample" else list(points)
-    output = ROOT / args.output_dir / ("sample" if args.mode == "sample" else "")
+    period = f"{start.replace('-', '')}_{end.replace('-', '')}"
+    output_dir = args.output_dir or f"data_external/open_meteo/raw/{period}/icon2i"
+    output = ROOT / output_dir / ("sample" if args.mode == "sample" else "")
     output.mkdir(parents=True, exist_ok=True)
     coordinate_bytes = coordinate_manifest_bytes(points); (output / "coordinates.csv").write_bytes(coordinate_bytes)
     chunks = [selected[i:i+args.chunk_size] for i in range(0, len(selected), args.chunk_size)]; records=[]

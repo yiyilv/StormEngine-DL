@@ -59,7 +59,11 @@ class OpenMeteoTests(unittest.TestCase):
                     }
                 )
             wrapper = {
-                "request_parameters": {"hourly": "temperature_2m,pressure_msl"},
+                "request_parameters": {
+                    "hourly": "temperature_2m,pressure_msl",
+                    "start_date": "2026-08-01",
+                    "end_date": "2026-08-08",
+                },
                 "station_ids": [point.station_id for point in points],
                 "response": responses,
             }
@@ -69,6 +73,46 @@ class OpenMeteoTests(unittest.TestCase):
             self.assertEqual(batch.values.shape, (169, 151, 1))
             self.assertTrue(batch.value_mask.all())
             self.assertEqual(str(batch.times[-1]), "2026-08-08T00:00:00.000000000")
+
+    def test_pressure_loader_accepts_arbitrary_requested_period(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            raw = Path(directory)
+            points = tuple(
+                MarinePoint(index, f"S{index:03}", 42.0, 15.0, "test")
+                for index in range(151)
+            )
+            returned_times = np.arange(
+                np.datetime64("2026-08-16T00"),
+                np.datetime64("2026-08-20T00"),
+                np.timedelta64(1, "h"),
+            )
+            responses = [
+                {
+                    "latitude": 42.0,
+                    "longitude": 15.0,
+                    "elevation": 0.0,
+                    "hourly_units": {"pressure_msl": "hPa"},
+                    "hourly": {
+                        "time": [str(value)[:16] for value in returned_times],
+                        "pressure_msl": [1002.0] * len(returned_times),
+                    },
+                }
+                for _ in points
+            ]
+            wrapper = {
+                "request_parameters": {
+                    "hourly": "pressure_msl",
+                    "start_date": "2026-08-16",
+                    "end_date": "2026-08-19",
+                },
+                "station_ids": [point.station_id for point in points],
+                "response": responses,
+            }
+            (raw / "chunk_000.json").write_text(json.dumps(wrapper), encoding="utf-8")
+            batch = load_download_pressure_chunks(raw, points)
+            self.assertEqual(batch.values.shape, (73, 151, 1))
+            self.assertEqual(str(batch.times[0]), "2026-08-16T00:00:00.000000000")
+            self.assertEqual(str(batch.times[-1]), "2026-08-19T00:00:00.000000000")
 
 
 if __name__=="__main__": unittest.main()
