@@ -1,0 +1,2627 @@
+{
+  "schema_version": 1,
+  "scientific_status": "independent_2026_era5t_operational_evaluation",
+  "contract": {
+    "input_period": [
+      "2026-08-01T00:00:00.000000000",
+      "2026-08-08T00:00:00.000000000"
+    ],
+    "forecast_windows": 152,
+    "history_hours": 12,
+    "forecast_hours": 6,
+    "input_variables": [
+      "msl",
+      "u10",
+      "v10",
+      "i10fg",
+      "t2m",
+      "tp"
+    ],
+    "target_variables": [
+      "msl",
+      "u10",
+      "v10",
+      "t2m",
+      "tp"
+    ],
+    "target_reference": "ERA5T reanalysis, not direct station truth",
+    "years_in_final_training": [
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "2026_excluded_from_training": true
+  },
+  "checkpoints": {
+    "v9_2_final16": {
+      "path": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v9_2_event_aware_final16\\seed_42\\final.pt",
+      "sha256": "ea0afde51397bd88bc6aeca45e452cabadfd956821112c6828eb826fdc03e86f",
+      "contract": {
+        "version": "stormengine-v9-output-form-v1",
+        "temporal_mode": "autoregressive",
+        "output_mode": "field",
+        "history_hours": 12,
+        "forecast_hours": 6,
+        "input_variables": [
+          "msl",
+          "u10",
+          "v10",
+          "i10fg",
+          "t2m",
+          "tp"
+        ],
+        "target_variables": [
+          "msl",
+          "u10",
+          "v10",
+          "t2m",
+          "tp"
+        ],
+        "station_count": 390,
+        "cache_identity": "v9_cache_identity_2010_2025.json",
+        "train_years": [
+          2010,
+          2011,
+          2012,
+          2013,
+          2014,
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "validation_years": [],
+        "confirmation_years": [],
+        "locked_test_years": [],
+        "reconstruction_loss_weight": 0.0,
+        "learning_rate": 2e-05,
+        "weight_decay": 0.0001,
+        "warm_start": {
+          "checkpoint": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v9_1_pressure_ablation\\pressure_6var\\pressure_6var\\seed_42\\best.pt",
+          "sha256": "eca9d3d82ed7bae0b7760bc026a31b6ff684c2cffb4bb97474be7011ef0b2bd0",
+          "strict": true,
+          "source_contract": {
+            "version": "stormengine-v9-output-form-v1",
+            "temporal_mode": "autoregressive",
+            "output_mode": "field",
+            "history_hours": 12,
+            "forecast_hours": 6,
+            "input_variables": [
+              "msl",
+              "u10",
+              "v10",
+              "i10fg",
+              "t2m",
+              "tp"
+            ],
+            "target_variables": [
+              "msl",
+              "u10",
+              "v10",
+              "t2m",
+              "tp"
+            ],
+            "station_count": 390,
+            "cache_identity": "v9_cache_identity_2010_2025.json",
+            "train_years": [
+              2015,
+              2016,
+              2017
+            ],
+            "validation_years": [
+              2018
+            ],
+            "confirmation_years": [],
+            "locked_test_years": [
+              2019
+            ],
+            "reconstruction_loss_weight": 0.0,
+            "learning_rate": 0.0001,
+            "weight_decay": 0.0001,
+            "warm_start": {
+              "checkpoint": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v7_b_2010_2017\\best.pt",
+              "sha256": "2149960f7c71ebb88324aee033ed11fe903f2c34b4064eafdaa5ee95c677f991",
+              "loaded_tensor_count": 25,
+              "loaded_tensors": [
+                "encoder.grid_coords",
+                "encoder.point_mlp.0.bias",
+                "encoder.point_mlp.2.weight",
+                "encoder.point_mlp.2.bias",
+                "processor.cells.0.gates.weight",
+                "processor.cells.0.gates.bias",
+                "processor.cells.0.candidate.weight",
+                "processor.cells.0.candidate.bias",
+                "processor.cells.1.gates.weight",
+                "processor.cells.1.gates.bias",
+                "processor.cells.1.candidate.weight",
+                "processor.cells.1.candidate.bias",
+                "decoder.network.0.weight",
+                "decoder.network.0.bias",
+                "decoder.network.2.weight",
+                "decoder.network.2.bias",
+                "decoder.network.4.weight",
+                "decoder.network.4.bias",
+                "decoder.network.0.weight->reconstruction_decoder.network.0.weight",
+                "decoder.network.0.bias->reconstruction_decoder.network.0.bias",
+                "decoder.network.2.weight->reconstruction_decoder.network.2.weight",
+                "decoder.network.2.bias->reconstruction_decoder.network.2.bias",
+                "decoder.network.4.weight->reconstruction_decoder.network.4.weight",
+                "decoder.network.4.bias->reconstruction_decoder.network.4.bias",
+                "encoder.point_mlp.0.weight (column-mapped)"
+              ],
+              "skipped_source_tensors": [],
+              "source_input_variables": [
+                "u10",
+                "v10",
+                "i10fg",
+                "t2m",
+                "tp"
+              ],
+              "target_input_variables": [
+                "msl",
+                "u10",
+                "v10",
+                "i10fg",
+                "t2m",
+                "tp"
+              ],
+              "zero_initialized_new_variable_columns": [
+                "msl"
+              ],
+              "expanded_encoder": true
+            },
+            "development_protocol": "v9.1-pressure-ablation-2015-2019",
+            "variable_capabilities": {
+              "msl": {
+                "physical_station_manifest": "data/manifests/dpc_msl_20260801_20260808.json",
+                "include_virtual": true
+              }
+            },
+            "expected_variable_capability_counts": {
+              "msl": 164
+            }
+          }
+        },
+        "development_protocol": "v9.2-final-production-2010-2025",
+        "variable_capabilities": {
+          "msl": {
+            "physical_station_manifest": "data/manifests/dpc_msl_20260801_20260808.json",
+            "include_virtual": true
+          }
+        },
+        "expected_variable_capability_counts": {
+          "msl": 164
+        },
+        "event_aware": {
+          "enabled": true,
+          "region": "sea",
+          "classification_weight": 0.2,
+          "intensity_weight": 0.5,
+          "focal_gamma": 2.0,
+          "rain_temperature_mm": 5.0,
+          "wind_temperature_ms": 2.0,
+          "thresholds": {
+            "storm_rain_6h_mm": 30.0,
+            "extreme_rain_6h_mm": 50.0,
+            "strong_wind_ms": 15.0,
+            "extreme_wind_ms": 20.0
+          },
+          "oversampling": {
+            "enabled": true,
+            "event_window_multiplier": 20.0
+          }
+        },
+        "scientific_status": "production_refit_no_internal_holdout",
+        "fixed_refit_epochs": 1,
+        "no_internal_validation_or_test": true
+      }
+    },
+    "v9_1_frozen": {
+      "path": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v9_1_pressure_ablation\\pressure_6var\\pressure_6var\\seed_42\\best.pt",
+      "sha256": "eca9d3d82ed7bae0b7760bc026a31b6ff684c2cffb4bb97474be7011ef0b2bd0",
+      "contract": {
+        "version": "stormengine-v9-output-form-v1",
+        "temporal_mode": "autoregressive",
+        "output_mode": "field",
+        "history_hours": 12,
+        "forecast_hours": 6,
+        "input_variables": [
+          "msl",
+          "u10",
+          "v10",
+          "i10fg",
+          "t2m",
+          "tp"
+        ],
+        "target_variables": [
+          "msl",
+          "u10",
+          "v10",
+          "t2m",
+          "tp"
+        ],
+        "station_count": 390,
+        "cache_identity": "v9_cache_identity_2010_2025.json",
+        "train_years": [
+          2015,
+          2016,
+          2017
+        ],
+        "validation_years": [
+          2018
+        ],
+        "confirmation_years": [],
+        "locked_test_years": [
+          2019
+        ],
+        "reconstruction_loss_weight": 0.0,
+        "learning_rate": 0.0001,
+        "weight_decay": 0.0001,
+        "warm_start": {
+          "checkpoint": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v7_b_2010_2017\\best.pt",
+          "sha256": "2149960f7c71ebb88324aee033ed11fe903f2c34b4064eafdaa5ee95c677f991",
+          "loaded_tensor_count": 25,
+          "loaded_tensors": [
+            "encoder.grid_coords",
+            "encoder.point_mlp.0.bias",
+            "encoder.point_mlp.2.weight",
+            "encoder.point_mlp.2.bias",
+            "processor.cells.0.gates.weight",
+            "processor.cells.0.gates.bias",
+            "processor.cells.0.candidate.weight",
+            "processor.cells.0.candidate.bias",
+            "processor.cells.1.gates.weight",
+            "processor.cells.1.gates.bias",
+            "processor.cells.1.candidate.weight",
+            "processor.cells.1.candidate.bias",
+            "decoder.network.0.weight",
+            "decoder.network.0.bias",
+            "decoder.network.2.weight",
+            "decoder.network.2.bias",
+            "decoder.network.4.weight",
+            "decoder.network.4.bias",
+            "decoder.network.0.weight->reconstruction_decoder.network.0.weight",
+            "decoder.network.0.bias->reconstruction_decoder.network.0.bias",
+            "decoder.network.2.weight->reconstruction_decoder.network.2.weight",
+            "decoder.network.2.bias->reconstruction_decoder.network.2.bias",
+            "decoder.network.4.weight->reconstruction_decoder.network.4.weight",
+            "decoder.network.4.bias->reconstruction_decoder.network.4.bias",
+            "encoder.point_mlp.0.weight (column-mapped)"
+          ],
+          "skipped_source_tensors": [],
+          "source_input_variables": [
+            "u10",
+            "v10",
+            "i10fg",
+            "t2m",
+            "tp"
+          ],
+          "target_input_variables": [
+            "msl",
+            "u10",
+            "v10",
+            "i10fg",
+            "t2m",
+            "tp"
+          ],
+          "zero_initialized_new_variable_columns": [
+            "msl"
+          ],
+          "expanded_encoder": true
+        },
+        "development_protocol": "v9.1-pressure-ablation-2015-2019",
+        "variable_capabilities": {
+          "msl": {
+            "physical_station_manifest": "data/manifests/dpc_msl_20260801_20260808.json",
+            "include_virtual": true
+          }
+        },
+        "expected_variable_capability_counts": {
+          "msl": 164
+        }
+      }
+    }
+  },
+  "input_coverage": {
+    "overall_valid_fraction": 0.5535427097557275,
+    "physical_valid_fraction": 0.2714713673838231,
+    "marine_valid_fraction": 1.0,
+    "by_variable": {
+      "msl": {
+        "valid_fraction": 0.4204521316947352,
+        "valid_cells": 27712
+      },
+      "u10": {
+        "valid_fraction": 0.4908359884691246,
+        "valid_cells": 32351
+      },
+      "v10": {
+        "valid_fraction": 0.4908359884691246,
+        "valid_cells": 32351
+      },
+      "i10fg": {
+        "valid_fraction": 0.4409346077985131,
+        "valid_cells": 29062
+      },
+      "t2m": {
+        "valid_fraction": 0.7236231224396905,
+        "valid_cells": 47694
+      },
+      "tp": {
+        "valid_fraction": 0.7545744196631771,
+        "valid_cells": 49734
+      }
+    },
+    "pressure_sources": {
+      "physical_dpc": {
+        "path": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\data_external\\meteohub\\processed\\20260801_20260808\\official_hourly_physical_msl.npz",
+        "stations": 239,
+        "valid_fraction": 0.054294273476764625,
+        "valid_cells": 2193
+      },
+      "marine_open_meteo": {
+        "path": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\data_external\\open_meteo\\processed\\20260801_20260808\\icon2i_hourly_marine_pressure.npz",
+        "stations": 151,
+        "valid_fraction": 1.0,
+        "valid_cells": 25519
+      }
+    }
+  },
+  "field_metrics": {
+    "v9_2_final16": {
+      "aggregate": {
+        "full": {
+          "msl": {
+            "mae": 0.8308523970040661,
+            "rmse": 1.0513261517721892
+          },
+          "u10": {
+            "mae": 1.0516971516186124,
+            "rmse": 1.356443604140839
+          },
+          "v10": {
+            "mae": 1.0314048922445935,
+            "rmse": 1.3778617825242958
+          },
+          "t2m": {
+            "mae": 1.5916644462954679,
+            "rmse": 2.1983913006352758
+          },
+          "tp": {
+            "mae": 0.03263580428266748,
+            "rmse": 0.12220161038164311
+          }
+        },
+        "land": {
+          "msl": {
+            "mae": 0.934434880817447,
+            "rmse": 1.1757597333920273
+          },
+          "u10": {
+            "mae": 0.9167675312225734,
+            "rmse": 1.1720139022607203
+          },
+          "v10": {
+            "mae": 0.8747359351205535,
+            "rmse": 1.1300578103780088
+          },
+          "t2m": {
+            "mae": 2.204640273752833,
+            "rmse": 2.773278870789069
+          },
+          "tp": {
+            "mae": 0.04628296158124347,
+            "rmse": 0.15996316855983347
+          }
+        },
+        "sea": {
+          "msl": {
+            "mae": 0.6936056059513366,
+            "rmse": 0.8591257273081214
+          },
+          "u10": {
+            "mae": 1.2304788986433641,
+            "rmse": 1.5677425749071459
+          },
+          "v10": {
+            "mae": 1.2389912604339468,
+            "rmse": 1.6498345585823881
+          },
+          "t2m": {
+            "mae": 0.7794714749144596,
+            "rmse": 1.0226796792272466
+          },
+          "tp": {
+            "mae": 0.01455332086205429,
+            "rmse": 0.02855490862156259
+          }
+        }
+      },
+      "by_lead_hour": {
+        "1": {
+          "full": {
+            "msl": {
+              "mae": 0.7873726560358416,
+              "rmse": 0.9973468937868664
+            },
+            "u10": {
+              "mae": 1.0201467371940025,
+              "rmse": 1.3167071022955528
+            },
+            "v10": {
+              "mae": 1.024416949841185,
+              "rmse": 1.3720841264125898
+            },
+            "t2m": {
+              "mae": 1.5859809745736173,
+              "rmse": 2.2049340008274383
+            },
+            "tp": {
+              "mae": 0.031624973573121426,
+              "rmse": 0.12220017821638035
+            }
+          },
+          "land": {
+            "msl": {
+              "mae": 0.8675752753243718,
+              "rmse": 1.0931442097733746
+            },
+            "u10": {
+              "mae": 0.8957291321344341,
+              "rmse": 1.1452058945096177
+            },
+            "v10": {
+              "mae": 0.853964196975275,
+              "rmse": 1.0973279609327542
+            },
+            "t2m": {
+              "mae": 2.195842753423512,
+              "rmse": 2.7855374688717864
+            },
+            "tp": {
+              "mae": 0.04322053664616572,
+              "rmse": 0.1595809815413709
+            }
+          },
+          "sea": {
+            "msl": {
+              "mae": 0.681104185478539,
+              "rmse": 0.8540209439860209
+            },
+            "u10": {
+              "mae": 1.1850000638979303,
+              "rmse": 1.5143184895149109
+            },
+            "v10": {
+              "mae": 1.250266847388516,
+              "rmse": 1.6678156552200982
+            },
+            "t2m": {
+              "mae": 0.777914117597507,
+              "rmse": 1.0112201870581548
+            },
+            "tp": {
+              "mae": 0.016260852501337734,
+              "rmse": 0.031247167161286532
+            }
+          }
+        },
+        "2": {
+          "full": {
+            "msl": {
+              "mae": 0.7842373155901117,
+              "rmse": 0.9867175041220111
+            },
+            "u10": {
+              "mae": 1.0217377036236523,
+              "rmse": 1.322282690308043
+            },
+            "v10": {
+              "mae": 1.0044073904129716,
+              "rmse": 1.3411980236902445
+            },
+            "t2m": {
+              "mae": 1.537851863598734,
+              "rmse": 2.1198135083126535
+            },
+            "tp": {
+              "mae": 0.03234805171929697,
+              "rmse": 0.1222261732136087
+            }
+          },
+          "land": {
+            "msl": {
+              "mae": 0.8590644656659421,
+              "rmse": 1.0802683621019302
+            },
+            "u10": {
+              "mae": 0.8950213845288287,
+              "rmse": 1.147474325524969
+            },
+            "v10": {
+              "mae": 0.8478600758606183,
+              "rmse": 1.0922518085146347
+            },
+            "t2m": {
+              "mae": 2.115002647842689,
+              "rmse": 2.66872455241713
+            },
+            "tp": {
+              "mae": 0.045486047681512855,
+              "rmse": 0.1598448947029029
+            }
+          },
+          "sea": {
+            "msl": {
+              "mae": 0.6850913417396363,
+              "rmse": 0.8469937625670154
+            },
+            "u10": {
+              "mae": 1.1896368264242936,
+              "rmse": 1.5233119538282658
+            },
+            "v10": {
+              "mae": 1.2118325821948395,
+              "rmse": 1.612914955941745
+            },
+            "t2m": {
+              "mae": 0.7731270744754938,
+              "rmse": 1.005421016149253
+            },
+            "tp": {
+              "mae": 0.014940207069360932,
+              "rmse": 0.029655686932843907
+            }
+          }
+        },
+        "3": {
+          "full": {
+            "msl": {
+              "mae": 0.8098538235798167,
+              "rmse": 1.0186793706010715
+            },
+            "u10": {
+              "mae": 1.0346690785390058,
+              "rmse": 1.3388088178118902
+            },
+            "v10": {
+              "mae": 1.0092742113057191,
+              "rmse": 1.3444302934834877
+            },
+            "t2m": {
+              "mae": 1.5599534340759005,
+              "rmse": 2.148427405209527
+            },
+            "tp": {
+              "mae": 0.032753318078013266,
+              "rmse": 0.12189036095737538
+            }
+          },
+          "land": {
+            "msl": {
+              "mae": 0.9031411357182958,
+              "rmse": 1.1304851436792684
+            },
+            "u10": {
+              "mae": 0.9007463859237977,
+              "rmse": 1.154616873196843
+            },
+            "v10": {
+              "mae": 0.8594754534636735,
+              "rmse": 1.107960689967458
+            },
+            "t2m": {
+              "mae": 2.1522347344768447,
+              "rmse": 2.7059844172186094
+            },
+            "tp": {
+              "mae": 0.046549832847603646,
+              "rmse": 0.1596074410224771
+            }
+          },
+          "sea": {
+            "msl": {
+              "mae": 0.6862481349963321,
+              "rmse": 0.8481301404263782
+            },
+            "u10": {
+              "mae": 1.2121166462541566,
+              "rmse": 1.5494968146577108
+            },
+            "v10": {
+              "mae": 1.2077575654464296,
+              "rmse": 1.6049552681317887
+            },
+            "t2m": {
+              "mae": 0.7751807110446491,
+              "rmse": 1.0146330744062129
+            },
+            "tp": {
+              "mae": 0.014472936008306014,
+              "rmse": 0.028095738820720424
+            }
+          }
+        },
+        "4": {
+          "full": {
+            "msl": {
+              "mae": 0.8429800344542625,
+              "rmse": 1.0659572687362138
+            },
+            "u10": {
+              "mae": 1.054194484242058,
+              "rmse": 1.357545409893654
+            },
+            "v10": {
+              "mae": 1.0247268167803465,
+              "rmse": 1.3658570873230862
+            },
+            "t2m": {
+              "mae": 1.5929690983926292,
+              "rmse": 2.1992793424049037
+            },
+            "tp": {
+              "mae": 0.03289788231354629,
+              "rmse": 0.12134393955920846
+            }
+          },
+          "land": {
+            "msl": {
+              "mae": 0.9596682744216884,
+              "rmse": 1.2032829109823628
+            },
+            "u10": {
+              "mae": 0.9160798636322356,
+              "rmse": 1.1697057225157066
+            },
+            "v10": {
+              "mae": 0.8743014754022076,
+              "rmse": 1.129431558013478
+            },
+            "t2m": {
+              "mae": 2.208120426912541,
+              "rmse": 2.7739710672651356
+            },
+            "tp": {
+              "mae": 0.047049846443700506,
+              "rmse": 0.1589088431386289
+            }
+          },
+          "sea": {
+            "msl": {
+              "mae": 0.6883681164974231,
+              "rmse": 0.8505068797643538
+            },
+            "u10": {
+              "mae": 1.237196356550073,
+              "rmse": 1.572237568854593
+            },
+            "v10": {
+              "mae": 1.2240403941063807,
+              "rmse": 1.6270369546631975
+            },
+            "t2m": {
+              "mae": 0.7778935881037461,
+              "rmse": 1.024629624109561
+            },
+            "tp": {
+              "mae": 0.014146529841091948,
+              "rmse": 0.027842244178047735
+            }
+          }
+        },
+        "5": {
+          "full": {
+            "msl": {
+              "mae": 0.8682634640471057,
+              "rmse": 1.0997785457884177
+            },
+            "u10": {
+              "mae": 1.0762003999604108,
+              "rmse": 1.3826042136535095
+            },
+            "v10": {
+              "mae": 1.0486167320368214,
+              "rmse": 1.4004179681283873
+            },
+            "t2m": {
+              "mae": 1.6210187628919674,
+              "rmse": 2.237966699585901
+            },
+            "tp": {
+              "mae": 0.03309801782909684,
+              "rmse": 0.1222715871513966
+            }
+          },
+          "land": {
+            "msl": {
+              "mae": 0.9940420283170947,
+              "rmse": 1.246984226962118
+            },
+            "u10": {
+              "mae": 0.9350664502356063,
+              "rmse": 1.1915269647571498
+            },
+            "v10": {
+              "mae": 0.8951609283105552,
+              "rmse": 1.1593844662657464
+            },
+            "t2m": {
+              "mae": 2.254149147445484,
+              "rmse": 2.824980550980243
+            },
+            "tp": {
+              "mae": 0.04759715209281482,
+              "rmse": 0.16020650376700524
+            }
+          },
+          "sea": {
+            "msl": {
+              "mae": 0.7016068663893704,
+              "rmse": 0.8670539620998337
+            },
+            "u10": {
+              "mae": 1.2632028833457767,
+              "rmse": 1.6010328335917832
+            },
+            "v10": {
+              "mae": 1.2519456719741242,
+              "rmse": 1.6669412189300181
+            },
+            "t2m": {
+              "mae": 0.782121003358558,
+              "rmse": 1.0346826711034558
+            },
+            "tp": {
+              "mae": 0.013886664929670509,
+              "rmse": 0.027421319839857815
+            }
+          }
+        },
+        "6": {
+          "full": {
+            "msl": {
+              "mae": 0.8924070883172588,
+              "rmse": 1.1313365530545667
+            },
+            "u10": {
+              "mae": 1.1032345061525448,
+              "rmse": 1.4179398431446473
+            },
+            "v10": {
+              "mae": 1.0769872530905178,
+              "rmse": 1.4406119113968614
+            },
+            "t2m": {
+              "mae": 1.652212544239959,
+              "rmse": 2.276211263565787
+            },
+            "tp": {
+              "mae": 0.03309258218293007,
+              "rmse": 0.12326932999758515
+            }
+          },
+          "land": {
+            "msl": {
+              "mae": 1.023118105457289,
+              "rmse": 1.285171436129464
+            },
+            "u10": {
+              "mae": 0.9579619708805375,
+              "rmse": 1.2216454252751157
+            },
+            "v10": {
+              "mae": 0.917653480710991,
+              "rmse": 1.1906621629838938
+            },
+            "t2m": {
+              "mae": 2.3024919324159256,
+              "rmse": 2.875302102763685
+            },
+            "tp": {
+              "mae": 0.04779435377566325,
+              "rmse": 0.16161723990735768
+            }
+          },
+          "sea": {
+            "msl": {
+              "mae": 0.7192149906067187,
+              "rmse": 0.8873345617763698
+            },
+            "u10": {
+              "mae": 1.2957206153879544,
+              "rmse": 1.6422799410895172
+            },
+            "v10": {
+              "mae": 1.288104501493391,
+              "rmse": 1.7166237261983441
+            },
+            "t2m": {
+              "mae": 0.7905923549068031,
+              "rmse": 1.04493554788506
+            },
+            "tp": {
+              "mae": 0.013612734822558604,
+              "rmse": 0.02683210265220665
+            }
+          }
+        }
+      }
+    },
+    "v9_1_frozen": {
+      "aggregate": {
+        "full": {
+          "msl": {
+            "mae": 0.8557451942960533,
+            "rmse": 1.1167124710059184
+          },
+          "u10": {
+            "mae": 1.0233076608065024,
+            "rmse": 1.3263767579799344
+          },
+          "v10": {
+            "mae": 1.0432215662485385,
+            "rmse": 1.3909192238416788
+          },
+          "t2m": {
+            "mae": 1.5263600429442932,
+            "rmse": 2.0937614566543847
+          },
+          "tp": {
+            "mae": 0.02865428156887357,
+            "rmse": 0.1202730419615314
+          }
+        },
+        "land": {
+          "msl": {
+            "mae": 1.0107238366377063,
+            "rmse": 1.2883097611327121
+          },
+          "u10": {
+            "mae": 0.8717839793824841,
+            "rmse": 1.1215551453290147
+          },
+          "v10": {
+            "mae": 0.8832810071971373,
+            "rmse": 1.1460617939238682
+          },
+          "t2m": {
+            "mae": 2.0608199061044794,
+            "rmse": 2.6140155992312986
+          },
+          "tp": {
+            "mae": 0.04263558846335256,
+            "rmse": 0.1579553263865628
+          }
+        },
+        "sea": {
+          "msl": {
+            "mae": 0.6503984931933633,
+            "rmse": 0.8367947618193576
+          },
+          "u10": {
+            "mae": 1.2240765386933266,
+            "rmse": 1.5567967774361984
+          },
+          "v10": {
+            "mae": 1.255142806991645,
+            "rmse": 1.6606458083633582
+          },
+          "t2m": {
+            "mae": 0.8182007242570464,
+            "rmse": 1.067048899597
+          },
+          "tp": {
+            "mae": 0.010129049933688905,
+            "rmse": 0.02395689765669334
+          }
+        }
+      },
+      "by_lead_hour": {
+        "1": {
+          "full": {
+            "msl": {
+              "mae": 0.7812921828544575,
+              "rmse": 1.0094507725847928
+            },
+            "u10": {
+              "mae": 0.9975718049492152,
+              "rmse": 1.2903271146327189
+            },
+            "v10": {
+              "mae": 1.016502331564271,
+              "rmse": 1.3488704192881775
+            },
+            "t2m": {
+              "mae": 1.5114921402672397,
+              "rmse": 2.063674100151491
+            },
+            "tp": {
+              "mae": 0.02682261229825493,
+              "rmse": 0.11956617496795317
+            }
+          },
+          "land": {
+            "msl": {
+              "mae": 0.8909490140560378,
+              "rmse": 1.1296121121632363
+            },
+            "u10": {
+              "mae": 0.8699347777806684,
+              "rmse": 1.1198989325895077
+            },
+            "v10": {
+              "mae": 0.8558676287278276,
+              "rmse": 1.1017584936784972
+            },
+            "t2m": {
+              "mae": 2.0401735650058517,
+              "rmse": 2.5800537527143077
+            },
+            "tp": {
+              "mae": 0.03925164475038357,
+              "rmse": 0.1567489991933639
+            }
+          },
+          "sea": {
+            "msl": {
+              "mae": 0.6359968815123636,
+              "rmse": 0.823664121808265
+            },
+            "u10": {
+              "mae": 1.1666908659475397,
+              "rmse": 1.4863427937217555
+            },
+            "v10": {
+              "mae": 1.2293433128225586,
+              "rmse": 1.6192110477948671
+            },
+            "t2m": {
+              "mae": 0.8109892524885789,
+              "rmse": 1.0399509985656716
+            },
+            "tp": {
+              "mae": 0.010354144299184485,
+              "rmse": 0.026130128501896575
+            }
+          }
+        },
+        "2": {
+          "full": {
+            "msl": {
+              "mae": 0.7795458761895151,
+              "rmse": 1.0149213263223507
+            },
+            "u10": {
+              "mae": 0.9992926616563826,
+              "rmse": 1.2975882117103028
+            },
+            "v10": {
+              "mae": 1.0129996284964387,
+              "rmse": 1.3487338332238938
+            },
+            "t2m": {
+              "mae": 1.4763132933144487,
+              "rmse": 2.01263034676297
+            },
+            "tp": {
+              "mae": 0.028245295831136216,
+              "rmse": 0.12010085430161212
+            }
+          },
+          "land": {
+            "msl": {
+              "mae": 0.9096544862729801,
+              "rmse": 1.158402907449732
+            },
+            "u10": {
+              "mae": 0.8614139216772522,
+              "rmse": 1.1121876411103622
+            },
+            "v10": {
+              "mae": 0.854597798553263,
+              "rmse": 1.1041033569138876
+            },
+            "t2m": {
+              "mae": 1.9768136838847703,
+              "rmse": 2.5069803312230463
+            },
+            "tp": {
+              "mae": 0.04219726974575389,
+              "rmse": 0.1576427479959323
+            }
+          },
+          "sea": {
+            "msl": {
+              "mae": 0.607151967828924,
+              "rmse": 0.7854221171551787
+            },
+            "u10": {
+              "mae": 1.1819819921287307,
+              "rmse": 1.5085458150792095
+            },
+            "v10": {
+              "mae": 1.2228820531711464,
+              "rmse": 1.6168284603849499
+            },
+            "t2m": {
+              "mae": 0.8131502758087724,
+              "rmse": 1.0441618011803326
+            },
+            "tp": {
+              "mae": 0.009758930394267796,
+              "rmse": 0.02466602227624515
+            }
+          }
+        },
+        "3": {
+          "full": {
+            "msl": {
+              "mae": 0.8266301583672169,
+              "rmse": 1.0737125849179432
+            },
+            "u10": {
+              "mae": 1.0080330083508449,
+              "rmse": 1.310251314220822
+            },
+            "v10": {
+              "mae": 1.0230989238571084,
+              "rmse": 1.3631388631425814
+            },
+            "t2m": {
+              "mae": 1.4903539753306112,
+              "rmse": 2.0408045393814316
+            },
+            "tp": {
+              "mae": 0.028662844823254877,
+              "rmse": 0.11966844382028756
+            }
+          },
+          "land": {
+            "msl": {
+              "mae": 0.9749876227072778,
+              "rmse": 1.2346814049275925
+            },
+            "u10": {
+              "mae": 0.85736727918144,
+              "rmse": 1.1068302346830818
+            },
+            "v10": {
+              "mae": 0.8662967588145472,
+              "rmse": 1.1219128034693
+            },
+            "t2m": {
+              "mae": 2.0000395887948614,
+              "rmse": 2.5423851796198385
+            },
+            "tp": {
+              "mae": 0.04297134579447956,
+              "rmse": 0.15728313625067852
+            }
+          },
+          "sea": {
+            "msl": {
+              "mae": 0.6300565181166361,
+              "rmse": 0.8127213144325423
+            },
+            "u10": {
+              "mae": 1.2076650995003064,
+              "rmse": 1.5389092173611258
+            },
+            "v10": {
+              "mae": 1.2308617925385021,
+              "rmse": 1.6286285730202195
+            },
+            "t2m": {
+              "mae": 0.8150205374904796,
+              "rmse": 1.0577907087189435
+            },
+            "tp": {
+              "mae": 0.009704081036382171,
+              "rmse": 0.02274680594244112
+            }
+          }
+        },
+        "4": {
+          "full": {
+            "msl": {
+              "mae": 0.8837453268398232,
+              "rmse": 1.1509598769184106
+            },
+            "u10": {
+              "mae": 1.0233046222414568,
+              "rmse": 1.3255979747100233
+            },
+            "v10": {
+              "mae": 1.0417310582088541,
+              "rmse": 1.3897193496337266
+            },
+            "t2m": {
+              "mae": 1.5216335864961776,
+              "rmse": 2.0962561182397534
+            },
+            "tp": {
+              "mae": 0.02910463537494456,
+              "rmse": 0.11980154207529774
+            }
+          },
+          "land": {
+            "msl": {
+              "mae": 1.0565934518275304,
+              "rmse": 1.3383286273938497
+            },
+            "u10": {
+              "mae": 0.864709678989871,
+              "rmse": 1.111880162057884
+            },
+            "v10": {
+              "mae": 0.8829194056464601,
+              "rmse": 1.1468387149096144
+            },
+            "t2m": {
+              "mae": 2.052724215004368,
+              "rmse": 2.615381299108516
+            },
+            "tp": {
+              "mae": 0.043519017393544815,
+              "rmse": 0.15741364697441246
+            }
+          },
+          "sea": {
+            "msl": {
+              "mae": 0.6547215612311112,
+              "rmse": 0.840659816303108
+            },
+            "u10": {
+              "mae": 1.233442922049808,
+              "rmse": 1.564431381512285
+            },
+            "v10": {
+              "mae": 1.2521564978540265,
+              "rmse": 1.657596746532391
+            },
+            "t2m": {
+              "mae": 0.8179385037228252,
+              "rmse": 1.0739799617247257
+            },
+            "tp": {
+              "mae": 0.010005579200299215,
+              "rmse": 0.023175472231432633
+            }
+          }
+        },
+        "5": {
+          "full": {
+            "msl": {
+              "mae": 0.9182992636767987,
+              "rmse": 1.1963916643460015
+            },
+            "u10": {
+              "mae": 1.042961155619762,
+              "rmse": 1.348721294146009
+            },
+            "v10": {
+              "mae": 1.0686683198335993,
+              "rmse": 1.4266217866809339
+            },
+            "t2m": {
+              "mae": 1.5564208656400726,
+              "rmse": 2.144449966408853
+            },
+            "tp": {
+              "mae": 0.029460979375634442,
+              "rmse": 0.12083745160122784
+            }
+          },
+          "land": {
+            "msl": {
+              "mae": 1.09934486223169,
+              "rmse": 1.393666697268793
+            },
+            "u10": {
+              "mae": 0.8783655022656051,
+              "rmse": 1.126128254525384
+            },
+            "v10": {
+              "mae": 0.9078804224531453,
+              "rmse": 1.1817525236983815
+            },
+            "t2m": {
+              "mae": 2.109958744742137,
+              "rmse": 2.6786960344194783
+            },
+            "tp": {
+              "mae": 0.04386929043370165,
+              "rmse": 0.1587650754457214
+            }
+          },
+          "sea": {
+            "msl": {
+              "mae": 0.6784138455915679,
+              "rmse": 0.8685270088922074
+            },
+            "u10": {
+              "mae": 1.26105039631402,
+              "rmse": 1.5965496563242854
+            },
+            "v10": {
+              "mae": 1.2817122838627013,
+              "rmse": 1.697510351385699
+            },
+            "t2m": {
+              "mae": 0.8229831758298372,
+              "rmse": 1.0883364215501194
+            },
+            "tp": {
+              "mae": 0.010369967223695395,
+              "rmse": 0.023463075444950448
+            }
+          }
+        },
+        "6": {
+          "full": {
+            "msl": {
+              "mae": 0.9449583578485088,
+              "rmse": 1.234627040324769
+            },
+            "u10": {
+              "mae": 1.0686827120213522,
+              "rmse": 1.3834576135446426
+            },
+            "v10": {
+              "mae": 1.0963291355309592,
+              "rmse": 1.4644747213290537
+            },
+            "t2m": {
+              "mae": 1.6019463966172094,
+              "rmse": 2.1990343290256433
+            },
+            "tp": {
+              "mae": 0.029629321710016393,
+              "rmse": 0.12164993504383699
+            }
+          },
+          "land": {
+            "msl": {
+              "mae": 1.1328135827307215,
+              "rmse": 1.4431434004259904
+            },
+            "u10": {
+              "mae": 0.8989127164000676,
+              "rmse": 1.1518095272237128
+            },
+            "v10": {
+              "mae": 0.9321240289875805,
+              "rmse": 1.215468390349733
+            },
+            "t2m": {
+              "mae": 2.1852096391948885,
+              "rmse": 2.752722903603123
+            },
+            "tp": {
+              "mae": 0.04400496266225189,
+              "rmse": 0.15985754807191066
+            }
+          },
+          "sea": {
+            "msl": {
+              "mae": 0.6960501848795767,
+              "rmse": 0.8857078106939162
+            },
+            "u10": {
+              "mae": 1.2936279562195545,
+              "rmse": 1.6407662627334043
+            },
+            "v10": {
+              "mae": 1.313900901700936,
+              "rmse": 1.740370340290477
+            },
+            "t2m": {
+              "mae": 0.8291226002017847,
+              "rmse": 1.096794360951144
+            },
+            "tp": {
+              "mae": 0.010581597448304367,
+              "rmse": 0.02339585002673354
+            }
+          }
+        }
+      }
+    },
+    "dense_era5t_persistence": {
+      "aggregate": {
+        "full": {
+          "msl": {
+            "mae": 0.6461775864230221,
+            "rmse": 0.8439440727383127
+          },
+          "u10": {
+            "mae": 1.0502236589304619,
+            "rmse": 1.464113083030819
+          },
+          "v10": {
+            "mae": 0.9380553486240442,
+            "rmse": 1.3203783885912113
+          },
+          "t2m": {
+            "mae": 2.408396043970618,
+            "rmse": 3.9050493203053516
+          },
+          "tp": {
+            "mae": 0.017485835846564043,
+            "rmse": 0.1543342116590707
+          }
+        },
+        "land": {
+          "msl": {
+            "mae": 0.6959529525556177,
+            "rmse": 0.9155755444200224
+          },
+          "u10": {
+            "mae": 0.8365829190891917,
+            "rmse": 1.152405853539446
+          },
+          "v10": {
+            "mae": 0.753686353411354,
+            "rmse": 1.0520534147313598
+          },
+          "t2m": {
+            "mae": 3.8244329607887426,
+            "rmse": 5.11389561225219
+          },
+          "tp": {
+            "mae": 0.029861118098198677,
+            "rmse": 0.20275531764625168
+          }
+        },
+        "sea": {
+          "msl": {
+            "mae": 0.5802252262973329,
+            "rmse": 0.7384054441162564
+          },
+          "u10": {
+            "mae": 1.333297639220145,
+            "rmse": 1.7956283150576573
+          },
+          "v10": {
+            "mae": 1.1823442672808584,
+            "rmse": 1.608375319598335
+          },
+          "t2m": {
+            "mae": 0.5321471291866029,
+            "rmse": 0.8964227015471182
+          },
+          "tp": {
+            "mae": 0.0010885868631481555,
+            "rmse": 0.030148154350879423
+          }
+        }
+      },
+      "by_lead_hour": {
+        "1": {
+          "full": {
+            "msl": {
+              "mae": 0.2635022714046402,
+              "rmse": 0.3334832379273913
+            },
+            "u10": {
+              "mae": 0.45607916911504404,
+              "rmse": 0.634681696056641
+            },
+            "v10": {
+              "mae": 0.41280762455115905,
+              "rmse": 0.5898248054775458
+            },
+            "t2m": {
+              "mae": 0.7559037956060767,
+              "rmse": 1.1852657421552628
+            },
+            "tp": {
+              "mae": 0.01441924888582186,
+              "rmse": 0.13468963393903136
+            }
+          },
+          "land": {
+            "msl": {
+              "mae": 0.278552240032662,
+              "rmse": 0.35651770056859466
+            },
+            "u10": {
+              "mae": 0.3701671573824537,
+              "rmse": 0.5171011947711022
+            },
+            "v10": {
+              "mae": 0.33508151251453777,
+              "rmse": 0.4836212307012567
+            },
+            "t2m": {
+              "mae": 1.1865619805096568,
+              "rmse": 1.5483246405622586
+            },
+            "tp": {
+              "mae": 0.024520706224282252,
+              "rmse": 0.17648730754225958
+            }
+          },
+          "sea": {
+            "msl": {
+              "mae": 0.2435610629725114,
+              "rmse": 0.30025286653968386
+            },
+            "u10": {
+              "mae": 0.5699125846607263,
+              "rmse": 0.7630608810111735
+            },
+            "v10": {
+              "mae": 0.5157947229996823,
+              "rmse": 0.7063627570866332
+            },
+            "t2m": {
+              "mae": 0.18528170060883298,
+              "rmse": 0.29975475766321896
+            },
+            "tp": {
+              "mae": 0.0010348179123618386,
+              "rmse": 0.03012842149958279
+            }
+          }
+        },
+        "2": {
+          "full": {
+            "msl": {
+              "mae": 0.4542463718388204,
+              "rmse": 0.5585043347293073
+            },
+            "u10": {
+              "mae": 0.7909680506007603,
+              "rmse": 1.0763118948491255
+            },
+            "v10": {
+              "mae": 0.7108916250123785,
+              "rmse": 0.9854409370375543
+            },
+            "t2m": {
+              "mae": 1.4613309690366834,
+              "rmse": 2.2563259294351954
+            },
+            "tp": {
+              "mae": 0.017425197261396783,
+              "rmse": 0.15509446154294473
+            }
+          },
+          "land": {
+            "msl": {
+              "mae": 0.4842184296990491,
+              "rmse": 0.5990902279825596
+            },
+            "u10": {
+              "mae": 0.6227070585510689,
+              "rmse": 0.841849294942717
+            },
+            "v10": {
+              "mae": 0.5608996583890902,
+              "rmse": 0.7789667325109496
+            },
+            "t2m": {
+              "mae": 2.304174844911084,
+              "rmse": 2.950983338065315
+            },
+            "tp": {
+              "mae": 0.029743508740733587,
+              "rmse": 0.20367297216425934
+            }
+          },
+          "sea": {
+            "msl": {
+              "mae": 0.4145333951740174,
+              "rmse": 0.4996758244292063
+            },
+            "u10": {
+              "mae": 1.0139138650666013,
+              "rmse": 1.3245183649014776
+            },
+            "v10": {
+              "mae": 0.9096309807882355,
+              "rmse": 1.2057352645502608
+            },
+            "t2m": {
+              "mae": 0.3445628335031026,
+              "rmse": 0.5459757783935084
+            },
+            "tp": {
+              "mae": 0.001103434551275518,
+              "rmse": 0.031010940746249792
+            }
+          }
+        },
+        "3": {
+          "full": {
+            "msl": {
+              "mae": 0.619959834427011,
+              "rmse": 0.7582634988578318
+            },
+            "u10": {
+              "mae": 1.0315597586384733,
+              "rmse": 1.3879493617846548
+            },
+            "v10": {
+              "mae": 0.9252464404142694,
+              "rmse": 1.2573409577797103
+            },
+            "t2m": {
+              "mae": 2.138626900156897,
+              "rmse": 3.2467382089476393
+            },
+            "tp": {
+              "mae": 0.01785571102792542,
+              "rmse": 0.1562284805974947
+            }
+          },
+          "land": {
+            "msl": {
+              "mae": 0.6609660953867141,
+              "rmse": 0.8143314522192121
+            },
+            "u10": {
+              "mae": 0.8041207583101043,
+              "rmse": 1.0662511946567226
+            },
+            "v10": {
+              "mae": 0.7262347516594267,
+              "rmse": 0.9797189714107285
+            },
+            "t2m": {
+              "mae": 3.3849002279894784,
+              "rmse": 4.249057539248561
+            },
+            "tp": {
+              "mae": 0.030528060191265458,
+              "rmse": 0.20534186974413174
+            }
+          },
+          "sea": {
+            "msl": {
+              "mae": 0.5656265386554042,
+              "rmse": 0.6768569972346149
+            },
+            "u10": {
+              "mae": 1.3329164340735622,
+              "rmse": 1.7240958770905763
+            },
+            "v10": {
+              "mae": 1.1889369280144357,
+              "rmse": 1.5504215030624418
+            },
+            "t2m": {
+              "mae": 0.48731474077872683,
+              "rmse": 0.7657311580147106
+            },
+            "tp": {
+              "mae": 0.0010648483864998703,
+              "rmse": 0.029632087346624238
+            }
+          }
+        },
+        "4": {
+          "full": {
+            "msl": {
+              "mae": 0.7551835029650331,
+              "rmse": 0.9240430644356245
+            },
+            "u10": {
+              "mae": 1.2105971322283122,
+              "rmse": 1.6121995255474222
+            },
+            "v10": {
+              "mae": 1.0819888466479155,
+              "rmse": 1.4516748320499515
+            },
+            "t2m": {
+              "mae": 2.778338547369185,
+              "rmse": 4.153192623488326
+            },
+            "tp": {
+              "mae": 0.018286951568174885,
+              "rmse": 0.15925449846472814
+            }
+          },
+          "land": {
+            "msl": {
+              "mae": 0.8087152176474991,
+              "rmse": 0.9964961258414856
+            },
+            "u10": {
+              "mae": 0.9498375373228024,
+              "rmse": 1.2442429204271113
+            },
+            "v10": {
+              "mae": 0.8579460332418829,
+              "rmse": 1.1370297102327667
+            },
+            "t2m": {
+              "mae": 4.410938295655553,
+              "rmse": 5.437886706785053
+            },
+            "tp": {
+              "mae": 0.031264527584226424,
+              "rmse": 0.20935343790009908
+            }
+          },
+          "sea": {
+            "msl": {
+              "mae": 0.6842539810107655,
+              "rmse": 0.8182195513939264
+            },
+            "u10": {
+              "mae": 1.5561035954781126,
+              "rmse": 1.997955056173422
+            },
+            "v10": {
+              "mae": 1.3788455744109085,
+              "rmse": 1.7851059162639216
+            },
+            "t2m": {
+              "mae": 0.6151438808897466,
+              "rmse": 0.9606691249622642
+            },
+            "tp": {
+              "mae": 0.0010916633469065982,
+              "rmse": 0.02988974625400042
+            }
+          }
+        },
+        "5": {
+          "full": {
+            "msl": {
+              "mae": 0.8570169561799922,
+              "rmse": 1.0521243869585715
+            },
+            "u10": {
+              "mae": 1.3506992492385317,
+              "rmse": 1.7776487590659598
+            },
+            "v10": {
+              "mae": 1.202057196131433,
+              "rmse": 1.5965892904618333
+            },
+            "t2m": {
+              "mae": 3.378968966708247,
+              "rmse": 4.971725559940444
+            },
+            "tp": {
+              "mae": 0.01844348084161806,
+              "rmse": 0.15992932544776114
+            }
+          },
+          "land": {
+            "msl": {
+              "mae": 0.926407220573043,
+              "rmse": 1.1427477572020301
+            },
+            "u10": {
+              "mae": 1.0787687273224391,
+              "rmse": 1.3984643910852543
+            },
+            "v10": {
+              "mae": 0.9711321062523826,
+              "rmse": 1.2713542453740454
+            },
+            "t2m": {
+              "mae": 5.378639008364566,
+              "rmse": 6.512011475069818
+            },
+            "tp": {
+              "mae": 0.031523339916483054,
+              "rmse": 0.21023189283415758
+            }
+          },
+          "sea": {
+            "msl": {
+              "mae": 0.7650748558591998,
+              "rmse": 0.9183759217305845
+            },
+            "u10": {
+              "mae": 1.7110071907773543,
+              "rmse": 2.1807740865948295
+            },
+            "v10": {
+              "mae": 1.508032940221175,
+              "rmse": 1.9455073181023879
+            },
+            "t2m": {
+              "mae": 0.7294061615136251,
+              "rmse": 1.1318741770464604
+            },
+            "tp": {
+              "mae": 0.001112667567421945,
+              "rmse": 0.0300966797690479
+            }
+          }
+        },
+        "6": {
+          "full": {
+            "msl": {
+              "mae": 0.9271565817226357,
+              "rmse": 1.1465280551762216
+            },
+            "u10": {
+              "mae": 1.4614385937616499,
+              "rmse": 1.9012808097297205
+            },
+            "v10": {
+              "mae": 1.2953403589871095,
+              "rmse": 1.7041255611812152
+            },
+            "t2m": {
+              "mae": 3.9372070849466185,
+              "rmse": 5.700195310349618
+            },
+            "tp": {
+              "mae": 0.018484425494447256,
+              "rmse": 0.15928584767456605
+            }
+          },
+          "land": {
+            "msl": {
+              "mae": 1.0168585119947389,
+              "rmse": 1.2576346105592033
+            },
+            "u10": {
+              "mae": 1.1938962756462816,
+              "rmse": 1.5334265285070872
+            },
+            "v10": {
+              "mae": 1.0708240584108044,
+              "rmse": 1.3896734211385744
+            },
+            "t2m": {
+              "mae": 6.281383407302116,
+              "rmse": 7.468236932827333
+            },
+            "tp": {
+              "mae": 0.031586565932201285,
+              "rmse": 0.20937112860663462
+            }
+          },
+          "sea": {
+            "msl": {
+              "mae": 0.8083015241120991,
+              "rmse": 0.9800994456766178
+            },
+            "u10": {
+              "mae": 1.8159321652645128,
+              "rmse": 2.2997758263093377
+            },
+            "v10": {
+              "mae": 1.5928244572507138,
+              "rmse": 2.047699305354758
+            },
+            "t2m": {
+              "mae": 0.8311734578255832,
+              "rmse": 1.2818467018661617
+            },
+            "tp": {
+              "mae": 0.0011240894144231622,
+              "rmse": 0.030113109633441108
+            }
+          }
+        }
+      }
+    }
+  },
+  "physical_six_hour_event_metrics": {
+    "v9_2_final16": {
+      "forecast_window_hours": 6,
+      "region": "sea",
+      "threshold_operator": ">",
+      "thresholds": {
+        "rain_6h_mm": 10.0,
+        "storm_rain_6h_mm": 30.0,
+        "extreme_rain_6h_mm": 50.0,
+        "strong_wind_ms": 15.0,
+        "extreme_wind_ms": 20.0
+      },
+      "postprocessing": {
+        "tp_6h_mm": "sum(max(tp_hourly_mm, 0)) over forecast leads +1...+6",
+        "max_wind_speed_ms": "max(sqrt(u10^2 + v10^2)) over forecast leads +1...+6"
+      },
+      "definitions": {
+        "rain_6h_10mm": "tp_6h_mm > 10",
+        "heavy_rain_6h_30mm": "tp_6h_mm > 30",
+        "extreme_rain_6h_50mm": "tp_6h_mm > 50",
+        "strong_wind_6h_15ms": "max_wind_speed_ms > 15",
+        "extreme_wind_6h_20ms": "max_wind_speed_ms > 20",
+        "storm_any_6h": "heavy_rain_6h_30mm OR strong_wind_6h_15ms",
+        "compound_storm_6h": "heavy_rain_6h_30mm AND strong_wind_6h_15ms",
+        "extreme_weather_6h": "extreme_rain_6h_50mm OR extreme_wind_6h_20ms"
+      },
+      "events": {
+        "rain_6h_10mm": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "tp_6h_mm": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "heavy_rain_6h_30mm": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "tp_6h_mm": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "extreme_rain_6h_50mm": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "tp_6h_mm": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "strong_wind_6h_15ms": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "max_wind_speed_ms": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "extreme_wind_6h_20ms": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "max_wind_speed_ms": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "storm_any_6h": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "tp_6h_mm": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            },
+            "max_wind_speed_ms": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "compound_storm_6h": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "tp_6h_mm": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            },
+            "max_wind_speed_ms": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "extreme_weather_6h": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "tp_6h_mm": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            },
+            "max_wind_speed_ms": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        }
+      }
+    },
+    "v9_1_frozen": {
+      "forecast_window_hours": 6,
+      "region": "sea",
+      "threshold_operator": ">",
+      "thresholds": {
+        "rain_6h_mm": 10.0,
+        "storm_rain_6h_mm": 30.0,
+        "extreme_rain_6h_mm": 50.0,
+        "strong_wind_ms": 15.0,
+        "extreme_wind_ms": 20.0
+      },
+      "postprocessing": {
+        "tp_6h_mm": "sum(max(tp_hourly_mm, 0)) over forecast leads +1...+6",
+        "max_wind_speed_ms": "max(sqrt(u10^2 + v10^2)) over forecast leads +1...+6"
+      },
+      "definitions": {
+        "rain_6h_10mm": "tp_6h_mm > 10",
+        "heavy_rain_6h_30mm": "tp_6h_mm > 30",
+        "extreme_rain_6h_50mm": "tp_6h_mm > 50",
+        "strong_wind_6h_15ms": "max_wind_speed_ms > 15",
+        "extreme_wind_6h_20ms": "max_wind_speed_ms > 20",
+        "storm_any_6h": "heavy_rain_6h_30mm OR strong_wind_6h_15ms",
+        "compound_storm_6h": "heavy_rain_6h_30mm AND strong_wind_6h_15ms",
+        "extreme_weather_6h": "extreme_rain_6h_50mm OR extreme_wind_6h_20ms"
+      },
+      "events": {
+        "rain_6h_10mm": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "tp_6h_mm": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "heavy_rain_6h_30mm": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "tp_6h_mm": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "extreme_rain_6h_50mm": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "tp_6h_mm": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "strong_wind_6h_15ms": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "max_wind_speed_ms": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "extreme_wind_6h_20ms": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "max_wind_speed_ms": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "storm_any_6h": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "tp_6h_mm": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            },
+            "max_wind_speed_ms": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "compound_storm_6h": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "tp_6h_mm": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            },
+            "max_wind_speed_ms": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "extreme_weather_6h": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "tp_6h_mm": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            },
+            "max_wind_speed_ms": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        }
+      }
+    },
+    "dense_era5t_persistence": {
+      "forecast_window_hours": 6,
+      "region": "sea",
+      "threshold_operator": ">",
+      "thresholds": {
+        "rain_6h_mm": 10.0,
+        "storm_rain_6h_mm": 30.0,
+        "extreme_rain_6h_mm": 50.0,
+        "strong_wind_ms": 15.0,
+        "extreme_wind_ms": 20.0
+      },
+      "postprocessing": {
+        "tp_6h_mm": "sum(max(tp_hourly_mm, 0)) over forecast leads +1...+6",
+        "max_wind_speed_ms": "max(sqrt(u10^2 + v10^2)) over forecast leads +1...+6"
+      },
+      "definitions": {
+        "rain_6h_10mm": "tp_6h_mm > 10",
+        "heavy_rain_6h_30mm": "tp_6h_mm > 30",
+        "extreme_rain_6h_50mm": "tp_6h_mm > 50",
+        "strong_wind_6h_15ms": "max_wind_speed_ms > 15",
+        "extreme_wind_6h_20ms": "max_wind_speed_ms > 20",
+        "storm_any_6h": "heavy_rain_6h_30mm OR strong_wind_6h_15ms",
+        "compound_storm_6h": "heavy_rain_6h_30mm AND strong_wind_6h_15ms",
+        "extreme_weather_6h": "extreme_rain_6h_50mm OR extreme_wind_6h_20ms"
+      },
+      "events": {
+        "rain_6h_10mm": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 4,
+            "correct_negatives": 66876,
+            "pod": null,
+            "far": 1.0,
+            "csi": 0.0
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 4,
+            "correct_negatives": 148,
+            "pod": null,
+            "far": 1.0,
+            "csi": 0.0
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "tp_6h_mm": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "heavy_rain_6h_30mm": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "tp_6h_mm": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "extreme_rain_6h_50mm": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "tp_6h_mm": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "strong_wind_6h_15ms": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "max_wind_speed_ms": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "extreme_wind_6h_20ms": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "max_wind_speed_ms": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "storm_any_6h": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "tp_6h_mm": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            },
+            "max_wind_speed_ms": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "compound_storm_6h": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "tp_6h_mm": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            },
+            "max_wind_speed_ms": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        },
+        "extreme_weather_6h": {
+          "grid_cell": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 66880,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "forecast_case": {
+            "hits": 0,
+            "misses": 0,
+            "false_alarms": 0,
+            "correct_negatives": 152,
+            "pod": null,
+            "far": null,
+            "csi": null
+          },
+          "observed_event_cells": 0,
+          "observed_event_cases": 0,
+          "components": {
+            "tp_6h_mm": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            },
+            "max_wind_speed_ms": {
+              "event_conditioned_rmse": null,
+              "peak_intensity_bias": null
+            }
+          }
+        }
+      }
+    }
+  },
+  "elapsed_seconds": 2.3116015000268817
+}
