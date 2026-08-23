@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "scientific_status": "no_truth_marine_only_operational_stress_test",
+  "accuracy_claim": false,
+  "contract": {
+    "period": [
+      "2026-08-16T00:00:00.000000000",
+      "2026-08-19T00:00:00.000000000"
+    ],
+    "forecast_windows": 56,
+    "history_hours": 12,
+    "forecast_hours": 6,
+    "physical_dpc_stations": 239,
+    "physical_dpc_valid_fraction": 0.0,
+    "marine_open_meteo_stations": 151,
+    "marine_open_meteo_valid_fraction": 1.0,
+    "interpretation": "All physical stations are deliberately offline; Open-Meteo is input support, not target truth."
+  },
+  "input_stress": {
+    "maximum_open_meteo_gust_ms": 31.200000762939453,
+    "maximum_open_meteo_hourly_precipitation_mm": 37.599998474121094,
+    "hours_with_any_gust_at_least_20ms": 9,
+    "hours_with_any_precipitation_at_least_5mm": 14,
+    "warning": "These model-derived inputs identify stress intensity; they are not verification truth."
+  },
+  "checkpoints": {
+    "v9_2_final16": {
+      "path": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v9_2_event_aware_final16\\seed_42\\final.pt",
+      "sha256": "ea0afde51397bd88bc6aeca45e452cabadfd956821112c6828eb826fdc03e86f"
+    },
+    "v9_1_frozen": {
+      "path": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v9_1_pressure_ablation\\pressure_6var\\pressure_6var\\seed_42\\best.pt",
+      "sha256": "eca9d3d82ed7bae0b7760bc026a31b6ff684c2cffb4bb97474be7011ef0b2bd0"
+    }
+  },
+  "predicted_response": {
+    "v9_2_final16": {
+      "maximum_predicted_sea_wind_ms": 13.22184944152832,
+      "maximum_predicted_sea_6h_precipitation_mm": 28.014644622802734,
+      "events": {
+        "rain_6h_10mm": {
+          "forecast_cases": 4,
+          "sea_grid_cells": 74
+        },
+        "heavy_rain_6h_30mm": {
+          "forecast_cases": 0,
+          "sea_grid_cells": 0
+        },
+        "extreme_rain_6h_50mm": {
+          "forecast_cases": 0,
+          "sea_grid_cells": 0
+        },
+        "strong_wind_6h_15ms": {
+          "forecast_cases": 0,
+          "sea_grid_cells": 0
+        },
+        "extreme_wind_6h_20ms": {
+          "forecast_cases": 0,
+          "sea_grid_cells": 0
+        },
+        "storm_any_6h": {
+          "forecast_cases": 0,
+          "sea_grid_cells": 0
+        },
+        "compound_storm_6h": {
+          "forecast_cases": 0,
+          "sea_grid_cells": 0
+        },
+        "extreme_weather_6h": {
+          "forecast_cases": 0,
+          "sea_grid_cells": 0
+        }
+      }
+    },
+    "v9_1_frozen": {
+      "maximum_predicted_sea_wind_ms": 10.760112762451172,
+      "maximum_predicted_sea_6h_precipitation_mm": 18.347373962402344,
+      "events": {
+        "rain_6h_10mm": {
+          "forecast_cases": 1,
+          "sea_grid_cells": 33
+        },
+        "heavy_rain_6h_30mm": {
+          "forecast_cases": 0,
+          "sea_grid_cells": 0
+        },
+        "extreme_rain_6h_50mm": {
+          "forecast_cases": 0,
+          "sea_grid_cells": 0
+        },
+        "strong_wind_6h_15ms": {
+          "forecast_cases": 0,
+          "sea_grid_cells": 0
+        },
+        "extreme_wind_6h_20ms": {
+          "forecast_cases": 0,
+          "sea_grid_cells": 0
+        },
+        "storm_any_6h": {
+          "forecast_cases": 0,
+          "sea_grid_cells": 0
+        },
+        "compound_storm_6h": {
+          "forecast_cases": 0,
+          "sea_grid_cells": 0
+        },
+        "extreme_weather_6h": {
+          "forecast_cases": 0,
+          "sea_grid_cells": 0
+        }
+      }
+    },
+    "v9_2_minus_v9_1": {
+      "msl": {
+        "full_grid_rmse_difference": 0.5942138433456421,
+        "mean_signed_difference": 0.29935210943222046
+      },
+      "u10": {
+        "full_grid_rmse_difference": 0.37503135204315186,
+        "mean_signed_difference": 0.00218643038533628
+      },
+      "v10": {
+        "full_grid_rmse_difference": 0.35945236682891846,
+        "mean_signed_difference": -0.06937021017074585
+      },
+      "t2m": {
+        "full_grid_rmse_difference": 0.7778562307357788,
+        "mean_signed_difference": -0.07938944548368454
+      },
+      "tp": {
+        "full_grid_rmse_difference": 0.08222491294145584,
+        "mean_signed_difference": 0.014383639208972454
+      }
+    }
+  },
+  "elapsed_seconds": 0.8671642999397591
+}
