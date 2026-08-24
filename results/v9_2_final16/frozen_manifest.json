@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "model": "V9.2 Final16",
+  "status": "frozen_production_candidate",
+  "frozen_at_git_commit": "0e478d81f7945d2f13c921583416e20132d4ff41",
+  "definition": "2010-2025 production refit; 390 points; 12 h history; six mask-aware inputs; +1..+6 h five-variable Adriatic grid forecast",
+  "checkpoint": {
+    "path": "artifacts/v9_2_event_aware_final16/seed_42/final.pt",
+    "bytes": 2421073,
+    "sha256": "ea0afde51397bd88bc6aeca45e452cabadfd956821112c6828eb826fdc03e86f"
+  },
+  "checkpoint_contract": {
+    "version": "stormengine-v9-output-form-v1",
+    "temporal_mode": "autoregressive",
+    "output_mode": "field",
+    "history_hours": 12,
+    "forecast_hours": 6,
+    "input_variables": [
+      "msl",
+      "u10",
+      "v10",
+      "i10fg",
+      "t2m",
+      "tp"
+    ],
+    "target_variables": [
+      "msl",
+      "u10",
+      "v10",
+      "t2m",
+      "tp"
+    ],
+    "station_count": 390,
+    "cache_identity": "v9_cache_identity_2010_2025.json",
+    "train_years": [
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "validation_years": [],
+    "confirmation_years": [],
+    "locked_test_years": [],
+    "reconstruction_loss_weight": 0.0,
+    "learning_rate": 2e-05,
+    "weight_decay": 0.0001,
+    "warm_start": {
+      "checkpoint": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v9_1_pressure_ablation\\pressure_6var\\pressure_6var\\seed_42\\best.pt",
+      "sha256": "eca9d3d82ed7bae0b7760bc026a31b6ff684c2cffb4bb97474be7011ef0b2bd0",
+      "strict": true,
+      "source_contract": {
+        "version": "stormengine-v9-output-form-v1",
+        "temporal_mode": "autoregressive",
+        "output_mode": "field",
+        "history_hours": 12,
+        "forecast_hours": 6,
+        "input_variables": [
+          "msl",
+          "u10",
+          "v10",
+          "i10fg",
+          "t2m",
+          "tp"
+        ],
+        "target_variables": [
+          "msl",
+          "u10",
+          "v10",
+          "t2m",
+          "tp"
+        ],
+        "station_count": 390,
+        "cache_identity": "v9_cache_identity_2010_2025.json",
+        "train_years": [
+          2015,
+          2016,
+          2017
+        ],
+        "validation_years": [
+          2018
+        ],
+        "confirmation_years": [],
+        "locked_test_years": [
+          2019
+        ],
+        "reconstruction_loss_weight": 0.0,
+        "learning_rate": 0.0001,
+        "weight_decay": 0.0001,
+        "warm_start": {
+          "checkpoint": "D:\\Documents\\py_projects\\StormEngine-DL\\StormEngine-DL\\artifacts\\v7_b_2010_2017\\best.pt",
+          "sha256": "2149960f7c71ebb88324aee033ed11fe903f2c34b4064eafdaa5ee95c677f991",
+          "loaded_tensor_count": 25,
+          "loaded_tensors": [
+            "encoder.grid_coords",
+            "encoder.point_mlp.0.bias",
+            "encoder.point_mlp.2.weight",
+            "encoder.point_mlp.2.bias",
+            "processor.cells.0.gates.weight",
+            "processor.cells.0.gates.bias",
+            "processor.cells.0.candidate.weight",
+            "processor.cells.0.candidate.bias",
+            "processor.cells.1.gates.weight",
+            "processor.cells.1.gates.bias",
+            "processor.cells.1.candidate.weight",
+            "processor.cells.1.candidate.bias",
+            "decoder.network.0.weight",
+            "decoder.network.0.bias",
+            "decoder.network.2.weight",
+            "decoder.network.2.bias",
+            "decoder.network.4.weight",
+            "decoder.network.4.bias",
+            "decoder.network.0.weight->reconstruction_decoder.network.0.weight",
+            "decoder.network.0.bias->reconstruction_decoder.network.0.bias",
+            "decoder.network.2.weight->reconstruction_decoder.network.2.weight",
+            "decoder.network.2.bias->reconstruction_decoder.network.2.bias",
+            "decoder.network.4.weight->reconstruction_decoder.network.4.weight",
+            "decoder.network.4.bias->reconstruction_decoder.network.4.bias",
+            "encoder.point_mlp.0.weight (column-mapped)"
+          ],
+          "skipped_source_tensors": [],
+          "source_input_variables": [
+            "u10",
+            "v10",
+            "i10fg",
+            "t2m",
+            "tp"
+          ],
+          "target_input_variables": [
+            "msl",
+            "u10",
+            "v10",
+            "i10fg",
+            "t2m",
+            "tp"
+          ],
+          "zero_initialized_new_variable_columns": [
+            "msl"
+          ],
+          "expanded_encoder": true
+        },
+        "development_protocol": "v9.1-pressure-ablation-2015-2019",
+        "variable_capabilities": {
+          "msl": {
+            "physical_station_manifest": "data/manifests/dpc_msl_20260801_20260808.json",
+            "include_virtual": true
+          }
+        },
+        "expected_variable_capability_counts": {
+          "msl": 164
+        }
+      }
+    },
+    "development_protocol": "v9.2-final-production-2010-2025",
+    "variable_capabilities": {
+      "msl": {
+        "physical_station_manifest": "data/manifests/dpc_msl_20260801_20260808.json",
+        "include_virtual": true
+      }
+    },
+    "expected_variable_capability_counts": {
+      "msl": 164
+    },
+    "event_aware": {
+      "enabled": true,
+      "region": "sea",
+      "classification_weight": 0.2,
+      "intensity_weight": 0.5,
+      "focal_gamma": 2.0,
+      "rain_temperature_mm": 5.0,
+      "wind_temperature_ms": 2.0,
+      "thresholds": {
+        "storm_rain_6h_mm": 30.0,
+        "extreme_rain_6h_mm": 50.0,
+        "strong_wind_ms": 15.0,
+        "extreme_wind_ms": 20.0
+      },
+      "oversampling": {
+        "enabled": true,
+        "event_window_multiplier": 20.0
+      }
+    },
+    "scientific_status": "production_refit_no_internal_holdout",
+    "fixed_refit_epochs": 1,
+    "no_internal_validation_or_test": true
+  },
+  "contract_checks": {
+    "status_is_production_refit": true,
+    "years_are_2010_2025": true,
+    "history_is_12h": true,
+    "forecast_is_6h": true,
+    "station_count_is_390": true,
+    "input_order_matches": true,
+    "target_order_matches": true,
+    "no_internal_holdout": true
+  },
+  "dependencies": [
+    {
+      "path": "configs/v9_2_event_aware_final16.yaml",
+      "bytes": 683,
+      "sha256": "f0834ee5641409f667ff6c5f31acdd3b088545cbc6e747fbe06fedeec9bbc65b"
+    },
+    {
+      "path": "configs/v9_2_event_aware_strong.yaml",
+      "bytes": 525,
+      "sha256": "4bcb75bf144027707ad293ab751c46339166f308b51598bdf8293e38a5011c63"
+    },
+    {
+      "path": "configs/v9_2_event_aware.yaml",
+      "bytes": 1131,
+      "sha256": "58b2ae364073d914ee5fde16f3e05bc4b7ee61304cf1e542d3bbe00a9eacd1f1"
+    },
+    {
+      "path": "configs/v9_1_pressure_6var.yaml",
+      "bytes": 487,
+      "sha256": "010f6f50e8fcaefa31c47e5bef0b47ab749b6685d374e5aeb316b13fa51131c3"
+    },
+    {
+      "path": "configs/v9_1_pressure_ablation_base.yaml",
+      "bytes": 860,
+      "sha256": "75471e71a3c0e102f8f2ab9289ef92d6fe818829c470b9ff8a0c2bcf8d7076e3"
+    },
+    {
+      "path": "data/normalization/era5_2010_2015.json",
+      "bytes": 2117,
+      "sha256": "fa95b7cdbf03ca496c15026f503baf2e2e9b69987cda7c6eaa804863d7251799"
+    },
+    {
+      "path": "data/stations_registry.csv",
+      "bytes": 163573,
+      "sha256": "bfc3612a529ac8d55ba57ee315741b302e782161bc3a73393a333aad12989c02"
+    },
+    {
+      "path": "data/static/adriatic_390_fields.npz",
+      "bytes": 4684,
+      "sha256": "09e098066086599ddb5f1d141fb9fe1587dfbf0fd9f4bd2f44179017e3e8d833"
+    },
+    {
+      "path": "data/manifests/v9_cache_identity_2010_2025.json",
+      "bytes": 27647,
+      "sha256": "6dfffb47aa8a7a0b48983a6f27bb36b62051cf6b2445b7ec98e057ede710e953"
+    },
+    {
+      "path": "scripts/predict_v9_2_final16.py",
+      "bytes": 8732,
+      "sha256": "f271fa64c5d3b772d55bc6fdfe806fae21d733b119a8f4afd09bc6deb914989f"
+    },
+    {
+      "path": "scripts/freeze_v9_2_final16.py",
+      "bytes": 6086,
+      "sha256": "891e7579fa75bb25e07f9eb8c926dfb6628709cd00481dc028cde7a9615cb925"
+    },
+    {
+      "path": "docs/V9_2_FINAL16_MODEL_CARD.md",
+      "bytes": 3670,
+      "sha256": "7c0328343e411dfd2cbeb00cec2a7940924aa1a552f72edfc077faa485981875"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "results/v9_2_2018_development_decision/development_evaluation_2018.json",
+      "bytes": 76208,
+      "sha256": "bf1fd3dfd207160bc67ff14407878e81675dc9e17a083a0d3429b2d9bfe29416"
+    },
+    {
+      "path": "results/v9_2_2018_development_decision/formal_train_summary.json",
+      "bytes": 13311,
+      "sha256": "d8d12d4cd542b5aebc45644e5df28677f82eb79b6143202daf9695ae91240559"
+    },
+    {
+      "path": "results/v9_2_final16/training_summary.json",
+      "bytes": 887,
+      "sha256": "762f2cf540f7b4484aad21690a59bd00034f000b10b627fc6e2f3fd3a92b902a"
+    },
+    {
+      "path": "results/v9_2_final16/final16_summary_full.json",
+      "bytes": 6419,
+      "sha256": "4c1b3d67f74c3cbf3425147421c058c707f11176c2384036d92d0f1cb49caecf"
+    },
+    {
+      "path": "results/v9_2_final16_operational_era5t_20260801_20260808/metrics.json",
+      "bytes": 76924,
+      "sha256": "39a28337e53c79c1fa865894f4e8d5e4dddc10f6a046647e82bec0485734cf8b"
+    },
+    {
+      "path": "results/v9_2_marine_only_stress_20260816_20260819/stress_summary.json",
+      "bytes": 4422,
+      "sha256": "ef0fe5938035212646f07cb0ec8c7e97e52ddee8c7abfa8770f8412d9cdfd818"
+    }
+  ],
+  "deployment": {
+    "inference_script": "scripts/predict_v9_2_final16.py",
+    "physical_source": "239 DPC/MeteoHub stations with per-variable value, mask, and age",
+    "marine_source": "151 Open-Meteo ICON-2I support points with per-variable value, mask, and age",
+    "output_variables": [
+      "msl",
+      "u10",
+      "v10",
+      "t2m",
+      "tp"
+    ],
+    "checkpoint_location": "local external artifact; do not commit to ordinary Git"
+  },
+  "scientific_limits": {
+    "independent_accuracy_claim_from_final16_refit": false,
+    "event_skill_evidence": "2018 development holdout evaluation",
+    "ordinary_operational_evidence": "2026-08-01--08 ERA5T evaluation",
+    "outage_robustness_evidence": "2026-08-16--19 no-truth marine-only stress test"
+  }
+}
