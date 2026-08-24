@@ -6,6 +6,18 @@ import torch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from stress_test_v9_2_marine_only import predicted_event_summary
+from predict_v9_2_final16 import enforce_physical_bounds
+
+
+def test_production_prediction_clips_only_negative_precipitation() -> None:
+    prediction = torch.zeros(1, 6, 5, 2, 2).numpy()
+    prediction[:, :, 0] = -3.0
+    prediction[:, :, 4, 0, 0] = -0.25
+    prediction[:, :, 4, 1, 1] = 0.75
+    bounded = enforce_physical_bounds(prediction)
+    assert (bounded[:, :, 0] == -3.0).all()
+    assert (bounded[:, :, 4, 0, 0] == 0.0).all()
+    assert (bounded[:, :, 4, 1, 1] == 0.75).all()
 
 
 def test_predicted_event_summary_uses_physical_six_hour_definitions() -> None:
