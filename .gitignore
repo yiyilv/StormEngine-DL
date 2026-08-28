@@ -8,6 +8,13 @@ __pycache__/
 .pytest_cache/
 .coverage
 AI_PROJECT_HISTORY.md
+AI_CHAT_HISTORY.md
+AGENTS.md
+CLAUDE.md
+.codex/
+.claude/
+.cursor/
+docs/diagrams/.$*.bkp
 outputs/
 artifacts/
 checkpoints/
