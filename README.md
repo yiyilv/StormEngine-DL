@@ -246,3 +246,8 @@ selected early collaborative work and supporting files.
 - [ItaliaMeteo MeteoHub data portal](https://meteohub.agenziaitaliameteo.it/app/datasets)
 - [Open-Meteo Forecast API](https://open-meteo.com/en/docs)
 - [Open-Meteo Historical Forecast API](https://open-meteo.com/en/docs/historical-forecast-api)
+
+
+## My contribution
+
+This was a collaborative MSc course project. My commits cover model-development and experiment work, including V8 processor-only training and gradual unfreezing, V9 forecast-form comparisons, pressure-alignment ablations, and physical-event evaluation. The [commit history filtered to my account](https://github.com/yiyilv/StormEngine-DL/commits?author=yiyilv) documents those changes.
